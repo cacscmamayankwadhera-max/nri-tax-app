@@ -293,7 +293,7 @@ export default function Dashboard() {
     async function loadCases() {
       try {
         const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
-        if (data) setCases(data.map(c => ({ ...c, name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
+        if (data) setCases(data.map(c => { c.status = c.status || 'intake'; return { ...c, name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed }; }));
       } catch (e) { /* Supabase not configured yet — use local state */ }
     }
     loadCases();
@@ -430,6 +430,15 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:CLS_COLORS[c.classification]+'18',color:CLS_COLORS[c.classification]}}>{c.classification}</span>
+              <button onClick={(e) => {
+                e.stopPropagation();
+                const ref = (c.dbId || c.id?.toString() || '').slice(0, 8).toUpperCase();
+                const url = `${window.location.origin}/portal?ref=${ref}`;
+                navigator.clipboard.writeText(url);
+                alert('Portal link copied!\n' + url);
+              }} className="text-[9px] text-amber-500 hover:text-amber-700 px-1" title="Copy portal link">
+                🔗
+              </button>
               <span className="text-xs text-gray-400">{c.modulesDone || c.modules_completed || 1}/10</span>
               <span className="text-gray-300">›</span>
             </div>
@@ -602,6 +611,35 @@ export default function Dashboard() {
             <div className="font-bold text-xs">{ac?.name}</div>
             <div className="text-[10px] text-gray-400">{ac?.country} · FY {fy}</div>
             <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{background:CLS_COLORS[ac?.classification]+'20',color:CLS_COLORS[ac?.classification]}}>{ac?.classification}</span>
+            <div className="mt-2">
+              <select value={ac?.status || 'intake'}
+                onChange={async (e) => {
+                  const newStatus = e.target.value;
+                  setAc(prev => ({...prev, status: newStatus}));
+                  if (ac?.dbId) {
+                    try {
+                      await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                    } catch(e) {}
+                  }
+                }}
+                className="w-full text-[10px] px-2 py-1 border border-gray-200 rounded bg-white">
+                <option value="intake">1. Intake Received</option>
+                <option value="in_progress">2. Analysis Running</option>
+                <option value="review">3. Under Review</option>
+                <option value="findings_ready">4. Findings Ready</option>
+                <option value="filing">5. Filing in Progress</option>
+                <option value="filed">6. Filed</option>
+                <option value="closed">7. Closed</option>
+              </select>
+            </div>
+            <button onClick={() => {
+              const ref = (ac?.dbId || ac?.id?.toString() || '').slice(0, 8).toUpperCase();
+              const url = `${window.location.origin}/portal?ref=${ref}`;
+              navigator.clipboard.writeText(url);
+              alert('Portal link copied! Share with client:\n' + url);
+            }} className="w-full mt-1 text-[9px] bg-amber-50 border border-amber-200 text-amber-700 px-2 py-1 rounded hover:bg-amber-100 transition">
+              Copy Client Portal Link
+            </button>
           </div>
 
           <div className="py-1">

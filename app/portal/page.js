@@ -1,0 +1,681 @@
+'use client';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { computeCapitalGains, formatINR, FY_CONFIG } from '@/lib/compute';
+
+// ═══ Constants ═══
+
+const STAGES = [
+  { key: 'intake',         label: 'Intake Received',         icon: '\uD83D\uDCCB', desc: 'Your information has been securely received.' },
+  { key: 'analysis',       label: 'AI Analysis in Progress', icon: '\uD83E\uDD16', desc: 'Our AI is reviewing your case across 9 specialist modules.' },
+  { key: 'review',         label: 'Expert Review',           icon: '\uD83D\uDC68\u200D\uD83D\uDCBC', desc: 'A senior tax advisor is reviewing the analysis.' },
+  { key: 'findings_ready', label: 'Findings Ready',          icon: '\uD83D\uDCCA', desc: 'Your tax position analysis is complete.' },
+  { key: 'filing',         label: 'Filing in Progress',      icon: '\uD83D\uDCDD', desc: 'Your return is being prepared and filed.' },
+  { key: 'filed',          label: 'Filed & Delivered',       icon: '\u2705', desc: 'Your return has been successfully filed.' },
+];
+
+const MODULE_NAMES = [
+  { id: 'residency', label: 'Residency Verification' },
+  { id: 'income',    label: 'Income Classification' },
+  { id: 'pricing',   label: 'Service Scoping' },
+  { id: 'recon',     label: 'Document Reconciliation' },
+  { id: 'filing',    label: 'Filing Architecture' },
+  { id: 'cg',        label: 'Capital Gains Analysis' },
+  { id: 'dtaa',      label: 'Treaty & Credit Review' },
+  { id: 'prefiling', label: 'Pre-Filing Quality Check' },
+  { id: 'memo',      label: 'Advisory Preparation' },
+];
+
+const CLS_COLORS = { Green: '#2A6B4A', Amber: '#B07D3A', Red: '#A04848' };
+const CLS_MEANINGS = {
+  Green: 'Straightforward case — simple filing with limited complexity.',
+  Amber: 'Moderate complexity — advisory review recommended alongside filing.',
+  Red:   'Significant complexity — premium compliance service recommended.',
+};
+
+const NEXT_STEPS = [
+  '', // placeholder for 0-index
+  'Our AI is analyzing your case across 9 specialist modules. You will see results here within minutes.',
+  'Our AI is analyzing your case across 9 specialist modules. You will see results here within minutes.',
+  'A senior tax advisor is reviewing the AI analysis. Expect findings within 1 business day.',
+  'Review your findings above. Your advisor will reach out to discuss next steps and confirm engagement.',
+  'Your return is being prepared and will be filed on the Income Tax portal.',
+  'Your return has been filed. Keep this page bookmarked for refund tracking.',
+];
+
+// ═══ Helper: determine current stage index (1-6) from case data ═══
+function determineStage(caseData, modulesCompleted) {
+  const status = caseData?.status || 'intake';
+  const mc = modulesCompleted || 0;
+
+  if (status === 'filed' || status === 'closed') return 6;
+  if (status === 'filing') return 5;
+  if (status === 'findings_ready') return 4;
+  if (status === 'review' || mc >= 9) return 3;
+  if (status === 'in_progress' || mc >= 1) return 2;
+  return 1;
+}
+
+// ═══ Helper: compute key findings from intake data ═══
+function computeFindings(intakeData, fy) {
+  if (!intakeData) return null;
+
+  const f = intakeData;
+  const findings = {};
+
+  // Capital gains savings
+  if (f.salePrice && f.purchaseCost) {
+    try {
+      const cg = computeCapitalGains(
+        Number(f.salePrice),
+        Number(f.purchaseCost),
+        f.propertyAcqFY || '2017-18',
+        fy || '2025-26'
+      );
+      if (cg.savings > 0) {
+        findings.cgSavings = cg.savings;
+        findings.cgBetter = cg.better;
+        findings.tdsRefund = cg.tdsRefund;
+      }
+    } catch (e) { /* skip CG findings if computation fails */ }
+  }
+
+  // Residency status
+  findings.residencyStatus = 'Non-Resident (preliminary)';
+
+  return findings;
+}
+
+// ═══ Main Component ═══
+// Suspense wrapper for useSearchParams
+export default function ClientPortalPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#f5f2ec]">
+        <nav className="bg-[#1a1a1a] px-6 md:px-12 h-14 flex items-center">
+          <span className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</span>
+        </nav>
+        <div className="max-w-lg mx-auto px-6 pt-32 text-center">
+          <div className="inline-block w-10 h-10 border-4 border-gray-200 border-t-[#C49A3C] rounded-full animate-spin" />
+          <p className="text-gray-500 mt-4 text-sm">Loading portal...</p>
+        </div>
+      </div>
+    }>
+      <ClientPortal />
+    </Suspense>
+  );
+}
+
+function ClientPortal() {
+  const searchParams = useSearchParams();
+  const refFromUrl = searchParams.get('ref') || '';
+
+  const [ref, setRef] = useState(refFromUrl);
+  const [inputRef, setInputRef] = useState(refFromUrl);
+  const [caseData, setCaseData] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [modulesCompleted, setModulesCompleted] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [vis, setVis] = useState(false);
+
+  useEffect(() => { setVis(true); }, []);
+
+  const fetchCase = useCallback(async (caseRef) => {
+    if (!caseRef || caseRef.length < 6) {
+      setError('Please enter at least 6 characters of your case reference.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setCaseData(null);
+    setModules([]);
+
+    try {
+      const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Unable to find your case.');
+        setLoading(false);
+        return;
+      }
+
+      setCaseData(data.case);
+      setModules(data.modules || []);
+      setModulesCompleted(data.modulesCompleted || 0);
+    } catch (e) {
+      setError('Connection error. Please check your internet and try again.');
+    }
+
+    setLoading(false);
+  }, []);
+
+  // Auto-fetch if ref is in URL
+  useEffect(() => {
+    if (refFromUrl && refFromUrl.length >= 6) {
+      setRef(refFromUrl);
+      setInputRef(refFromUrl);
+      fetchCase(refFromUrl);
+    }
+  }, [refFromUrl, fetchCase]);
+
+  // Poll for updates every 15s while case is in progress
+  useEffect(() => {
+    if (!caseData || !ref) return;
+    const stage = determineStage(caseData, modulesCompleted);
+    if (stage >= 4) return; // no need to poll once findings ready or beyond
+
+    const interval = setInterval(() => {
+      fetchCase(ref);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [caseData, modulesCompleted, ref, fetchCase]);
+
+  const handleLookup = (e) => {
+    e.preventDefault();
+    const trimmed = inputRef.trim().toUpperCase();
+    setRef(trimmed);
+    // Update URL without reload
+    window.history.replaceState(null, '', `/portal?ref=${trimmed}`);
+    fetchCase(trimmed);
+  };
+
+  const stage = caseData ? determineStage(caseData, modulesCompleted) : 0;
+  const findings = caseData ? computeFindings(caseData.intake_data, caseData.fy) : null;
+  const completedModuleIds = modules.filter(m => m.has_output).map(m => m.module_id);
+
+  // ═══ Render: Lookup Form (no case loaded) ═══
+  if (!caseData && !loading) {
+    return (
+      <div className="min-h-screen bg-[#f5f2ec]">
+        <Nav />
+        <TrustBar />
+        <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="text-center mb-10">
+            <div className="text-4xl mb-4">{'\uD83D\uDD0D'}</div>
+            <h1 className="font-serif text-3xl font-bold text-[#1a1a1a] mb-2">Track Your Case</h1>
+            <p className="text-gray-500">Enter the case reference you received after submitting your intake.</p>
+          </div>
+
+          <form onSubmit={handleLookup} className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+            <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+              Case Reference
+            </label>
+            <input
+              type="text"
+              value={inputRef}
+              onChange={e => setInputRef(e.target.value.toUpperCase())}
+              placeholder="e.g. ABCD1234"
+              maxLength={12}
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg text-lg font-mono tracking-widest text-center bg-white focus:ring-2 focus:ring-[#C49A3C] focus:border-[#C49A3C] outline-none transition-shadow"
+              autoFocus
+            />
+            <p className="text-[10px] text-gray-400 mt-2 text-center">
+              The 8-character code from your intake confirmation
+            </p>
+
+            {error && (
+              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+                {error}
+                {error.includes('not found') && (
+                  <span className="block mt-1">
+                    <a href="/client" className="text-red-800 underline font-semibold">Submit a new intake</a>
+                  </span>
+                )}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={inputRef.trim().length < 6}
+              className="w-full mt-6 bg-[#C49A3C] text-[#1a1a1a] py-3 rounded-lg font-bold text-sm hover:bg-amber-400 transition disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Look Up My Case
+            </button>
+          </form>
+
+          <div className="text-center mt-8">
+            <p className="text-xs text-gray-400">
+              Do not have a reference? <a href="/client" className="text-[#C49A3C] font-semibold hover:underline">Start your intake here</a>
+            </p>
+          </div>
+        </div>
+        <ContactBar />
+      </div>
+    );
+  }
+
+  // ═══ Render: Loading ═══
+  if (loading && !caseData) {
+    return (
+      <div className="min-h-screen bg-[#f5f2ec]">
+        <Nav />
+        <TrustBar />
+        <div className="max-w-lg mx-auto px-6 pt-32 text-center">
+          <div className="inline-block w-10 h-10 border-4 border-gray-200 border-t-[#C49A3C] rounded-full animate-spin" />
+          <p className="text-gray-500 mt-4 text-sm">Looking up your case...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ═══ Render: Portal Dashboard ═══
+  return (
+    <div className="min-h-screen bg-[#f5f2ec] pb-24">
+      <Nav />
+      <TrustBar />
+
+      <div className={`max-w-3xl mx-auto px-4 md:px-6 pt-8 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+
+        {/* Case ref header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <div className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Case Reference</div>
+            <div className="font-mono text-lg font-bold text-[#1a1a1a] tracking-wider">
+              {(caseData.id || '').slice(0, 8).toUpperCase()}
+            </div>
+          </div>
+          {loading && (
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              <div className="w-3 h-3 border-2 border-gray-300 border-t-[#C49A3C] rounded-full animate-spin" />
+              Refreshing...
+            </div>
+          )}
+        </div>
+
+        {/* ── Section 1: Case Summary Card ── */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="font-serif text-xl font-bold text-[#1a1a1a]">{caseData.client_name || 'Client'}</h2>
+              <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-500">
+                <span>{caseData.country}</span>
+                <span className="text-gray-300">|</span>
+                <span>FY {caseData.fy} (AY {caseData.ay})</span>
+                <span className="text-gray-300">|</span>
+                <span>Submitted {formatDate(caseData.created_at)}</span>
+              </div>
+            </div>
+            {caseData.classification && (
+              <div
+                className="text-sm font-bold px-5 py-2 rounded-full whitespace-nowrap self-start"
+                style={{
+                  background: (CLS_COLORS[caseData.classification] || '#999') + '15',
+                  color: CLS_COLORS[caseData.classification] || '#999',
+                  border: `2px solid ${(CLS_COLORS[caseData.classification] || '#999')}40`,
+                }}
+              >
+                {caseData.classification} Case
+              </div>
+            )}
+          </div>
+          {caseData.classification && (
+            <p className="text-xs text-gray-400 mt-3">{CLS_MEANINGS[caseData.classification]}</p>
+          )}
+        </div>
+
+        {/* ── Section 2: Process Timeline (hero) ── */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+          <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-6">Your Case Progress</h3>
+          <div className="relative">
+            {STAGES.map((s, i) => {
+              const stageNum = i + 1;
+              const isCompleted = stageNum < stage;
+              const isCurrent = stageNum === stage;
+              const isFuture = stageNum > stage;
+
+              return (
+                <div key={s.key} className="flex gap-4 mb-1 last:mb-0">
+                  {/* Vertical line + circle */}
+                  <div className="flex flex-col items-center" style={{ minWidth: 40 }}>
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-base flex-shrink-0 transition-all duration-500 ${
+                        isCurrent ? 'ring-4 ring-[#C49A3C]/20' : ''
+                      }`}
+                      style={{
+                        background: isCompleted ? '#2A6B4A' : isCurrent ? '#C49A3C' : '#e5e7eb',
+                        color: isCompleted || isCurrent ? '#fff' : '#9ca3af',
+                      }}
+                      role="img"
+                      aria-label={isCompleted ? 'Completed' : isCurrent ? 'In progress' : 'Pending'}
+                    >
+                      {isCompleted ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <span className="text-sm">{s.icon}</span>
+                      )}
+                    </div>
+                    {/* Connector line */}
+                    {i < STAGES.length - 1 && (
+                      <div
+                        className="w-0.5 flex-1 my-1 rounded-full transition-all duration-500"
+                        style={{
+                          minHeight: 24,
+                          background: isCompleted ? '#2A6B4A' : '#e5e7eb',
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* Label + description */}
+                  <div className={`pt-2 pb-4 ${isFuture ? 'opacity-40' : ''}`}>
+                    <div className="flex items-center gap-2">
+                      <span className={`font-semibold text-sm ${isCurrent ? 'text-[#C49A3C]' : isCompleted ? 'text-[#1a1a1a]' : 'text-gray-400'}`}>
+                        {s.label}
+                      </span>
+                      {isCurrent && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#C49A3C] bg-amber-50 px-2 py-0.5 rounded-full">
+                          <span className="w-1.5 h-1.5 bg-[#C49A3C] rounded-full animate-pulse" />
+                          CURRENT
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{s.desc}</p>
+                    {isCompleted && getStageTimestamp(s.key, caseData, modules) && (
+                      <p className="text-[10px] text-gray-400 mt-1">
+                        Completed {formatDate(getStageTimestamp(s.key, caseData, modules))}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Section 3: Key Findings (stage 3+) ── */}
+        {stage >= 3 && findings && (
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+            <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-5">Key Findings</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {findings.cgSavings > 0 && (
+                <FindingCard
+                  label="Tax Savings Identified"
+                  value={`${formatINR(findings.cgSavings)} savings via Option ${findings.cgBetter}`}
+                  accent="#2A6B4A"
+                  bg="#f0fdf4"
+                  border="#bbf7d0"
+                />
+              )}
+              {findings.tdsRefund > 0 && (
+                <FindingCard
+                  label="Estimated TDS Refund"
+                  value={`${formatINR(findings.tdsRefund)} refund expected`}
+                  accent="#2A6B4A"
+                  bg="#f0fdf4"
+                  border="#bbf7d0"
+                />
+              )}
+              <FindingCard
+                label="Residency Status"
+                value={findings.residencyStatus}
+                accent="#1a1a1a"
+                bg="#f5f2ec"
+                border="#e5e1d8"
+              />
+              {caseData.classification && (
+                <FindingCard
+                  label="Service Tier"
+                  value={
+                    caseData.classification === 'Green'
+                      ? 'Basic Filing'
+                      : caseData.classification === 'Amber'
+                      ? 'Advisory Filing'
+                      : 'Premium Compliance'
+                  }
+                  accent={CLS_COLORS[caseData.classification]}
+                  bg={(CLS_COLORS[caseData.classification]) + '08'}
+                  border={(CLS_COLORS[caseData.classification]) + '30'}
+                />
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Section 4: What We're Doing (modules) ── */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-serif text-lg font-bold text-[#1a1a1a]">What We Are Doing</h3>
+            <span className="text-xs text-gray-400 font-semibold">
+              {completedModuleIds.length} of {MODULE_NAMES.length} complete
+            </span>
+          </div>
+
+          {/* Progress bar */}
+          <div className="w-full h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-1000 ease-out"
+              style={{
+                width: `${Math.round((completedModuleIds.length / MODULE_NAMES.length) * 100)}%`,
+                background: completedModuleIds.length === MODULE_NAMES.length ? '#2A6B4A' : '#C49A3C',
+              }}
+            />
+          </div>
+
+          <div className="space-y-3">
+            {MODULE_NAMES.map((mod, i) => {
+              const isComplete = completedModuleIds.includes(mod.id);
+              // Current module = first incomplete module after all completed ones
+              const isCurrent = !isComplete && completedModuleIds.length === i && stage <= 3;
+              const isFuture = !isComplete && !isCurrent;
+
+              return (
+                <div
+                  key={mod.id}
+                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors ${
+                    isCurrent ? 'bg-amber-50' : ''
+                  }`}
+                >
+                  {/* Status indicator */}
+                  {isComplete ? (
+                    <div className="w-6 h-6 rounded-full bg-[#2A6B4A] flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  ) : isCurrent ? (
+                    <div className="w-6 h-6 rounded-full border-2 border-[#C49A3C] flex items-center justify-center flex-shrink-0">
+                      <div className="w-2 h-2 bg-[#C49A3C] rounded-full animate-pulse" />
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-gray-200 flex-shrink-0" />
+                  )}
+
+                  {/* Module name */}
+                  <span className={`text-sm ${
+                    isComplete ? 'text-[#1a1a1a] font-medium' :
+                    isCurrent ? 'text-[#C49A3C] font-semibold' :
+                    'text-gray-400'
+                  }`}>
+                    {mod.label}
+                  </span>
+
+                  {isCurrent && (
+                    <span className="text-[10px] text-[#C49A3C] font-semibold ml-auto">In progress...</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Section 5: Documents Shared (stage 4+) ── */}
+        {stage >= 4 && (
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+            <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-4">Documents</h3>
+            {stage >= 6 ? (
+              <div className="space-y-3">
+                {['CG Computation Sheet', 'Client Advisory Memo', 'Tax Position Report', 'ITR Acknowledgement'].map((doc, i) => (
+                  <div key={i} className="flex items-center justify-between bg-[#f5f2ec] rounded-lg px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">{'\uD83D\uDCC4'}</span>
+                      <span className="text-sm font-medium text-[#1a1a1a]">{doc}</span>
+                    </div>
+                    <span className="text-xs text-gray-400">Available</span>
+                  </div>
+                ))}
+                <p className="text-xs text-gray-400 mt-2">
+                  Your advisor will share download links directly via email or WhatsApp.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-[#f5f2ec] rounded-lg px-5 py-6 text-center">
+                <div className="text-2xl mb-2">{'\uD83D\uDCC1'}</div>
+                <p className="text-sm text-gray-500">
+                  Your advisor will share documents once the review is complete.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Section 6: What Happens Next ── */}
+        <div className="bg-amber-50 border-2 border-[#C49A3C] rounded-2xl p-6 md:p-8 mb-6">
+          <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3">What Happens Next</h3>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            {NEXT_STEPS[stage] || NEXT_STEPS[1]}
+          </p>
+          {stage <= 2 && (
+            <div className="mt-4 flex items-center gap-2 text-xs text-gray-500">
+              <div className="w-2 h-2 bg-[#C49A3C] rounded-full animate-pulse" />
+              This page updates automatically every 15 seconds
+            </div>
+          )}
+        </div>
+      </div>
+
+      <ContactBar />
+    </div>
+  );
+}
+
+// ═══ Sub-components ═══
+
+function Nav() {
+  return (
+    <nav className="bg-[#1a1a1a] px-6 md:px-12 h-14 flex items-center justify-between">
+      <a href="/" className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</a>
+      <div className="flex gap-3 items-center">
+        <a href="/client" className="text-gray-400 text-sm hover:text-white transition">New Intake</a>
+        <a href="/portal" className="text-[#C49A3C] text-sm font-semibold">Track Case</a>
+      </div>
+    </nav>
+  );
+}
+
+function TrustBar() {
+  return (
+    <div className="bg-[#1a1a1a] border-t border-gray-800 text-center py-1.5">
+      <span className="text-[11px] text-gray-400 tracking-wide">
+        MKW Advisors &mdash; CA &middot; CS &middot; CMA Certified &nbsp;|&nbsp; Trusted by 500+ NRIs
+      </span>
+    </div>
+  );
+}
+
+function FindingCard({ label, value, accent, bg, border }) {
+  return (
+    <div
+      className="rounded-xl p-5 border"
+      style={{ background: bg, borderColor: border }}
+    >
+      <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">{label}</div>
+      <div className="font-bold text-base" style={{ color: accent }}>{value}</div>
+    </div>
+  );
+}
+
+function ContactBar() {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-gray-800 py-3 px-4 z-50">
+      <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
+        <span className="text-gray-500 text-xs hidden md:inline">Questions?</span>
+        <a
+          href="https://wa.me/919876543210"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-green-400 hover:text-green-300 transition font-semibold text-xs"
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.319 0-4.476-.67-6.31-1.823l-.452-.278-2.65.889.889-2.65-.278-.452A9.953 9.953 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+          WhatsApp Us
+        </a>
+        <a
+          href="mailto:tax@mkwadvisors.com"
+          className="text-gray-300 hover:text-white transition text-xs"
+        >
+          tax@mkwadvisors.com
+        </a>
+        <a
+          href="tel:+919876543210"
+          className="text-gray-300 hover:text-white transition text-xs"
+        >
+          +91-98765 43210
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ═══ Utilities ═══
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return '';
+  }
+}
+
+function getStageTimestamp(stageKey, caseData, modules) {
+  if (!caseData) return null;
+
+  switch (stageKey) {
+    case 'intake':
+      return caseData.created_at;
+    case 'analysis': {
+      // First module completion timestamp
+      const sorted = modules.filter(m => m.has_output).sort((a, b) =>
+        new Date(a.completed_at) - new Date(b.completed_at)
+      );
+      return sorted.length > 0 ? sorted[sorted.length - 1]?.completed_at : null;
+    }
+    case 'review':
+      // When all modules completed or status changed to review
+      if (caseData.status === 'review' || caseData.status === 'findings_ready' ||
+          caseData.status === 'filing' || caseData.status === 'filed' || caseData.status === 'closed') {
+        const sorted = modules.filter(m => m.has_output).sort((a, b) =>
+          new Date(a.completed_at) - new Date(b.completed_at)
+        );
+        return sorted.length > 0 ? sorted[sorted.length - 1]?.completed_at : null;
+      }
+      return null;
+    case 'findings_ready':
+      return caseData.status === 'findings_ready' || caseData.status === 'filing' ||
+             caseData.status === 'filed' || caseData.status === 'closed'
+        ? caseData.updated_at
+        : null;
+    case 'filing':
+      return caseData.status === 'filing' || caseData.status === 'filed' || caseData.status === 'closed'
+        ? caseData.updated_at
+        : null;
+    case 'filed':
+      return caseData.status === 'filed' || caseData.status === 'closed'
+        ? caseData.updated_at
+        : null;
+    default:
+      return null;
+  }
+}
