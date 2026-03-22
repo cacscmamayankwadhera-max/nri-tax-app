@@ -10,21 +10,20 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get('ref');
 
-    if (!ref || ref.length < 6) {
+    if (!ref || ref.length < 10) {
       return NextResponse.json(
-        { error: 'Invalid case reference. Please provide at least 6 characters.' },
+        { error: 'Invalid case reference. Please provide a valid tracking code.' },
         { status: 400 }
       );
     }
 
     const supabase = createServerClient();
-    const refLower = ref.toLowerCase();
 
-    // Find case where ID starts with the provided reference
+    // Find case by portal_token (unguessable hex token)
     const { data: cases, error: caseError } = await supabase
       .from('cases')
       .select('*')
-      .ilike('id', `${refLower}%`)
+      .eq('portal_token', ref)
       .limit(1);
 
     if (caseError) {

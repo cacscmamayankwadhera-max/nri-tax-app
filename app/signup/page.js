@@ -6,7 +6,6 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('preparer');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,7 +17,7 @@ export default function Signup() {
     setError('');
     const { error } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: name, role } }
+      options: { data: { full_name: name } }
     });
     if (error) {
       setError(error.message);
@@ -63,15 +62,7 @@ export default function Signup() {
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-300 outline-none" />
             </div>
-            <div className="mb-6">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Role</label>
-              <select value={role} onChange={e => setRole(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-300 outline-none">
-                <option value="admin">Admin / Partner</option>
-                <option value="senior">Senior Reviewer</option>
-                <option value="preparer">Preparer / Associate</option>
-              </select>
-            </div>
+            <div className="mb-6"></div>
             {error && <div className="text-red-600 text-xs mb-4 bg-red-50 p-2 rounded">{error}</div>}
             <button type="submit" disabled={loading}
               className="w-full bg-[#C49A3C] text-[#1a1a1a] py-2.5 rounded-lg font-bold text-sm hover:bg-amber-400 transition disabled:opacity-50">

@@ -12,6 +12,7 @@ export default function ClientIntake() {
   const [prs, setPrs] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [caseRef, setCaseRef] = useState(null);
+  const [portalToken, setPortalToken] = useState(null);
   const [parseDone, setParseDone] = useState(false);
   const [fadeDir, setFadeDir] = useState('in');
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
@@ -53,6 +54,7 @@ export default function ClientIntake() {
       });
       const data = await res.json();
       ref = data.caseRef || null;
+      if (data.portalToken) setPortalToken(data.portalToken);
     } catch (e) { /* continue even if save fails */ }
     setCaseRef(ref);
     setSubmitted(true);
@@ -137,12 +139,12 @@ export default function ClientIntake() {
 
         <div className="max-w-2xl mx-auto py-10 px-4">
           {/* Case reference link for portal tracking */}
-          {caseRef && (
+          {portalToken && (
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6 text-center">
-              <div className="text-sm font-semibold text-blue-800 mb-1">Your Case Reference</div>
-              <div className="font-mono text-2xl font-bold text-blue-900 tracking-wider mb-2">{caseRef}</div>
-              <a href={`/portal?ref=${caseRef}`} className="text-blue-600 text-sm underline">Track your case status {'\u2192'}</a>
-              <p className="text-xs text-blue-400 mt-2">Save this reference to check your case progress anytime</p>
+              <div className="text-sm font-semibold text-blue-800 mb-1">Your Tracking Code</div>
+              <div className="font-mono text-2xl font-bold text-blue-900 tracking-wider mb-2">{portalToken}</div>
+              <a href={`/portal?ref=${portalToken}`} className="text-blue-600 text-sm underline">Track your case status {'\u2192'}</a>
+              <p className="text-xs text-blue-400 mt-2">Save this code to check your case progress anytime</p>
             </div>
           )}
 
@@ -412,6 +414,8 @@ export default function ClientIntake() {
                 <I l="Sale price (\u20B9)" v={f.salePrice} ch={v => u('salePrice', parseInt(v) || 0)} ph="6800000" type="number" />
                 <I l="Purchase cost (\u20B9)" v={f.purchaseCost} ch={v => u('purchaseCost', parseInt(v) || 0)} ph="2200000" type="number" />
                 <I l="City / Location" v={f.propertyLocation} ch={v => u('propertyLocation', v)} ph="Nashik" />
+                <I l="Date of sale" v={f.saleDate} ch={v => u('saleDate', v)} type="date" tip="Needed for Section 54 timelines and advance tax" />
+                <I l="Improvement cost (\u20B9)" v={f.improvementCost} ch={v => u('improvementCost', parseInt(v) || 0)} ph="0" type="number" tip="Renovations, additions \u2014 if any" />
                 <I l="Bought or planning to buy new house?" wide tip="Important \u2014 this can eliminate your capital gains tax entirely">
                   <S v={f.section54} ch={v => u('section54', v)} o={['Not sure', 'Yes \u2014 bought new house', 'Planning to buy', 'Considering government bonds', 'No']} />
                 </I>
@@ -437,9 +441,17 @@ export default function ClientIntake() {
           {(f.rent || f.interest) && <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-5 shadow-sm">
             <div className="text-sm font-semibold mb-4">Quick amounts <span className="text-gray-400 font-normal">(approximate is fine)</span></div>
             {f.rent && <I l="Monthly rent amount (\u20B9)" v={f.rentalMonthly} ch={v => u('rentalMonthly', parseInt(v) || 0)} ph="25000" type="number" />}
-            {f.interest && <div className="grid grid-cols-2 gap-4 mt-4">
-              <I l="NRO interest (\u20B9/year)" v={f.nroInterest} ch={v => u('nroInterest', parseInt(v) || 0)} ph="140000" type="number" />
-              <I l="FD interest (\u20B9/year)" v={f.fdInterest} ch={v => u('fdInterest', parseInt(v) || 0)} ph="85000" type="number" />
+            {f.interest && <div className="mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <I l="NRO interest (\u20B9/year)" v={f.nroInterest} ch={v => u('nroInterest', parseInt(v) || 0)} ph="140000" type="number" />
+                <I l="FD interest (\u20B9/year)" v={f.fdInterest} ch={v => u('fdInterest', parseInt(v) || 0)} ph="85000" type="number" />
+              </div>
+              <div className="mt-4">
+                <I l="Interest account type">
+                  <S v={f.interestType} ch={v => u('interestType', v)} o={['NRO (Taxable)', 'NRE (Tax-Free)', 'Both NRO + NRE']} />
+                </I>
+                <p className="text-[10px] text-gray-400 mt-1">NRE interest is completely tax-free under Section 10(4). NRO interest is taxable at 30%.</p>
+              </div>
             </div>}
           </div>}
           <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-5 shadow-sm">

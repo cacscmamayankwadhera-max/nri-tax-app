@@ -60,7 +60,8 @@ create table public.cases (
   -- Timestamps
   created_at timestamptz default now(),
   updated_at timestamptz default now(),
-  filed_at timestamptz
+  filed_at timestamptz,
+  portal_token text unique default encode(gen_random_bytes(12), 'hex')
 );
 
 alter table public.cases enable row level security;

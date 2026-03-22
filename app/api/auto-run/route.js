@@ -29,7 +29,7 @@ async function runModule(moduleId, formData, fy, moduleOutputs) {
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 3000,
+    max_tokens: 4096,
     temperature: 0,
     system: systemPrompt,
     messages: [{

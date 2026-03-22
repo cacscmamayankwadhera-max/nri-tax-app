@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
+import { rateLimit } from '@/lib/rate-limit';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -13,6 +14,12 @@ export async function POST(request) {
     if (process.env.NODE_ENV === 'production') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+  }
+
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  const limit = rateLimit(ip, 20, 60000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
   }
 
   try {
@@ -32,7 +39,7 @@ export async function POST(request) {
     
     const message = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 3000,
+      max_tokens: 4096,
       temperature: 0,
       system: systemPrompt,
       messages: [{

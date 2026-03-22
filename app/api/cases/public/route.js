@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
+import { rateLimit } from '@/lib/rate-limit';
 
 // Fire-and-forget: trigger auto-run of all AI modules for a new case.
 // This runs in the background — the client gets their response immediately.
@@ -37,6 +38,12 @@ function triggerAutoRun(caseId, formData, fy) {
 }
 
 export async function POST(request) {
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  const limit = rateLimit(ip, 5, 60000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many submissions. Please wait.' }, { status: 429 });
+  }
+
   try {
     const { formData, fy, classification } = await request.json();
 
@@ -81,6 +88,7 @@ export async function POST(request) {
       success: true,
       caseId: data?.id,
       caseRef: (data?.id || Date.now().toString(36)).slice(0, 8).toUpperCase(),
+      portalToken: data?.portal_token,
       message: 'Intake received successfully.'
     });
 
