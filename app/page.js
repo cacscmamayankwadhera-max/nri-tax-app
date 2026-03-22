@@ -274,15 +274,15 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════
          WHAT WE HANDLE (always dark section)
          ══════════════════════════════════════════════════════════ */}
-      <div style={{ background: 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
+      <div style={{ background: '#1a1a1a' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
+          <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: '#C49A3C' }}>
             Our Services
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: 'var(--text-on-dark)' }}>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: '#ffffff' }}>
             What We Handle
           </h2>
-          <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)', opacity: 0.5 }} />
+          <div className="w-16 h-px mx-auto mb-12" style={{ background: '#C49A3C', opacity: 0.5 }} />
 
           <div className="grid md:grid-cols-3 gap-4">
             {FEATURES.map((s, i) => (
@@ -290,17 +290,16 @@ export default function Home() {
                 key={i}
                 className="rounded-lg p-6 transition-all duration-300"
                 style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
+                  background: '#252525',
+                  border: '1px solid #3a3a3a',
                   borderTop: '2px solid rgba(196,154,60,0.4)',
-                  transition: 'background-color 0.3s ease, border-color 0.3s ease',
                 }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                onMouseEnter={e => e.currentTarget.style.borderColor = '#C49A3C'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = '#3a3a3a'}
               >
                 <div className="text-2xl mb-3">{s.ic}</div>
-                <h3 className="font-bold text-sm mb-1" style={{ color: 'var(--text-on-dark)' }}>{s.t}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>{s.d}</p>
+                <h3 className="font-bold text-sm mb-1" style={{ color: '#ffffff' }}>{s.t}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>{s.d}</p>
               </div>
             ))}
           </div>
@@ -463,24 +462,24 @@ export default function Home() {
           <div className="flex flex-wrap justify-between items-start gap-8">
             <div>
               <div className="font-serif text-lg font-bold" style={{ color: 'var(--accent)' }}>MKW Advisors</div>
-              <div className="text-xs mt-1" style={{ color: '#6b7280' }}>NRI Tax Filing &middot; Advisory &middot; Compliance</div>
-              <div className="text-xs mt-3" style={{ color: '#4b5563' }}>CA | CS | CMA | IBBI Registered Valuer</div>
+              <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>NRI Tax Filing &middot; Advisory &middot; Compliance</div>
+              <div className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>CA | CS | CMA | IBBI Registered Valuer</div>
             </div>
-            <div className="text-xs" style={{ color: '#6b7280' }}>
-              <div className="font-bold mb-2" style={{ color: '#9ca3af' }}>Services</div>
+            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              <div className="font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Services</div>
               <div>NRI ITR Filing</div>
               <div>Capital Gains Advisory</div>
               <div>DTAA / FTC Review</div>
             </div>
-            <div className="text-xs" style={{ color: '#6b7280' }}>
-              <div className="font-bold mb-2" style={{ color: '#9ca3af' }}>Quick Links</div>
+            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              <div className="font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Quick Links</div>
               <a href="/client" className="block hover:text-white transition">Start Filing</a>
               <a href="/login" className="block hover:text-white transition">Team Login</a>
             </div>
           </div>
           <div
             className="mt-8 pt-6 text-center text-xs"
-            style={{ borderTop: '1px solid #1f2937', color: '#4b5563' }}
+            style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}
           >
             &copy; {new Date().getFullYear()} MKW Advisors. All rights reserved.
           </div>
