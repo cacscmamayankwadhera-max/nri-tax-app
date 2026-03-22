@@ -70,11 +70,11 @@ async function downloadDocx(type, caseData, fy, moduleOutputs) {
 
 /* ═══ MARKDOWN RENDERER ═══ */
 function renderMd(text) {
-  if (!text || text === 'auto') return '<em class="text-gray-400">Generated from intake form. Proceed to next module.</em>';
+  if (!text || text === 'auto') return '<em style="color:var(--text-muted)">Generated from intake form. Proceed to next module.</em>';
   return text
-    .replace(/### (.*)/g, '<h3 class="font-serif text-sm font-bold text-gray-900 mt-5 mb-2 pb-1 border-b border-gray-200">$1</h3>')
+    .replace(/### (.*)/g, '<h3 class="font-serif text-sm font-bold mt-5 mb-2 pb-1" style="color:var(--text-primary);border-bottom:1px solid var(--border)">$1</h3>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^- (.*)/gm, '<div class="pl-4 py-0.5 relative"><span class="absolute left-0 text-amber-500 font-bold">›</span>$1</div>')
+    .replace(/^- (.*)/gm, '<div class="pl-4 py-0.5 relative"><span class="absolute left-0 font-bold" style="color:var(--accent)">›</span>$1</div>')
     .replace(/\n{2,}/g, '<div class="h-2"></div>')
     .replace(/\n/g, '<br/>');
 }
@@ -84,30 +84,30 @@ function CGPreview({ f, fy, cg }) {
   const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
   const T = ({ h, r }) => (
     <table className="w-full border-collapse my-2 text-xs">
-      <thead><tr>{h.map((x,i) => <th key={i} className="bg-gray-200 p-1.5 border border-gray-300 font-bold text-left">{x}</th>)}</tr></thead>
-      <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 border border-gray-300 ${ci>0?'text-right':''} ${String(c).includes('Total')?'font-bold bg-gray-50':''}`}>{c}</td>)}</tr>)}</tbody>
+      <thead><tr>{h.map((x,i) => <th key={i} className="p-1.5 font-bold text-left" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>{x}</th>)}</tr></thead>
+      <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 ${ci>0?'text-right':''} ${String(c).includes('Total')?'font-bold':''}`} style={{ border:'1px solid var(--border)', background: String(c).includes('Total') ? 'var(--bg-secondary)' : 'var(--bg-card)' }}>{c}</td>)}</tr>)}</tbody>
     </table>
   );
-  if (!cg) return <p className="text-gray-400 text-sm">Property sale data required for computation.</p>;
+  if (!cg) return <p className="text-theme-muted text-sm">Property sale data required for computation.</p>;
   return (
     <div>
-      <div className="text-sm font-bold text-amber-600 tracking-wide">MKW ADVISORS</div>
-      <div className="text-xs text-gray-500 italic mb-3">NRI Tax Filing · Advisory · Compliance</div>
-      <div className="border-b-2 border-amber-500 mb-4" />
-      <div className="font-serif text-xl font-bold">Capital Gains Computation Sheet</div>
-      <div className="text-gray-500 text-xs mb-3">Property Sale — FY {fy} | {today} | {f.name}</div>
-      <div className="border-b-2 border-amber-500 mb-4" />
+      <div className="text-sm font-bold text-theme-accent tracking-wide">MKW ADVISORS</div>
+      <div className="text-xs text-theme-muted italic mb-3">NRI Tax Filing · Advisory · Compliance</div>
+      <div className="mb-4" style={{ borderBottom:'2px solid var(--accent)' }} />
+      <div className="font-serif text-xl font-bold text-theme">Capital Gains Computation Sheet</div>
+      <div className="text-theme-muted text-xs mb-3">Property Sale — FY {fy} | {today} | {f.name}</div>
+      <div className="mb-4" style={{ borderBottom:'2px solid var(--accent)' }} />
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">1. Transaction Details</h3>
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">1. Transaction Details</h3>
       <T h={["Particulars","Details"]} r={[["Asset",f.propertyType||"Residential Plot"],["Location",f.propertyLocation||"—"],["Acquired","FY "+(f.propertyAcqFY||"2017-18")],["Sold","FY "+fy],["Pre July 2024?","Yes — Dual computation"]]} />
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">2. Key Amounts</h3>
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">2. Key Amounts</h3>
       <T h={["Particulars","Amount"]} r={[["Sale Consideration",formatINR(f.salePrice||0)],["Cost of Acquisition",formatINR(f.purchaseCost||0)],["Improvement",formatINR(0)]]} />
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">3. Dual Tax Computation</h3>
-      <p className="text-xs font-semibold mb-2">Taxpayer may choose the lower-tax option:</p>
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">3. Dual Tax Computation</h3>
+      <p className="text-xs font-semibold mb-2 text-theme-secondary">Taxpayer may choose the lower-tax option:</p>
 
-      <h4 className="text-xs font-bold text-blue-700 mt-3">Option A — 20% with Indexation</h4>
+      <h4 className="text-xs font-bold mt-3" style={{ color:'#3b82f6' }}>Option A — 20% with Indexation</h4>
       <T h={["Particulars","Working","Amount"]} r={[
         ["CII Acquisition ("+(f.propertyAcqFY||"2017-18")+")","",cg.ciiAcq],
         ["CII Sale ("+fy+")","",cg.ciiSale],
@@ -120,7 +120,7 @@ function CGPreview({ f, fy, cg }) {
         ["Total Tax (A)","",formatINR(cg.optionA.total)]
       ]} />
 
-      <h4 className="text-xs font-bold text-red-700 mt-3">Option B — 12.5% without Indexation</h4>
+      <h4 className="text-xs font-bold mt-3" style={{ color:'var(--red)' }}>Option B — 12.5% without Indexation</h4>
       <T h={["Particulars","Working","Amount"]} r={[
         ["Cost","",formatINR(f.purchaseCost||0)],
         ["Sale","",formatINR(f.salePrice||0)],
@@ -130,33 +130,33 @@ function CGPreview({ f, fy, cg }) {
         ["Total Tax (B)","",formatINR(cg.optionB.total)]
       ]} />
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">4. Comparison</h3>
-      <div className="bg-green-50 border border-green-300 rounded p-2 my-2 text-xs font-bold text-green-800">
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">4. Comparison</h3>
+      <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--green) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--green) 30%, transparent)', color:'var(--green)' }}>
         RECOMMENDED: Option {cg.better} ({cg.better==="B"?"12.5% flat":"20% indexed"}) — saves {formatINR(cg.savings)}
       </div>
       <T h={["","Option A","Option B"]} r={[["Capital Gain",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)],["","",cg.better==="B"?"Saves "+formatINR(cg.savings):""]]} />
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">5. Section 54/54EC</h3>
-      <div className="bg-red-50 border border-red-300 rounded p-2 my-2 text-xs font-bold text-red-800">
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">5. Section 54/54EC</h3>
+      <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--red) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)', color:'var(--red)' }}>
         ACTION REQUIRED: Discuss exemptions BEFORE filing. Can eliminate CG tax entirely.
       </div>
-      <p className="text-xs"><strong>Section 54:</strong> New house → full exemption. Tax saved: <strong>{formatINR(cg.netTax)}</strong></p>
-      <p className="text-xs"><strong>Section 54EC:</strong> Bonds within 6 months. Max ₹50L. Tax saved: <strong>{formatINR(cg.sec54ecSaved)}</strong></p>
-      <p className="text-xs"><strong>Status:</strong> {f.section54 || "NOT YET DISCUSSED"}</p>
+      <p className="text-xs text-theme-secondary"><strong>Section 54:</strong> New house → full exemption. Tax saved: <strong>{formatINR(cg.netTax)}</strong></p>
+      <p className="text-xs text-theme-secondary"><strong>Section 54EC:</strong> Bonds within 6 months. Max ₹50L. Tax saved: <strong>{formatINR(cg.sec54ecSaved)}</strong></p>
+      <p className="text-xs text-theme-secondary"><strong>Status:</strong> {f.section54 || "NOT YET DISCUSSED"}</p>
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">6. TDS (Section 195 — NRI)</h3>
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">6. TDS (Section 195 — NRI)</h3>
       <T h={["","Details"]} r={[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]]} />
-      <div className="bg-blue-50 border border-blue-300 rounded p-2 my-2 text-xs font-bold text-blue-800">
+      <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, #3b82f6 10%, transparent)', border:'1px solid color-mix(in srgb, #3b82f6 30%, transparent)', color:'#3b82f6' }}>
         KEY INSIGHT: TDS of {formatINR(cg.tds195)} is deducted but actual tax is only {formatINR(cg.netTax)}. Estimated refund: {formatINR(cg.tdsRefund)}
       </div>
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">7. Net Tax Summary</h3>
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">7. Net Tax Summary</h3>
       <T h={["Scenario","Tax","TDS Paid","Refund / Payable"]} r={[
         ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.tds195),"Refund "+formatINR(cg.tdsRefund)],
         ["Full Section 54","₹0",formatINR(cg.tds195),"Refund "+formatINR(cg.tds195)]
       ]} />
 
-      <div className="mt-6 border-t-2 border-amber-500 pt-3 text-[10px] text-gray-400 italic">
+      <div className="mt-6 pt-3 text-[10px] text-theme-muted italic" style={{ borderTop:'2px solid var(--accent)' }}>
         Based on information as of {today}. Position may change. Not a formal legal opinion. © {new Date().getFullYear()} MKW Advisors.
       </div>
     </div>
@@ -169,22 +169,22 @@ function MemoPreview({ f, fy, cg }) {
   const hp = f.rentalMonthly ? computeHouseProperty(f.rentalMonthly * 12) : null;
   const T = ({ h, r }) => (
     <table className="w-full border-collapse my-2 text-xs">
-      <thead><tr>{h.map((x,i) => <th key={i} className="bg-gray-200 p-1.5 border border-gray-300 font-bold text-left">{x}</th>)}</tr></thead>
-      <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 border border-gray-300 ${ci>0?'text-right':''}`}>{c}</td>)}</tr>)}</tbody>
+      <thead><tr>{h.map((x,i) => <th key={i} className="p-1.5 font-bold text-left" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>{x}</th>)}</tr></thead>
+      <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 ${ci>0?'text-right':''}`} style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{c}</td>)}</tr>)}</tbody>
     </table>
   );
   return (
     <div>
-      <div className="text-sm font-bold text-amber-600 tracking-wide">MKW ADVISORS</div>
-      <div className="text-xs text-gray-500 italic mb-3">NRI Tax Filing · Advisory · Compliance</div>
-      <div className="border-b-2 border-amber-500 mb-4" />
-      <div className="font-serif text-xl font-bold">Client Advisory Memo</div>
-      <div className="text-gray-500 text-xs mb-1">NRI Tax Advisory — FY {fy} | {today}</div>
-      <div className="text-xs mb-3"><strong>Client:</strong> {f.name} | <strong>AY:</strong> {FY_CONFIG[fy]?.ay} | <strong>By:</strong> MKW Advisors</div>
-      <div className="border-b-2 border-amber-500 mb-4" />
+      <div className="text-sm font-bold text-theme-accent tracking-wide">MKW ADVISORS</div>
+      <div className="text-xs text-theme-muted italic mb-3">NRI Tax Filing · Advisory · Compliance</div>
+      <div className="mb-4" style={{ borderBottom:'2px solid var(--accent)' }} />
+      <div className="font-serif text-xl font-bold text-theme">Client Advisory Memo</div>
+      <div className="text-theme-muted text-xs mb-1">NRI Tax Advisory — FY {fy} | {today}</div>
+      <div className="text-xs mb-3 text-theme-secondary"><strong>Client:</strong> {f.name} | <strong>AY:</strong> {FY_CONFIG[fy]?.ay} | <strong>By:</strong> MKW Advisors</div>
+      <div className="mb-4" style={{ borderBottom:'2px solid var(--accent)' }} />
 
-      <h3 className="font-serif text-sm font-bold mt-3">Facts Captured</h3>
-      <ul className="text-xs list-disc pl-5 leading-relaxed">
+      <h3 className="font-serif text-sm font-bold mt-3 text-theme">Facts Captured</h3>
+      <ul className="text-xs list-disc pl-5 leading-relaxed text-theme-secondary">
         <li>Resident in {f.country}, {f.yearsAbroad || "several years"} abroad</li>
         <li>India stay FY {fy}: ~{f.stayDays || "?"} days</li>
         {f.rent && <li>Rental: {f.rentalDetails || formatINR(f.rentalMonthly ? f.rentalMonthly*12 : 0)+"/yr"}</li>}
@@ -193,34 +193,34 @@ function MemoPreview({ f, fy, cg }) {
         {f.foreignSalary && <li>Foreign salary in {f.country}. {f.foreignTaxPaid?"Tax paid abroad. ":""}Asked about FTC.</li>}
       </ul>
 
-      <h3 className="font-serif text-sm font-bold mt-4">Assumptions</h3>
-      <ol className="text-xs list-decimal pl-5 leading-relaxed">
+      <h3 className="font-serif text-sm font-bold mt-4 text-theme">Assumptions</h3>
+      <ol className="text-xs list-decimal pl-5 leading-relaxed text-theme-secondary">
         <li>Non-Resident status (preliminary) based on ~{f.stayDays||"?"} days.</li>
         {f.purchaseCost && <li>Property cost {formatINR(f.purchaseCost)} — pending deed verification.</li>}
         <li>New tax regime (115BAC) assumed as default.</li>
       </ol>
 
       {cg && <>
-        <h3 className="font-serif text-sm font-bold mt-4">Key Issue — Capital Gains</h3>
-        <p className="text-xs">Dual computation: <strong>Option {cg.better}</strong> saves <strong>{formatINR(cg.savings)}</strong></p>
+        <h3 className="font-serif text-sm font-bold mt-4 text-theme">Key Issue — Capital Gains</h3>
+        <p className="text-xs text-theme-secondary">Dual computation: <strong>Option {cg.better}</strong> saves <strong>{formatINR(cg.savings)}</strong></p>
         <T h={["","A (indexed)","B (flat)"]} r={[["LTCG",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)]]} />
-        <div className="bg-red-50 border border-red-300 rounded p-2 my-2 text-xs font-bold text-red-800">
+        <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--red) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)', color:'var(--red)' }}>
           Section 54 planning: {f.section54||"NOT DISCUSSED"} — could eliminate tax entirely
         </div>
       </>}
 
       {f.foreignTaxPaid && <>
-        <h3 className="font-serif text-sm font-bold mt-4">FTC Clarification</h3>
-        <p className="text-xs">Your {f.country} salary is <strong>not taxable in India</strong> (NR status). FTC applies only when same income taxed in both countries. <strong>Not applicable here.</strong></p>
+        <h3 className="font-serif text-sm font-bold mt-4 text-theme">FTC Clarification</h3>
+        <p className="text-xs text-theme-secondary">Your {f.country} salary is <strong>not taxable in India</strong> (NR status). FTC applies only when same income taxed in both countries. <strong>Not applicable here.</strong></p>
       </>}
 
       {hp && <>
-        <h3 className="font-serif text-sm font-bold mt-4">Rental Income</h3>
+        <h3 className="font-serif text-sm font-bold mt-4 text-theme">Rental Income</h3>
         <T h={["","Amount"]} r={[["Gross Rent",formatINR(hp.grossRent)],["Std Deduction (30%)","("+formatINR(hp.standardDeduction)+")"],["Taxable",formatINR(hp.taxableIncome)]]} />
       </>}
 
-      <h3 className="font-serif text-sm font-bold mt-4">Recommended Actions</h3>
-      <ol className="text-xs list-decimal pl-5 leading-relaxed">
+      <h3 className="font-serif text-sm font-bold mt-4 text-theme">Recommended Actions</h3>
+      <ol className="text-xs list-decimal pl-5 leading-relaxed text-theme-secondary">
         {f.propertySale && <li>Provide sale deed and purchase deed</li>}
         {f.propertySale && <li>Confirm Section 54/54EC status</li>}
         <li>Provide Form 16B from buyer</li>
@@ -229,7 +229,7 @@ function MemoPreview({ f, fy, cg }) {
         {f.foreignSalary && <li>Share {f.country} P60 / tax summary</li>}
       </ol>
 
-      <div className="mt-6 border-t-2 border-amber-500 pt-3 text-[10px] text-gray-400 italic">
+      <div className="mt-6 pt-3 text-[10px] text-theme-muted italic" style={{ borderTop:'2px solid var(--accent)' }}>
         Based on information as of {today}. Not a formal legal opinion. © {new Date().getFullYear()} MKW Advisors.
       </div>
     </div>
@@ -240,10 +240,10 @@ function MemoPreview({ f, fy, cg }) {
 function Inp({ l, v, ch, tip, ph, type, wide, children }) {
   return (
     <div className={wide ? 'col-span-2' : ''}>
-      <label className="block text-xs font-medium text-gray-600 mb-1">{l}</label>
+      <label className="block text-xs font-medium text-theme-secondary mb-1">{l}</label>
       {children || <input type={type||'text'} value={v||''} onChange={e=>ch(e.target.value)} placeholder={ph}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-amber-400 focus:border-amber-400 outline-none" />}
-      {tip && <p className="text-[10px] text-gray-400 mt-0.5">{tip}</p>}
+        className="input-theme" />}
+      {tip && <p className="text-[10px] text-theme-muted mt-0.5">{tip}</p>}
     </div>
   );
 }
@@ -251,7 +251,7 @@ function Inp({ l, v, ch, tip, ph, type, wide, children }) {
 function Sel({ v, ch, o, ph }) {
   return (
     <select value={v||''} onChange={e=>ch(e.target.value)}
-      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white focus:ring-1 focus:ring-amber-400 outline-none">
+      className="input-theme">
       <option value="">{ph||'Select'}</option>
       {o.map(x => typeof x === 'string' ? <option key={x}>{x}</option> : <option key={x.v} value={x.v}>{x.l}</option>)}
     </select>
@@ -260,8 +260,8 @@ function Sel({ v, ch, o, ph }) {
 
 function Chk({ l, c, ch }) {
   return (
-    <label className="flex items-center gap-2 text-xs cursor-pointer py-0.5">
-      <input type="checkbox" checked={!!c} onChange={e=>ch(e.target.checked)} className="accent-amber-500 w-3.5 h-3.5" />{l}
+    <label className="flex items-center gap-2 text-xs cursor-pointer py-0.5 text-theme-secondary">
+      <input type="checkbox" checked={!!c} onChange={e=>ch(e.target.checked)} className="w-3.5 h-3.5" style={{ accentColor:'var(--accent)' }} />{l}
     </label>
   );
 }
@@ -281,12 +281,27 @@ export default function Dashboard() {
   const [prs, setPrs] = useState(false);     // parsing narrative
   const [dv, setDv] = useState(null);        // active deliverable view
   const [dlLd, setDlLd] = useState(false);   // downloading docx
+  const [theme, setTheme] = useState('light');
   const printRef = useRef(null);
   const supabase = createClient();
 
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   const cfg = FY_CONFIG[fy];
   const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
+
+  // ── Theme persistence ──
+  useEffect(() => {
+    const saved = localStorage.getItem('nri-theme') || 'light';
+    setTheme(saved);
+    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
+  }, []);
+
+  function toggleTheme() {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('nri-theme', next);
+    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
+  }
 
   // ── Load cases from Supabase on mount ──
   useEffect(() => {
@@ -387,63 +402,99 @@ export default function Dashboard() {
     setTimeout(() => w.print(), 300);
   }
 
+  /* ═══ Theme toggle button (shared across views) ═══ */
+  const ThemeToggle = () => (
+    <button
+      onClick={toggleTheme}
+      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+      style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+    >
+      {theme === 'dark' ? (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+
   /* ═══ RENDER: HOME ═══ */
   if (view === 'home') return (
-    <div className="min-h-screen bg-[#f5f2ec]">
-      <nav className="bg-[#1a1a1a] px-6 h-12 flex items-center justify-between">
-        <span className="font-serif text-[#C49A3C] font-bold tracking-wide text-sm">NRI TAX SUITE</span>
-        <span className="text-[10px] text-gray-500 border border-gray-700 px-2 py-0.5 rounded">v3 · FY {fy}</span>
+    <div className="min-h-screen bg-theme animate-fade-in">
+      <nav className="bg-theme-nav px-6 h-12 flex items-center justify-between">
+        <span className="font-serif text-theme-accent font-bold tracking-wide text-sm">NRI TAX SUITE</span>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] px-2 py-0.5 rounded" style={{ background:'var(--bg-badge)', color:'var(--text-badge)', border:'1px solid var(--border)' }}>v3 · FY {fy}</span>
+          <ThemeToggle />
+        </div>
       </nav>
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <div className="text-center mb-8">
-          <h1 className="font-serif text-3xl font-bold text-[#1a1a1a]">NRI Tax Suite</h1>
-          <p className="text-gray-500 mt-1 text-sm">AI-Assisted Tax Advisory · Real Deliverables</p>
-          <div className="mt-2"><span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">FY {fy} · AY {cfg.ay} · CII {cfg.cii}</span></div>
+        <div className="text-center mb-8 animate-fade-in-up">
+          <h1 className="font-serif text-3xl font-bold text-theme">NRI Tax Suite</h1>
+          <p className="text-theme-muted mt-1 text-sm">AI-Assisted Tax Advisory · Real Deliverables</p>
+          <div className="mt-2"><span className="px-3 py-1 rounded-full text-xs font-bold" style={{ background:'var(--bg-badge)', color:'var(--text-badge)' }}>FY {fy} · AY {cfg.ay} · CII {cfg.cii}</span></div>
         </div>
-        <div className="grid grid-cols-4 gap-3 mb-6">
-          {[{l:'Total',v:cases.length,c:'text-gray-900'},{l:'Green',v:cases.filter(c=>c.classification==='Green').length,c:'text-green-700'},{l:'Amber',v:cases.filter(c=>c.classification==='Amber').length,c:'text-amber-600'},{l:'Red',v:cases.filter(c=>c.classification==='Red').length,c:'text-red-700'}].map((s,i)=>(
-            <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider">{s.l}</div>
-              <div className={`text-2xl font-bold font-serif ${s.c}`}>{s.v}</div>
+        <div className="grid grid-cols-4 gap-3 mb-6 stagger-children">
+          {[
+            {l:'Total',v:cases.length,sc:'var(--text-primary)'},
+            {l:'Green',v:cases.filter(c=>c.classification==='Green').length,sc:'var(--green)'},
+            {l:'Amber',v:cases.filter(c=>c.classification==='Amber').length,sc:'var(--amber)'},
+            {l:'Red',v:cases.filter(c=>c.classification==='Red').length,sc:'var(--red)'}
+          ].map((s,i)=>(
+            <div key={i} className="card-theme p-4 animate-fade-in-up">
+              <div className="text-[10px] text-theme-muted uppercase tracking-wider">{s.l}</div>
+              <div className="text-2xl font-bold font-serif" style={{ color:s.sc }}>{s.v}</div>
             </div>
           ))}
         </div>
         <div className="flex justify-center gap-3 mb-6">
-          <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="bg-[#C49A3C] text-white px-8 py-2.5 rounded-lg font-semibold text-sm hover:bg-amber-600 transition">+ New NRI Case</button>
-          <select value={fy} onChange={e=>setFy(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+          <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="btn-primary">+ New NRI Case</button>
+          <select value={fy} onChange={e=>setFy(e.target.value)} className="input-theme" style={{ width:'auto', padding:'0.625rem 1rem' }}>
             <option value="2025-26">FY 2025-26</option>
             <option value="2024-25">FY 2024-25</option>
           </select>
         </div>
         {cases.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-theme-muted">
             <div className="text-4xl mb-3 opacity-30">📋</div>
             <p className="font-semibold">No cases yet</p>
             <p className="text-xs mt-1">Click "New NRI Case" to start</p>
           </div>
-        ) : cases.map(c => (
-          <div key={c.id || c.dbId} onClick={()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);}}
-            className="bg-white rounded-lg border border-gray-200 p-4 mb-3 cursor-pointer hover:bg-gray-50 transition flex justify-between items-center">
-            <div>
-              <div className="font-semibold text-sm">{c.name || c.client_name}</div>
-              <div className="text-xs text-gray-400">{c.country} · FY {c.fy}</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:CLS_COLORS[c.classification]+'18',color:CLS_COLORS[c.classification]}}>{c.classification}</span>
-              <button onClick={(e) => {
-                e.stopPropagation();
-                const ref = (c.dbId || c.id?.toString() || '').slice(0, 8).toUpperCase();
-                const url = `${window.location.origin}/portal?ref=${ref}`;
-                navigator.clipboard.writeText(url);
-                alert('Portal link copied!\n' + url);
-              }} className="text-[9px] text-amber-500 hover:text-amber-700 px-1" title="Copy portal link">
-                🔗
-              </button>
-              <span className="text-xs text-gray-400">{c.modulesDone || c.modules_completed || 1}/10</span>
-              <span className="text-gray-300">›</span>
-            </div>
+        ) : (
+          <div className="stagger-children">
+            {cases.map(c => (
+              <div key={c.id || c.dbId} onClick={()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);}}
+                className="bg-theme-card rounded-lg border border-theme p-4 mb-3 cursor-pointer transition animate-fade-in-up flex justify-between items-center"
+                style={{ '--tw-bg-opacity':'1' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-card-hover, var(--bg-secondary))'}
+                onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-card)'}>
+                <div>
+                  <div className="font-semibold text-sm text-theme">{c.name || c.client_name}</div>
+                  <div className="text-xs text-theme-muted">{c.country} · FY {c.fy}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:CLS_COLORS[c.classification]+'18',color:CLS_COLORS[c.classification]}}>{c.classification}</span>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    const ref = (c.dbId || c.id?.toString() || '').slice(0, 8).toUpperCase();
+                    const url = `${window.location.origin}/portal?ref=${ref}`;
+                    navigator.clipboard.writeText(url);
+                    alert('Portal link copied!\n' + url);
+                  }} className="text-[9px] text-theme-accent px-1" title="Copy portal link">
+                    🔗
+                  </button>
+                  <span className="text-xs text-theme-muted">{c.modulesDone || c.modules_completed || 1}/10</span>
+                  <span className="text-theme-muted">›</span>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
@@ -452,31 +503,32 @@ export default function Dashboard() {
   if (view === 'wizard') {
     const titles = ['Quick Start', 'India Connections', 'Income & Transactions', 'Documents', 'Review'];
     return (
-      <div className="min-h-screen bg-[#f5f2ec]">
-        <nav className="bg-[#1a1a1a] px-6 h-12 flex items-center">
-          <span className="font-serif text-[#C49A3C] font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
+      <div className="min-h-screen bg-theme animate-fade-in">
+        <nav className="bg-theme-nav px-6 h-12 flex items-center justify-between">
+          <span className="font-serif text-theme-accent font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
+          <ThemeToggle />
         </nav>
         <div className="max-w-2xl mx-auto py-6 px-4">
           <div className="flex items-center gap-3 mb-4">
-            <button onClick={()=>step>0?setStep(step-1):setView('home')} className="text-gray-400 hover:text-gray-600">‹</button>
-            <div className="flex-1 font-serif text-lg font-bold">{titles[step]}</div>
-            <span className="text-xs text-gray-400">Step {step+1}/5</span>
+            <button onClick={()=>step>0?setStep(step-1):setView('home')} className="text-theme-muted btn-secondary" style={{ padding:'0.25rem 0.5rem', borderRadius:'0.5rem' }}>‹</button>
+            <div className="flex-1 font-serif text-lg font-bold text-theme">{titles[step]}</div>
+            <span className="text-xs text-theme-muted">Step {step+1}/5</span>
           </div>
-          <div className="h-1 bg-gray-200 rounded mb-5"><div className="h-1 bg-[#C49A3C] rounded transition-all" style={{width:`${(step+1)/5*100}%`}} /></div>
+          <div className="h-1 rounded mb-5" style={{ background:'var(--border)' }}><div className="h-1 rounded transition-all" style={{width:`${(step+1)/5*100}%`, background:'var(--accent)'}} /></div>
 
           {/* Step 0 */}
-          {step===0 && <div>
-            <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-4">
-              <div className="flex items-center gap-2 mb-2"><span className="text-amber-500">✨</span><span className="text-xs font-semibold text-amber-700">Describe the situation (AI auto-fill)</span></div>
+          {step===0 && <div className="animate-fade-in-up">
+            <div className="card-theme p-4 mb-4" style={{ borderLeftColor:'var(--accent)', borderLeftWidth:'3px' }}>
+              <div className="flex items-center gap-2 mb-2"><span className="text-theme-accent">✨</span><span className="text-xs font-semibold text-theme-accent">Describe the situation (AI auto-fill)</span></div>
               <textarea value={narr} onChange={e=>setNarr(e.target.value)} rows={3} placeholder="e.g. UK client, 38 days stay, sold Nashik plot ₹68L (bought 2017 ₹22L), Pune flat ₹25K/mo rent, NRO ₹1.4L, FD ₹85K, UK salary GBP 72K, tax paid..."
-                className="w-full p-2.5 border border-amber-200 rounded text-sm resize-y" />
+                className="input-theme" style={{ resize:'vertical' }} />
               <button onClick={doParse} disabled={prs||!narr.trim()}
-                className="mt-2 bg-[#C49A3C] text-white px-4 py-2 rounded text-sm font-semibold disabled:opacity-40">
+                className="btn-primary mt-2" style={{ padding:'0.5rem 1rem' }}>
                 {prs ? 'Reading...' : 'AI Auto-Fill'}
               </button>
             </div>
-            <div className="text-center text-xs text-gray-400 my-3">— or fill manually —</div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
+            <div className="text-center text-xs text-theme-muted my-3">— or fill manually —</div>
+            <div className="card-theme p-5">
               <div className="grid grid-cols-2 gap-3">
                 <Inp l="Name *" v={f.name} ch={v=>u('name',v)} ph="Rajesh Mehta" />
                 <Inp l="Country *"><Sel v={f.country} ch={v=>u('country',v)} o={COUNTRIES} /></Inp>
@@ -485,12 +537,12 @@ export default function Dashboard() {
               </div>
             </div>
             <button onClick={()=>setStep(1)} disabled={!f.name||!f.country}
-              className="w-full mt-3 bg-[#1a1a1a] text-white py-2.5 rounded-lg font-semibold text-sm disabled:opacity-30">Continue →</button>
+              className="w-full mt-3 btn-dark">Continue →</button>
           </div>}
 
           {/* Step 1 */}
-          {step===1 && <div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5">
+          {step===1 && <div className="animate-fade-in-up">
+            <div className="card-theme p-5">
               <div className="grid grid-cols-2 gap-3">
                 <Inp l="Stay days" v={f.stayDays} ch={v=>u('stayDays',v)} ph="38" tip="Approximate OK" />
                 <Inp l="Source"><Sel v={f.staySource} ch={v=>u('staySource',v)} o={['Estimate','Passport','Travel summary']} /></Inp>
@@ -506,30 +558,30 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex gap-2 mt-3">
-              <button onClick={()=>setStep(0)} className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-medium">← Back</button>
-              <button onClick={()=>setStep(2)} className="flex-[2] bg-[#1a1a1a] text-white py-2 rounded-lg text-sm font-semibold">Continue →</button>
+              <button onClick={()=>setStep(0)} className="flex-1 btn-secondary">← Back</button>
+              <button onClick={()=>setStep(2)} className="flex-[2] btn-dark">Continue →</button>
             </div>
           </div>}
 
           {/* Step 2 */}
-          {step===2 && <div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5 mb-3">
-              <div className="text-xs font-semibold mb-2">Indian Income</div>
+          {step===2 && <div className="animate-fade-in-up">
+            <div className="card-theme p-5 mb-3">
+              <div className="text-xs font-semibold mb-2 text-theme">Indian Income</div>
               <div className="grid grid-cols-2 gap-x-4">
                 {[['salary','Salary'],['rent','Rental'],['interest','Interest'],['dividend','Dividends'],['cgShares','CG-Shares'],['cgMF','CG-MF'],['cgESOPRSU','CG-ESOP'],['business','Business']].map(([k,l])=>
                   <Chk key={k} l={l} c={f[k]} ch={v=>u(k,v)} />
                 )}
               </div>
             </div>
-            {(f.rent||f.interest) && <div className="bg-white rounded-lg border border-gray-200 p-5 mb-3">
+            {(f.rent||f.interest) && <div className="card-theme p-5 mb-3">
               {f.rent && <Inp l="Monthly rent ₹" v={f.rentalMonthly} ch={v=>u('rentalMonthly',parseInt(v)||0)} ph="25000" type="number" />}
               {f.interest && <div className="grid grid-cols-2 gap-3 mt-2">
                 <Inp l="NRO int ₹/yr" v={f.nroInterest} ch={v=>u('nroInterest',parseInt(v)||0)} ph="140000" type="number" />
                 <Inp l="FD int ₹/yr" v={f.fdInterest} ch={v=>u('fdInterest',parseInt(v)||0)} ph="85000" type="number" />
               </div>}
             </div>}
-            <div className="bg-white rounded-lg border border-gray-200 p-5 mb-3">
-              <div className="text-xs font-semibold mb-2">Cross-Border</div>
+            <div className="card-theme p-5 mb-3">
+              <div className="text-xs font-semibold mb-2 text-theme">Cross-Border</div>
               <div className="grid grid-cols-2 gap-x-4">
                 <Chk l="Foreign salary" c={f.foreignSalary} ch={v=>u('foreignSalary',v)} />
                 <Chk l="Tax paid abroad" c={f.foreignTaxPaid} ch={v=>u('foreignTaxPaid',v)} />
@@ -537,14 +589,14 @@ export default function Dashboard() {
               {f.foreignSalary && <div className="mt-2"><Inp l="Details" v={f.foreignDetails} ch={v=>u('foreignDetails',v)} ph="UK GBP 72K" wide /></div>}
             </div>
             <div className="flex gap-2 mt-3">
-              <button onClick={()=>setStep(1)} className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-medium">← Back</button>
-              <button onClick={()=>setStep(3)} className="flex-[2] bg-[#1a1a1a] text-white py-2 rounded-lg text-sm font-semibold">Continue →</button>
+              <button onClick={()=>setStep(1)} className="flex-1 btn-secondary">← Back</button>
+              <button onClick={()=>setStep(3)} className="flex-[2] btn-dark">Continue →</button>
             </div>
           </div>}
 
           {/* Step 3 */}
-          {step===3 && <div>
-            <div className="bg-white rounded-lg border border-gray-200 p-5 mb-3">
+          {step===3 && <div className="animate-fade-in-up">
+            <div className="card-theme p-5 mb-3">
               <div className="grid grid-cols-2 gap-3">
                 <Inp l="AIS"><Sel v={f.ais} ch={v=>u('ais',v)} o={['Yes','Not reviewed','No']} /></Inp>
                 <Inp l="26AS"><Sel v={f.f26as} ch={v=>u('f26as',v)} o={['Yes','No']} /></Inp>
@@ -553,36 +605,36 @@ export default function Dashboard() {
                 <Inp l="Service"><Sel v={f.serviceNeed} ch={v=>u('serviceNeed',v)} o={['Filing only','Filing+Advisory','Advisory+Planning']} /></Inp>
                 <Inp l="Regime"><Sel v={f.taxRegime} ch={v=>u('taxRegime',v)} o={['New (default)','Old','Help decide']} /></Inp>
               </div>
-              <div className="mt-3"><Inp l="Notes" wide><textarea value={f.notes||''} onChange={e=>u('notes',e.target.value)} rows={2} className="w-full p-2 border border-gray-300 rounded text-sm resize-y" /></Inp></div>
+              <div className="mt-3"><Inp l="Notes" wide><textarea value={f.notes||''} onChange={e=>u('notes',e.target.value)} rows={2} className="input-theme" style={{ resize:'vertical' }} /></Inp></div>
             </div>
             <div className="flex gap-2 mt-3">
-              <button onClick={()=>setStep(2)} className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-medium">← Back</button>
-              <button onClick={()=>setStep(4)} className="flex-[2] bg-[#1a1a1a] text-white py-2 rounded-lg text-sm font-semibold">Review →</button>
+              <button onClick={()=>setStep(2)} className="flex-1 btn-secondary">← Back</button>
+              <button onClick={()=>setStep(4)} className="flex-[2] btn-dark">Review →</button>
             </div>
           </div>}
 
           {/* Step 4: Review */}
-          {step===4 && <div>
+          {step===4 && <div className="animate-fade-in-up">
             <div className="rounded-lg p-4 mb-3 border" style={{background:CLS_COLORS[classifyCase(f)]+'08',borderColor:CLS_COLORS[classifyCase(f)]+'40'}}>
               <div className="flex justify-between items-center">
-                <div className="font-bold text-sm">AI Classification</div>
+                <div className="font-bold text-sm text-theme">AI Classification</div>
                 <span className="font-bold text-sm px-4 py-1 rounded-full" style={{background:CLS_COLORS[classifyCase(f)]+'20',color:CLS_COLORS[classifyCase(f)]}}>{classifyCase(f)}</span>
               </div>
             </div>
-            {cgData && <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
-              <div className="text-xs font-bold text-green-700">CG Preview: Option {cgData.better} saves {formatINR(cgData.savings)}</div>
-              <div className="text-[10px] text-green-600">A: {formatINR(cgData.optionA.total)} · B: {formatINR(cgData.optionB.total)}</div>
+            {cgData && <div className="rounded-lg p-3 mb-3" style={{ background:'color-mix(in srgb, var(--green) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--green) 30%, transparent)' }}>
+              <div className="text-xs font-bold" style={{ color:'var(--green)' }}>CG Preview: Option {cgData.better} saves {formatINR(cgData.savings)}</div>
+              <div className="text-[10px]" style={{ color:'var(--green)', opacity:0.8 }}>A: {formatINR(cgData.optionA.total)} · B: {formatINR(cgData.optionB.total)}</div>
             </div>}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 mb-3">
+            <div className="card-theme p-4 mb-3">
               <div className="grid grid-cols-2 gap-1 text-xs">
                 {[['Client',f.name],['Country',f.country],['FY',fy],['Stay','~'+f.stayDays+'d'],['Service',f.serviceNeed],['Assets',f.indianAssets]].filter(([,v])=>v).map(([l,v],i)=>
-                  <div key={i}><span className="text-gray-400">{l}:</span> <strong>{v}</strong></div>
+                  <div key={i} className="text-theme-secondary"><span className="text-theme-muted">{l}:</span> <strong className="text-theme">{v}</strong></div>
                 )}
               </div>
             </div>
             <div className="flex gap-2 mt-3">
-              <button onClick={()=>setStep(3)} className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-medium">← Back</button>
-              <button onClick={startCase} className="flex-[2] bg-[#C49A3C] text-white py-2.5 rounded-lg text-sm font-bold">Start Workflow →</button>
+              <button onClick={()=>setStep(3)} className="flex-1 btn-secondary">← Back</button>
+              <button onClick={startCase} className="flex-[2] btn-primary font-bold">Start Workflow →</button>
             </div>
           </div>}
         </div>
@@ -595,21 +647,22 @@ export default function Dashboard() {
   const modOut = outs[mod?.id];
 
   return (
-    <div className="h-screen flex flex-col bg-[#f5f2ec]">
-      <nav className="bg-[#1a1a1a] px-5 h-11 flex items-center justify-between flex-shrink-0">
-        <span className="font-serif text-[#C49A3C] font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
-        <div className="flex gap-1">
-          <button onClick={()=>setView('home')} className="text-[10px] text-gray-500 border border-gray-600 px-2 py-0.5 rounded hover:text-white">Home</button>
-          <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="text-[10px] text-amber-400 border border-amber-800 px-2 py-0.5 rounded hover:text-amber-200">+ New</button>
+    <div className="h-screen flex flex-col bg-theme animate-fade-in">
+      <nav className="bg-theme-nav px-5 h-11 flex items-center justify-between flex-shrink-0">
+        <span className="font-serif text-theme-accent font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
+        <div className="flex gap-1 items-center">
+          <button onClick={()=>setView('home')} className="text-[10px] px-2 py-0.5 rounded text-theme-on-dark" style={{ border:'1px solid var(--border)' }}>Home</button>
+          <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="text-[10px] text-theme-accent px-2 py-0.5 rounded" style={{ border:'1px solid var(--accent)' }}>+ New</button>
+          <ThemeToggle />
         </div>
       </nav>
 
       <div className="flex flex-1 overflow-hidden">
         {/* SIDEBAR */}
-        <div className="w-52 border-r border-gray-200 bg-[#faf8f4] overflow-y-auto flex-shrink-0">
-          <div className="p-3 border-b border-gray-200">
-            <div className="font-bold text-xs">{ac?.name}</div>
-            <div className="text-[10px] text-gray-400">{ac?.country} · FY {fy}</div>
+        <div className="w-52 border-r border-theme overflow-y-auto flex-shrink-0" style={{ background:'var(--bg-secondary)' }}>
+          <div className="p-3 border-b border-theme">
+            <div className="font-bold text-xs text-theme">{ac?.name}</div>
+            <div className="text-[10px] text-theme-muted">{ac?.country} · FY {fy}</div>
             <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{background:CLS_COLORS[ac?.classification]+'20',color:CLS_COLORS[ac?.classification]}}>{ac?.classification}</span>
             <div className="mt-2">
               <select value={ac?.status || 'intake'}
@@ -622,7 +675,7 @@ export default function Dashboard() {
                     } catch(e) {}
                   }
                 }}
-                className="w-full text-[10px] px-2 py-1 border border-gray-200 rounded bg-white">
+                className="input-theme text-xs py-1">
                 <option value="intake">1. Intake Received</option>
                 <option value="in_progress">2. Analysis Running</option>
                 <option value="review">3. Under Review</option>
@@ -637,37 +690,46 @@ export default function Dashboard() {
               const url = `${window.location.origin}/portal?ref=${ref}`;
               navigator.clipboard.writeText(url);
               alert('Portal link copied! Share with client:\n' + url);
-            }} className="w-full mt-1 text-[9px] bg-amber-50 border border-amber-200 text-amber-700 px-2 py-1 rounded hover:bg-amber-100 transition">
+            }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
               Copy Client Portal Link
             </button>
           </div>
 
           <div className="py-1">
-            <div className="px-3 py-1 text-[9px] font-bold text-gray-400 uppercase tracking-wider">Modules</div>
+            <div className="px-3 py-1 text-[9px] font-bold text-theme-muted uppercase tracking-wider">Modules</div>
             {MODS.map((m, i) => {
               const done = !!outs[m.id];
               const active = i === mi && !dv;
               return (
                 <div key={m.id} onClick={()=>{setMi(i);setDv(null);}}
-                  className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-xs transition ${active ? 'bg-white font-semibold text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
-                  style={{ borderLeft: active ? `3px solid ${m.c}` : '3px solid transparent' }}>
+                  className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-xs transition ${active ? 'font-semibold' : ''}`}
+                  style={{
+                    borderLeft: active ? `3px solid ${m.c}` : '3px solid transparent',
+                    background: active ? 'var(--bg-card)' : 'transparent',
+                    color: active ? 'var(--text-primary)' : 'var(--text-muted)'
+                  }}>
                   <span className={done ? '' : 'opacity-30'}>{done ? '✓' : m.ic}</span>
                   <span>{m.l}</span>
-                  {m.cp && !done && <span className="text-amber-500 text-[8px]">⚠</span>}
+                  {m.cp && !done && <span className="text-theme-accent text-[8px]">⚠</span>}
                 </div>
               );
             })}
           </div>
 
-          <div className="py-1 border-t border-gray-200">
-            <div className="px-3 py-1 text-[9px] font-bold text-amber-500 uppercase tracking-wider">Deliverables</div>
+          <div className="py-1 border-t border-theme">
+            <div className="px-3 py-1 text-[9px] font-bold text-theme-accent uppercase tracking-wider">Deliverables</div>
             {DELS.map(d => {
               const ready = d.n.every(n => !!outs[n]);
               const active = dv === d.id;
               return (
                 <div key={d.id} onClick={()=>ready && setDv(d.id)}
-                  className={`flex items-center gap-2 px-3 py-1.5 text-xs transition ${active ? 'bg-white font-semibold text-gray-900' : ready ? 'text-gray-500 cursor-pointer hover:text-gray-700' : 'text-gray-300 cursor-default'}`}
-                  style={{ borderLeft: active ? '3px solid #C49A3C' : '3px solid transparent' }}>
+                  className={`flex items-center gap-2 px-3 py-1.5 text-xs transition ${!ready ? 'cursor-default' : 'cursor-pointer'}`}
+                  style={{
+                    borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
+                    background: active ? 'var(--bg-card)' : 'transparent',
+                    color: active ? 'var(--text-primary)' : ready ? 'var(--text-muted)' : 'var(--border)',
+                    fontWeight: active ? 600 : 400
+                  }}>
                   <span>{ready ? '📄' : '○'}</span>
                   <span>{d.l}</span>
                 </div>
@@ -677,142 +739,151 @@ export default function Dashboard() {
         </div>
 
         {/* MAIN CONTENT */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 overflow-y-auto p-5 bg-theme">
           {/* DELIVERABLE VIEW */}
           {dv ? (
-            <div>
+            <div className="animate-fade-in">
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <div className="font-serif text-base font-bold">{DELS.find(d=>d.id===dv)?.l}</div>
-                  <div className="text-[10px] text-gray-400">{DELS.find(d=>d.id===dv)?.d}</div>
+                  <div className="font-serif text-base font-bold text-theme">{DELS.find(d=>d.id===dv)?.l}</div>
+                  <div className="text-[10px] text-theme-muted">{DELS.find(d=>d.id===dv)?.d}</div>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={()=>handleDownload(DELS.find(d=>d.id===dv)?.apiType)} disabled={dlLd}
-                    className="flex items-center gap-1 px-3 py-1.5 border border-amber-400 text-amber-600 rounded text-xs font-semibold hover:bg-amber-50 disabled:opacity-40">
+                    className="btn-primary flex items-center gap-1 text-xs" style={{ padding:'0.375rem 0.75rem' }}>
                     {dlLd ? '...' : '⬇'} Download DOCX
                   </button>
-                  <button onClick={doPrint} className="flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded text-xs font-medium hover:bg-gray-50">
+                  <button onClick={doPrint} className="btn-secondary flex items-center gap-1 text-xs" style={{ padding:'0.375rem 0.75rem' }}>
                     🖨 Print
                   </button>
-                  <button onClick={()=>setDv(null)} className="px-2 py-1 text-gray-400 hover:text-gray-600">✕</button>
+                  <button onClick={()=>setDv(null)} className="text-theme-muted px-2 py-1" style={{ transition:'color 0.2s' }}>✕</button>
                 </div>
               </div>
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="card-theme p-6">
                 <div ref={printRef}>
                   {dv === 'cg_sheet' && <CGPreview f={f} fy={fy} cg={cgData} />}
                   {dv === 'memo_doc' && <MemoPreview f={f} fy={fy} cg={cgData} />}
                   {dv === 'position' && <div>
-                    <div className="text-sm font-bold text-amber-600">MKW ADVISORS</div>
-                    <div className="border-b-2 border-amber-500 my-3" />
-                    <div className="font-serif text-xl font-bold">Tax Position Report</div>
-                    <div className="text-xs text-gray-400 mb-4">{f.name} · FY {fy} · {classifyCase(f)}</div>
-                    <h3 className="font-serif font-bold text-sm mt-4">Residency</h3>
-                    <p className="text-xs"><strong>Non-Resident (High Confidence)</strong> — ~{f.stayDays}d stay, overseas employment.</p>
-                    <div className="bg-red-50 border border-red-200 rounded p-2 my-2 text-xs font-bold text-red-700">₹12L 87A rebate does NOT apply to NRIs.</div>
-                    <h3 className="font-serif font-bold text-sm mt-4">Income</h3>
-                    <table className="w-full border-collapse my-2 text-xs"><thead><tr><th className="bg-gray-200 p-1.5 border border-gray-300">Head</th><th className="bg-gray-200 p-1.5 border border-gray-300">Amount</th><th className="bg-gray-200 p-1.5 border border-gray-300">Tax</th></tr></thead><tbody>
-                      {f.rent && <tr><td className="p-1.5 border border-gray-300">Rental</td><td className="p-1.5 border border-gray-300 text-right">{formatINR(f.rentalMonthly?f.rentalMonthly*12:0)}</td><td className="p-1.5 border border-gray-300">Taxable</td></tr>}
-                      {f.propertySale && <tr><td className="p-1.5 border border-gray-300">CG — Property</td><td className="p-1.5 border border-gray-300 text-right">{formatINR(f.salePrice||0)}</td><td className="p-1.5 border border-gray-300">LTCG dual</td></tr>}
-                      {f.nroInterest && <tr><td className="p-1.5 border border-gray-300">NRO Interest</td><td className="p-1.5 border border-gray-300 text-right">{formatINR(f.nroInterest)}</td><td className="p-1.5 border border-gray-300">Taxable</td></tr>}
-                      {f.foreignSalary && <tr><td className="p-1.5 border border-gray-300">Foreign Salary</td><td className="p-1.5 border border-gray-300 text-right">—</td><td className="p-1.5 border border-gray-300">Not taxable (NR)</td></tr>}
+                    <div className="text-sm font-bold text-theme-accent">MKW ADVISORS</div>
+                    <div className="my-3" style={{ borderBottom:'2px solid var(--accent)' }} />
+                    <div className="font-serif text-xl font-bold text-theme">Tax Position Report</div>
+                    <div className="text-xs text-theme-muted mb-4">{f.name} · FY {fy} · {classifyCase(f)}</div>
+                    <h3 className="font-serif font-bold text-sm mt-4 text-theme">Residency</h3>
+                    <p className="text-xs text-theme-secondary"><strong>Non-Resident (High Confidence)</strong> — ~{f.stayDays}d stay, overseas employment.</p>
+                    <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--red) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)', color:'var(--red)' }}>₹12L 87A rebate does NOT apply to NRIs.</div>
+                    <h3 className="font-serif font-bold text-sm mt-4 text-theme">Income</h3>
+                    <table className="w-full border-collapse my-2 text-xs"><thead><tr><th className="p-1.5" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>Head</th><th className="p-1.5" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>Amount</th><th className="p-1.5" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>Tax</th></tr></thead><tbody>
+                      {f.rent && <tr><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>Rental</td><td className="p-1.5 text-right" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{formatINR(f.rentalMonthly?f.rentalMonthly*12:0)}</td><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>Taxable</td></tr>}
+                      {f.propertySale && <tr><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>CG — Property</td><td className="p-1.5 text-right" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{formatINR(f.salePrice||0)}</td><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>LTCG dual</td></tr>}
+                      {f.nroInterest && <tr><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>NRO Interest</td><td className="p-1.5 text-right" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{formatINR(f.nroInterest)}</td><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>Taxable</td></tr>}
+                      {f.foreignSalary && <tr><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>Foreign Salary</td><td className="p-1.5 text-right" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>—</td><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>Not taxable (NR)</td></tr>}
                     </tbody></table>
-                    <h3 className="font-serif font-bold text-sm mt-4">Approach</h3>
-                    <p className="text-xs">Form: <strong>ITR-2</strong> · Regime: New · Schedules: CG, HP, OS, TDS</p>
+                    <h3 className="font-serif font-bold text-sm mt-4 text-theme">Approach</h3>
+                    <p className="text-xs text-theme-secondary">Form: <strong>ITR-2</strong> · Regime: New · Schedules: CG, HP, OS, TDS</p>
                   </div>}
                   {dv === 'quote' && <div>
-                    <div className="text-sm font-bold text-amber-600">MKW ADVISORS</div>
-                    <div className="border-b-2 border-amber-500 my-3" />
-                    <div className="font-serif text-xl font-bold">Engagement Quote</div>
-                    <div className="text-xs text-gray-400 mb-4">{f.name} · FY {fy}</div>
+                    <div className="text-sm font-bold text-theme-accent">MKW ADVISORS</div>
+                    <div className="my-3" style={{ borderBottom:'2px solid var(--accent)' }} />
+                    <div className="font-serif text-xl font-bold text-theme">Engagement Quote</div>
+                    <div className="text-xs text-theme-muted mb-4">{f.name} · FY {fy}</div>
                     <table className="w-full border-collapse my-2 text-xs"><tbody>
                       {[['Classification',classifyCase(f)],['Tier',classifyCase(f)==='Green'?'T2 Advisory (₹18-30K)':'T3 Premium (₹35-75K)'],['Turnaround',(classifyCase(f)==='Green'?'5-7':'8-12')+' business days']].map(([l,v],i)=>
-                        <tr key={i}><td className="p-1.5 border border-gray-300 font-bold bg-gray-100">{l}</td><td className="p-1.5 border border-gray-300">{v}</td></tr>
+                        <tr key={i}><td className="p-1.5 font-bold" style={{ border:'1px solid var(--border)', background:'var(--bg-secondary)' }}>{l}</td><td className="p-1.5" style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{v}</td></tr>
                       )}
                     </tbody></table>
-                    <h3 className="font-serif font-bold text-sm mt-4">Included</h3>
-                    <ol className="text-xs list-decimal pl-5 leading-relaxed">
+                    <h3 className="font-serif font-bold text-sm mt-4 text-theme">Included</h3>
+                    <ol className="text-xs list-decimal pl-5 leading-relaxed text-theme-secondary">
                       <li>Residency review</li><li>Income classification</li><li>AIS/26AS reconciliation</li>
                       {f.propertySale && <li>CG dual computation + Section 54 planning</li>}
                       {f.foreignTaxPaid && <li>DTAA/FTC review</li>}
                       <li>Pre-filing review</li><li>Return filing</li><li>Advisory Memo</li>
                     </ol>
-                    <h3 className="font-serif font-bold text-sm mt-4">Excluded</h3>
-                    <ul className="text-xs list-disc pl-5"><li>Notice representation</li><li>Multi-year filing</li><li>Foreign tax return</li></ul>
+                    <h3 className="font-serif font-bold text-sm mt-4 text-theme">Excluded</h3>
+                    <ul className="text-xs list-disc pl-5 text-theme-secondary"><li>Notice representation</li><li>Multi-year filing</li><li>Foreign tax return</li></ul>
+                  </div>}
+                  {dv === 'total_income' && <div>
+                    <div className="text-sm font-bold text-theme-accent">MKW ADVISORS</div>
+                    <div className="my-3" style={{ borderBottom:'2px solid var(--accent)' }} />
+                    <div className="font-serif text-xl font-bold text-theme">Computation of Total Income</div>
+                    <div className="text-xs text-theme-muted mb-4">{f.name} · FY {fy}</div>
+                    <p className="text-xs text-theme-secondary">Awaiting module outputs to generate formal computation.</p>
                   </div>}
                 </div>
               </div>
             </div>
           ) : (
             /* MODULE VIEW */
-            <div>
+            <div className="animate-fade-in">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{mod.ic}</span>
                   <div>
-                    <div className="font-serif text-base font-bold">Step {mi+1}: {mod.l}</div>
-                    <div className="text-[10px] text-gray-400">{mod.id==='intake'?'From form':modOut?'Done':'Ready'}</div>
+                    <div className="font-serif text-base font-bold text-theme">Step {mi+1}: {mod.l}</div>
+                    <div className="text-[10px] text-theme-muted">{mod.id==='intake'?'From form':modOut?'Done':'Ready'}</div>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   {!modOut && mod.id !== 'intake' && (
                     <button onClick={()=>runMod(mi)} disabled={ld}
-                      className="px-4 py-2 text-white rounded-lg text-xs font-semibold disabled:opacity-40"
-                      style={{ background: mod.c }}>
+                      className="btn-primary text-xs" style={{ padding:'0.5rem 1rem' }}>
                       {ld ? 'Analyzing...' : 'Run ' + mod.l}
                     </button>
                   )}
                   {modOut && mi < 9 && (
                     <button onClick={()=>{setMi(mi+1);setDv(null);}}
-                      className="px-4 py-2 bg-[#1a1a1a] text-white rounded-lg text-xs font-semibold">Next →</button>
+                      className="btn-dark text-xs" style={{ padding:'0.5rem 1rem' }}>Next →</button>
                   )}
                 </div>
               </div>
 
               {/* Human checkpoint warning */}
               {mod.cp && !modOut && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3 text-xs text-amber-700 flex items-center gap-2">
+                <div className="rounded-lg p-3 mb-3 text-xs flex items-center gap-2" style={{ background:'color-mix(in srgb, var(--amber) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--amber) 30%, transparent)', color:'var(--amber)' }}>
                   <span>⚠</span> Human checkpoint — {mod.cp}
                 </div>
               )}
 
               {/* Loading */}
               {ld && (
-                <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+                <div className="card-theme p-12 text-center">
                   <div className="text-2xl animate-pulse">🔄</div>
-                  <div className="font-semibold mt-3 text-sm">Running {mod.l}...</div>
-                  <div className="text-[10px] text-gray-400">FY {fy} · CII {cfg.cii}</div>
+                  <div className="font-semibold mt-3 text-sm text-theme-accent">Running {mod.l}...</div>
+                  <div className="text-[10px] text-theme-muted">FY {fy} · CII {cfg.cii}</div>
                 </div>
               )}
 
               {/* Output */}
               {modOut && !ld && (
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <div className="text-xs leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMd(modOut) }} />
+                <div className="card-theme p-5">
+                  <div className="text-xs leading-relaxed text-theme-secondary" dangerouslySetInnerHTML={{ __html: renderMd(modOut) }} />
                 </div>
               )}
 
               {/* Empty state */}
               {!modOut && !ld && mod.id !== 'intake' && (
-                <div className="bg-white rounded-lg border border-dashed border-gray-300 p-12 text-center">
+                <div className="bg-theme-card rounded-lg p-12 text-center" style={{ border:'1px dashed var(--border)' }}>
                   <div className="text-3xl opacity-20 mb-2">{mod.ic}</div>
-                  <div className="font-semibold text-gray-400 text-sm">Click "Run {mod.l}" to execute</div>
+                  <div className="font-semibold text-theme-muted text-sm">Click "Run {mod.l}" to execute</div>
                 </div>
               )}
 
               {/* Deliverable cards */}
               {modOut && !ld && DELS.filter(d => d.n.includes(mod.id) && d.n.every(n => !!outs[n])).map(d => (
                 <div key={d.id} onClick={()=>setDv(d.id)}
-                  className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-3 cursor-pointer hover:bg-amber-100 transition flex justify-between items-center">
+                  className="rounded-lg p-4 mt-3 cursor-pointer transition flex justify-between items-center"
+                  style={{ background:'color-mix(in srgb, var(--accent) 8%, var(--bg-card))', border:'1px solid color-mix(in srgb, var(--accent) 25%, transparent)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'color-mix(in srgb, var(--accent) 14%, var(--bg-card))'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'color-mix(in srgb, var(--accent) 8%, var(--bg-card))'}>
                   <div>
-                    <div className="font-semibold text-xs text-amber-700">{d.l} — Ready</div>
-                    <div className="text-[10px] text-amber-500">{d.d}</div>
+                    <div className="font-semibold text-xs text-theme-accent">{d.l} — Ready</div>
+                    <div className="text-[10px] text-theme-muted">{d.d}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={e=>{e.stopPropagation();handleDownload(d.apiType);}}
-                      className="text-[10px] border border-amber-300 text-amber-600 px-2 py-1 rounded hover:bg-amber-200">
+                      className="text-[10px] px-2 py-1 rounded text-theme-accent" style={{ border:'1px solid color-mix(in srgb, var(--accent) 40%, transparent)' }}>
                       ⬇ DOCX
                     </button>
-                    <span className="text-amber-400">›</span>
+                    <span className="text-theme-accent">›</span>
                   </div>
                 </div>
               ))}
