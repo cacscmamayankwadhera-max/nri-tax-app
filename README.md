@@ -1,212 +1,314 @@
-# NRI Tax Suite — Complete Production Setup Guide
+# NRI Tax Suite
 
-## What This Is
+**AI-Assisted NRI Tax Filing, Advisory & Compliance Platform**
 
-A production-ready NRI tax filing, advisory, and compliance platform powered by AI. It takes client intake through a smart wizard, runs 10 analysis modules using Claude, performs real tax computations (capital gains dual-option, house property, etc.), and generates downloadable professional DOCX deliverables.
+A complete product for serving Non-Resident Indian taxpayers — from the moment a client lands on your website to the final advisory memo in their inbox. Built with Next.js, Claude AI, Supabase, and docx-js.
+
+---
+
+## What This Product Does
+
+Two sides, one connected system:
+
+### Client Side (what your NRI clients see)
+- A professional **landing page** with pricing, services, and "Start Filing" button
+- A **5-step smart wizard** where clients describe their situation in plain English — AI fills the form
+- An instant **tax diagnostic** showing case complexity (Green/Amber/Red) and capital gains savings preview
+- Contact buttons to engage your firm
+
+### Team Side (what you and your team use)
+- **Login/signup** with role-based access (Admin, Partner, Senior, Preparer)
+- **Case dashboard** showing all submitted cases with classification, progress, and status
+- **10 AI analysis modules** — auto-run on submission, or run manually one by one
+- **4 downloadable DOCX deliverables** — real branded documents with actual tax computations
+- Human checkpoint system at critical review stages
+
+---
+
+## The Complete Flow
+
+```
+NRI CLIENT JOURNEY                           YOUR TEAM JOURNEY
+═══════════════════                          ═══════════════════
+
+1. Client finds you
+   (Google, referral, WhatsApp)
+
+2. Opens yourdomain.com
+   Sees landing page with
+   pricing and services
+
+3. Clicks "Start Filing"
+   → /client wizard opens
+   → Types situation in plain English
+   → AI auto-fills the form
+   → Walks through 5 steps
+
+4. Submits intake
+   → Sees instant diagnostic:
+   "Amber — Option B saves ₹1,83,836"
+   → Clicks "Email Us" or "WhatsApp"
+
+5. Case saved to database ──────────────────→ 6. You log into /dashboard
+   Auto-run pipeline starts ─────────────────→    See new case appear
+   (all 9 AI modules run                         Classification: Amber
+    automatically in background)                  All modules: DONE
+
+                                              7. Review AI analysis
+                                                 All 9 modules already
+                                                 completed by auto-run.
+                                                 Review & approve results.
+                                                 (Or re-run any module
+                                                  manually if needed)
+
+                                              8. Generate deliverables
+                                                 Click "Download DOCX" →
+                                                 Real Word doc downloads
+
+9. Client receives:                          ← 9. You email/share:
+   - Advisory Memo                              - Advisory Memo
+   - CG Computation Sheet                       - CG Computation Sheet
+   - Engagement Quote                            - Engagement Quote
+   - Tax Position Report                         - Tax Position Report
+
+10. Client pays, you file                     10. File return on portal
+    the return, done.                             Mark case as filed
+```
+
+---
+
+## Pages
+
+| URL | Who sees it | Login needed | What it does |
+|-----|------------|--------------|-------------|
+| `/` | Everyone | No | Landing page — services, pricing, how-it-works, CTAs |
+| `/client` | NRI clients | No | 5-step intake wizard with AI auto-fill |
+| `/client` (after submit) | NRI clients | No | Diagnostic result — classification, CG preview, contact buttons |
+| `/login` | Team | No | Email + password login |
+| `/signup` | Team | No | Create team account with role selection |
+| `/dashboard` | Team | Yes | Full case management, AI modules, DOCX downloads |
+
+---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────┐
-│  FRONTEND (Next.js + Tailwind)                  │
-│  Smart Wizard → Module Runner → Deliverables    │
-├─────────────────────────────────────────────────┤
-│  API ROUTES (Next.js Server)                    │
-│  /api/ai       → Claude Anthropic SDK           │
-│  /api/ai/parse → Narrative-to-structured data   │
-│  /api/deliverables → DOCX generation (docx-js)  │
-├─────────────────────────────────────────────────┤
-│  DATABASE (Supabase)                            │
-│  cases, module_outputs, deliverables, profiles  │
-├─────────────────────────────────────────────────┤
-│  COMPUTATION ENGINE (lib/compute.js)            │
-│  CG dual computation, HP computation, CII table │
-├─────────────────────────────────────────────────┤
-│  SKILL MODULES (lib/skills.js)                  │
-│  10 FY-aware system prompts for AI modules      │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│  CLIENT PAGES (public, no auth)                              │
+│  /              Landing page with marketing + CTAs           │
+│  /client        Smart wizard → diagnostic → contact          │
+├──────────────────────────────────────────────────────────────┤
+│  TEAM PAGES (auth required)                                  │
+│  /login         Email + password authentication              │
+│  /signup        Team account creation with roles             │
+│  /dashboard     Case management + AI modules + deliverables  │
+├──────────────────────────────────────────────────────────────┤
+│  AUTH MIDDLEWARE (middleware.js)                              │
+│  Protects /dashboard — redirects to /login if no session     │
+├──────────────────────────────────────────────────────────────┤
+│  API ROUTES (server-side)                                    │
+│  /api/ai             Run any of 10 AI skill modules          │
+│  /api/ai/parse       Narrative → structured data (AI)        │
+│  /api/deliverables   Generate DOCX with real computations    │
+│  /api/cases/public   Save client intake (no auth needed)     │
+│  /api/auto-run       Chain all 9 modules automatically       │
+├──────────────────────────────────────────────────────────────┤
+│  COMPUTATION ENGINE (lib/compute.js)                         │
+│  CII table (2001-2026) · Dual CG computation · HP calc      │
+│  Case classification · Currency formatting                   │
+├──────────────────────────────────────────────────────────────┤
+│  SKILL MODULES (lib/skills.js)                               │
+│  10 FY-aware system prompts for Claude AI                    │
+│  Context builder that chains all module outputs              │
+├──────────────────────────────────────────────────────────────┤
+│  DATABASE (Supabase PostgreSQL)                              │
+│  cases · module_outputs · deliverables · profiles            │
+│  Row-level security · Team role policies                     │
+├──────────────────────────────────────────────────────────────┤
+│  SKILL PACK (skills/)                                        │
+│  10 reference modules + 4 support assets                     │
+│  The complete NRI tax advisory knowledge base                │
+└──────────────────────────────────────────────────────────────┘
 ```
+
+---
 
 ## Tech Stack
 
-- **Frontend:** Next.js 14, React 18, Tailwind CSS, Lucide icons
-- **Backend:** Next.js API Routes (serverless)
-- **AI:** Anthropic Claude Sonnet 4 via official SDK
-- **Database:** Supabase (PostgreSQL + Auth + Storage)
-- **Documents:** docx-js for DOCX generation
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **AI:** Anthropic Claude Sonnet 4 (via official SDK, server-side)
+- **Database:** Supabase (PostgreSQL + Auth + Row Level Security + Storage)
+- **Documents:** docx-js (server-side DOCX generation)
+- **Icons:** Lucide React
 - **Deployment:** Vercel (recommended) or any Node.js host
+
+---
+
+## AI Modules (10 Total)
+
+| # | Module | What it does | Deliverable it feeds |
+|---|--------|-------------|---------------------|
+| 1 | Case Intake | Classifies case Green/Amber/Red, generates document list | — |
+| 2 | Residency Analyzer | Determines NR/RNOR/Resident view with confidence level | Tax Position Report |
+| 3 | Income Source Mapper | Maps income into tax heads, flags complexity | Tax Position Report |
+| 4 | Pricing & Scope | Assigns service tier (T1-T4) and pricing band (A-D) | Engagement Quote |
+| 5 | AIS/26AS Reconciliation | Compares taxpayer data with department records | — |
+| 6 | ITR Form Selector | Identifies return form and schedules needed | — |
+| 7 | Capital Gains Analyzer | Dual computation (20% indexed vs 12.5% flat) | CG Computation Sheet |
+| 8 | DTAA/FTC Spotter | Flags treaty issues, addresses FTC misconceptions | Advisory Memo |
+| 9 | Pre-Filing Review | Final readiness gate (Ready/Conditional/Not Ready) | — |
+| 10 | Advisory Memo | Generates client-ready memo with all findings | Advisory Memo |
+
+### Auto-Run Pipeline
+When a client submits their intake on `/client`, the system automatically runs all 9 AI modules (skipping intake) in sequence via `/api/auto-run`. Each module receives context from all prior modules. Results are saved to Supabase progressively. Case status moves from `intake` → `in_progress` → `review`. By the time your team opens the case, analysis is already complete.
+
+### Human Checkpoints
+Module 5 (Reconciliation) and Module 9 (Pre-Filing) have **mandatory human review markers**. The AI runs the analysis, but a senior reviewer must validate before proceeding.
+
+---
+
+## Deliverables (4 Downloadable DOCX)
+
+| Document | Contains | When available |
+|----------|---------|---------------|
+| **CG Computation Sheet** | Transaction details table, Option A (20% indexed) full computation, Option B (12.5% flat) full computation, comparison with recommendation, Section 54/54EC planning with tax-saved amounts, TDS position, net tax summary with 3 scenarios | After Module 7 |
+| **Client Advisory Memo** | Facts, assumptions, key issues (numbered), CG dual comparison embedded, FTC clarification, rental computation, risk flags, numbered action items | After Module 10 |
+| **Tax Position Report** | Client profile, residency assessment, income summary table, key issues, recommended approach | After Modules 3+4 |
+| **Engagement Quote** | Service tier, fee band, turnaround, scope inclusions/exclusions, deliverables list | After Module 4 |
+
+All documents generate with **MKW Advisors branding**, professional formatting, tables with real computed numbers, and a legal disclaimer.
+
+---
+
+## FY 2025-26 Compliance
+
+The system is built for FY 2025-26 (AY 2026-27) with these rules baked in:
+
+| Parameter | Value |
+|-----------|-------|
+| Cost Inflation Index | 376 |
+| Default tax regime | New (Section 115BAC) |
+| Basic exemption (new regime) | ₹4,00,000 |
+| Section 87A rebate | ₹60,000 (residents only — **NRIs do NOT get this**) |
+| LTCG property (pre July 23, 2024) | Taxpayer chooses: 20% with indexation OR 12.5% without |
+| LTCG property (post July 23, 2024) | 12.5% flat, no indexation |
+| LTCG listed equity | 12.5% above ₹1.25L |
+| NRI asset disclosure | Required if Indian assets exceed ₹1 Crore |
+| ITR-1/ITR-2 due date | 31 July 2026 |
+| Standard deduction (salaried) | ₹75,000 |
+
+Also supports FY 2024-25 (AY 2025-26) via year selector.
 
 ---
 
 ## Local Setup — Step by Step
 
-### Prerequisites
+### What you need first
 
-- Node.js 18+ (check: `node --version`)
-- npm or yarn
-- Git
-- A Supabase account (free tier works)
-- An Anthropic API key
+1. **Node.js** — go to nodejs.org, download LTS, install
+2. **Supabase account** — go to supabase.com, sign up free
+3. **Anthropic API key** — go to console.anthropic.com, create key, add $5 credits
 
-### Step 1: Clone or Extract the Project
+### Setup commands
 
-If you downloaded the zip:
 ```bash
-unzip nri-tax-app.zip
+# 1. Extract and enter project
+unzip nri-tax-app-complete.zip
 cd nri-tax-app
-```
 
-Or if starting from git:
-```bash
-git clone https://github.com/YOUR_USERNAME/nri-tax-suite.git
-cd nri-tax-suite
-```
-
-### Step 2: Install Dependencies
-
-```bash
+# 2. Install packages
 npm install
-```
 
-### Step 3: Set Up Supabase
-
-1. Go to [supabase.com](https://supabase.com) → New Project
-2. Name: `nri-tax-suite`
-3. Set a database password (save it)
-4. Region: Mumbai (ap-south-1) for lowest latency
-5. Wait for project to provision (~2 minutes)
-
-Once ready:
-6. Go to **SQL Editor** in the Supabase dashboard
-7. Copy the entire contents of `supabase/schema.sql`
-8. Paste and click **Run**
-9. You should see all tables created successfully
-
-Get your keys:
-10. Go to **Settings → API**
-11. Copy: `Project URL` → this is your SUPABASE_URL
-12. Copy: `anon/public` key → this is your SUPABASE_ANON_KEY
-13. Copy: `service_role` key → this is your SUPABASE_SERVICE_ROLE_KEY
-
-### Step 4: Get Anthropic API Key
-
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an API key
-3. Add credits ($5–10 is enough for testing)
-
-### Step 5: Configure Environment
-
-```bash
+# 3. Create environment file
 cp .env.example .env.local
 ```
 
-Edit `.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIs...
+### Configure `.env.local`
+
+Open the file in any text editor and fill in your values:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://abcxyz.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
 ANTHROPIC_API_KEY=sk-ant-api03-...
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 FIRM_NAME=MKW Advisors
 FIRM_TAGLINE=NRI Tax Filing · Advisory · Compliance
 ```
 
-### Step 6: Run Locally
+**Where to find Supabase keys:**
+- Go to your Supabase project → Settings → API
+- Project URL = `NEXT_PUBLIC_SUPABASE_URL`
+- `anon` `public` key = `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `service_role` key = `SUPABASE_SERVICE_ROLE_KEY`
+
+### Set up database
+
+1. Go to Supabase dashboard → SQL Editor
+2. Open `supabase/schema.sql` from the project
+3. Copy ALL the content
+4. Paste into SQL Editor
+5. Click Run
+6. You should see "Success" — all tables created
+
+### Run the app
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open browser → go to `http://localhost:3000`
+
+You should see the landing page with "NRI Tax Filing Done Right" heading.
+
+### Test it
+
+1. Click "Start Filing" → fills the client wizard
+2. Open a new tab → go to `localhost:3000/login`
+3. Go to `localhost:3000/signup` first to create your admin account
+4. Login → see the dashboard
+5. The case submitted from client wizard should appear with all modules auto-completed
 
 ---
 
-## Git Setup — Push to Repository
-
-### First Time Setup
+## Push to GitHub
 
 ```bash
-# Initialize git (if not already)
+# First time
 git init
-
-# Add all files
 git add .
-
-# First commit
-git commit -m "feat: NRI Tax Suite v1 — complete production app"
-
-# Create repo on GitHub (go to github.com/new)
-# Then connect:
+git commit -m "NRI Tax Suite v1 — complete product"
 git remote add origin https://github.com/YOUR_USERNAME/nri-tax-suite.git
 git branch -M main
 git push -u origin main
 ```
 
-### Ongoing Workflow
-
 ```bash
-# Check what changed
-git status
-
-# Stage changes
+# After making changes
 git add .
-
-# Commit with descriptive message
-git commit -m "fix: update CII table for FY 2026-27"
-
-# Push
+git commit -m "description of what changed"
 git push
-```
-
-### Recommended Branch Strategy
-
-```bash
-# Feature branches
-git checkout -b feature/document-upload
-# ... make changes ...
-git commit -m "feat: add AIS PDF upload and parsing"
-git push -u origin feature/document-upload
-# Create Pull Request on GitHub → merge to main
-
-# Hotfixes
-git checkout -b fix/cg-computation-cess
-git commit -m "fix: correct cess calculation rounding"
-git push -u origin fix/cg-computation-cess
 ```
 
 ---
 
-## Production Deployment (Vercel)
+## Deploy to Production (Vercel)
 
-### Step 1: Connect to Vercel
-
-1. Go to [vercel.com](https://vercel.com)
-2. Click "Import Project" → connect your GitHub repo
+1. Go to vercel.com — sign in with GitHub
+2. Click "Import Project" — select `nri-tax-suite` repo
 3. Framework: Next.js (auto-detected)
+4. Add environment variables (same values from `.env.local`)
+5. Click Deploy — wait 2-3 minutes
+6. Live at `https://nri-tax-suite.vercel.app`
 
-### Step 2: Set Environment Variables
+**Note:** The auto-run pipeline runs 9 AI modules sequentially (~60-120 seconds). On Vercel Hobby plan, serverless functions timeout at 60 seconds. For production, use Vercel Pro plan (300s timeout) or configure the function duration in `vercel.json`.
 
-In Vercel dashboard → Settings → Environment Variables, add:
-
-| Key | Value |
-|-----|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your anon key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Your service role key |
-| `ANTHROPIC_API_KEY` | Your Anthropic key |
-| `FIRM_NAME` | MKW Advisors |
-| `FIRM_TAGLINE` | NRI Tax Filing · Advisory · Compliance |
-
-### Step 3: Deploy
-
-Click "Deploy" — Vercel builds and deploys automatically.
-
-Your app will be live at: `https://nri-tax-suite.vercel.app` (or your custom domain).
-
-### Step 4: Custom Domain (Optional)
+### Custom domain
 
 1. In Vercel → Settings → Domains
-2. Add: `tax.mkwadvisors.com` (or whatever you want)
+2. Add your domain (e.g., `tax.mkwadvisors.com`)
 3. Update DNS as instructed
 4. SSL is automatic
 
@@ -217,182 +319,193 @@ Your app will be live at: `https://nri-tax-suite.vercel.app` (or your custom dom
 ```
 nri-tax-app/
 ├── app/
+│   ├── page.js                     ← Landing page (public)
+│   ├── client/
+│   │   └── page.js                 ← Client intake wizard (public)
+│   ├── login/
+│   │   └── page.js                 ← Team login
+│   ├── signup/
+│   │   └── page.js                 ← Team signup
+│   ├── dashboard/
+│   │   └── page.js                 ← Team dashboard (protected)
 │   ├── api/
 │   │   ├── ai/
-│   │   │   ├── route.js          # AI module runner (server-side)
+│   │   │   ├── route.js            ← AI module runner
 │   │   │   └── parse/
-│   │   │       └── route.js      # Narrative parser
-│   │   └── deliverables/
-│   │       └── route.js          # DOCX generator
-│   ├── dashboard/
-│   │   └── page.js               # Main app UI
-│   ├── globals.css
+│   │   │       └── route.js        ← Narrative parser
+│   │   ├── auto-run/
+│   │   │   └── route.js            ← Auto-run pipeline (9 modules)
+│   │   ├── deliverables/
+│   │   │   └── route.js            ← DOCX generator
+│   │   └── cases/
+│   │       └── public/
+│   │           └── route.js        ← Public intake submission
 │   ├── layout.js
-│   └── page.js                   # Redirects to /dashboard
+│   └── globals.css
 ├── lib/
-│   ├── compute.js                # CII, CG, HP computation engine
-│   ├── skills.js                 # 10 AI module prompts
-│   ├── supabase-browser.js       # Client-side Supabase
-│   └── supabase-server.js        # Server-side Supabase
+│   ├── compute.js                  ← Tax computation engine
+│   ├── skills.js                   ← 10 AI module prompts
+│   ├── supabase-browser.js         ← Client-side Supabase
+│   └── supabase-server.js          ← Server-side Supabase
+├── skills/                         ← Full NRI Tax Skill Pack
+│   ├── SKILL.md                    ← Master control file
+│   ├── references/                 ← 10 module skill files
+│   │   ├── nri-case-intake.md
+│   │   ├── residential-status-analyzer.md
+│   │   ├── income-source-mapper.md
+│   │   ├── pricing-scope-classifier.md
+│   │   ├── ais-26as-tis-reconciliation.md
+│   │   ├── itr-form-schedule-selector.md
+│   │   ├── capital-gains-analyzer.md
+│   │   ├── dtaa-ftc-issue-spotter.md
+│   │   ├── pre-filing-risk-review.md
+│   │   └── advisory-memo-generator.md
+│   └── assets/                     ← Support documents
+│       ├── intake-questionnaire.md
+│       ├── document-checklist.md
+│       ├── pricing-policy.md
+│       └── delivery-sop.md
 ├── supabase/
-│   └── schema.sql                # Complete database schema
+│   └── schema.sql                  ← Complete database schema
+├── scripts/
+│   ├── generate-deliverables-v2.js ← Standalone DOCX generator
+│   └── test-case-full-run.md       ← Full test case walkthrough
+├── middleware.js                    ← Auth protection for /dashboard
+├── jsconfig.json                   ← Path alias (@/) configuration
 ├── .env.example
 ├── .gitignore
 ├── next.config.js
 ├── package.json
-├── postcss.config.js
 ├── tailwind.config.js
+├── postcss.config.js
 └── README.md
 ```
 
+---
+
 ## Key Files Explained
 
-### `lib/compute.js` — The Computation Engine
-Pure JavaScript functions for tax computation. No AI involved — these produce exact numbers:
-- `computeCapitalGains()` — Dual-option CG (20% indexed vs 12.5% flat)
-- `computeHouseProperty()` — Rental income computation with 30% SD
-- `classifyCase()` — Green/Amber/Red classification
-- CII table from 2001-02 to 2025-26
+### `app/page.js` — Landing Page
+Public marketing page. Shows services, pricing tiers, how-it-works, trust numbers, and two main CTAs: "Start Filing" (→ /client) and "Team Login" (→ /login).
 
-### `lib/skills.js` — AI Module Prompts
-All 10 module system prompts, FY-aware:
-- Residency, Income, Pricing, Reconciliation, Filing
-- Capital Gains, DTAA/FTC, Pre-Filing, Advisory Memo
-- Each prompt embeds FY-specific rules (CII, dual computation, 87A non-applicability)
+### `app/client/page.js` — Client Intake Wizard
+The money page. NRI clients fill this without creating an account. Five steps:
+1. **Describe situation** — paste a paragraph, AI extracts all fields
+2. **India connections** — stay days, property sale details, acquisition year, sale price
+3. **Income** — checkboxes for income types, amounts for rent/interest
+4. **Documents** — AIS status, asset value, service preference
+5. **Review** — sees classification (Green/Amber/Red) and CG savings preview
+
+After submit: shows diagnostic result with "Email Us" and "WhatsApp Us" buttons. Case is saved to database and auto-run pipeline starts in background.
+
+### `app/dashboard/page.js` — Team Dashboard (783 lines)
+The operational engine. Contains:
+- **Case list** with classification badges and progress tracking
+- **Module runner** — click to run each of 10 AI modules (or review auto-run results)
+- **Deliverable viewer** — preview CG computation, advisory memo, etc. inline
+- **DOCX download** — click to download real branded Word documents
+- **Print** — open print-friendly version for PDF export
+- **Supabase integration** — cases auto-save and load from database
+
+### `app/api/auto-run/route.js` — Auto-Run Pipeline
+Server-side. When a client submits intake, this endpoint automatically runs all 9 AI modules in sequence. Each module receives accumulated context from prior modules. Results are saved to Supabase progressively. Resilient — if one module fails, the rest continue.
 
 ### `app/api/ai/route.js` — AI Module Runner
-Server-side API route that:
-1. Receives module ID + case data
-2. Selects the correct skill prompt
-3. Builds case context from all prior module outputs
-4. Calls Claude via official SDK (API key stays server-side)
-5. Returns structured analysis
+Server-side. Receives module ID + case data → selects the correct skill prompt → builds context from all prior outputs → calls Claude → returns structured analysis. API key never reaches the browser.
 
-### `app/api/deliverables/route.js` — DOCX Generator
-Server-side route that:
-1. Receives deliverable type + case data
-2. Runs computation engine for real numbers
-3. Generates professional DOCX with tables, formatting, branding
-4. Returns the file as a download
+### `app/api/deliverables/route.js` — DOCX Generator (336 lines)
+Server-side. Receives deliverable type + case data → runs computation engine for real numbers → builds professional Word document with tables, formatting, branding → returns downloadable file. Four document types: CG sheet, advisory memo, engagement quote, position report.
+
+### `lib/compute.js` — Tax Computation Engine
+Pure JavaScript. No AI. Produces exact numbers:
+- `computeCapitalGains()` — Option A (20% + indexation) vs Option B (12.5% flat), with Section 54EC savings calculation
+- `computeHouseProperty()` — gross rent → 30% SD → net taxable
+- `classifyCase()` — Green/Amber/Red based on weighted scoring
+- CII table from FY 2001-02 to 2025-26
+
+### `lib/skills.js` — AI Module Prompts
+All 10 module system prompts, each aware of FY-specific rules. Includes `buildCaseContext()` which concatenates all prior module outputs so each subsequent module has full case history.
+
+### `supabase/schema.sql` — Database
+Five tables: profiles (team users), cases, module_outputs, deliverables, activity_log, plus storage bucket for generated files. Row-level security policies. Team roles (admin/partner/senior/preparer) with appropriate access levels. Public intake submissions allowed without login.
 
 ---
 
-## How to Integrate the UI
+## Costs
 
-The `app/dashboard/page.js` currently has a placeholder. To complete it:
+| Service | Free Tier | Typical Monthly Cost |
+|---------|-----------|---------------------|
+| Supabase | 50K rows, 500MB, 2GB bandwidth | ₹0 for <200 cases |
+| Anthropic API | — | ₹200–500 per case (10 modules) |
+| Vercel | 100GB bandwidth, serverless | ₹0 for <1000 cases/month |
+| Domain | — | ~₹800/year |
 
-1. Copy the UI code from `nri-tax-suite-final.jsx` (the React artifact)
-2. Add `'use client';` at the top
-3. Replace direct Anthropic API calls with fetch to `/api/ai`:
+**Cost per NRI case: approximately ₹200–500 in AI calls**
+**Revenue per case: ₹8,000–75,000**
 
-```javascript
-// BEFORE (in artifact — calls Anthropic directly from browser):
-const res = await fetch("https://api.anthropic.com/v1/messages", { ... });
+---
 
-// AFTER (in production — calls your own API route):
-const res = await fetch('/api/ai', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ moduleId: 'residency', formData: f, fy, moduleOutputs: outs })
-});
-const { output } = await res.json();
-```
+## Pricing Model (Built Into the System)
 
-4. Add DOCX download function:
+| Classification | Service Tier | Fee Range | Typical Cases |
+|---------------|-------------|-----------|---------------|
+| Green | Basic Filing | ₹8,000–15,000 | Interest only, simple NRI profile |
+| Amber | Advisory Filing | ₹18,000–30,000 | Multiple income heads, residency review needed |
+| Red (Amber+) | Premium Compliance | ₹35,000–75,000 | Property sale, ESOP, DTAA, complex transactions |
+| Red (HNI) | Annual Retainer | ₹1,00,000+/year | Family office, ongoing planning, recurring advisory |
 
-```javascript
-async function downloadDeliverable(type) {
-  const res = await fetch('/api/deliverables', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type, caseData: { name: f.name, country: f.country, classification: cls(f), formData: f }, fy, moduleOutputs: outs })
-  });
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${f.name.toLowerCase().replace(/\s+/g,'-')}-${type}.docx`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-```
-
-5. Add Supabase persistence:
-
-```javascript
-import { createClient } from '@/lib/supabase-browser';
-const supabase = createClient();
-
-// Save case after intake
-const { data } = await supabase.from('cases').insert({
-  user_id: userId,
-  client_name: f.name,
-  country: f.country,
-  fy, ay: FY_CONFIG[fy].ay,
-  classification: cls(f),
-  intake_data: f,
-}).select().single();
-
-// Save module output
-await supabase.from('module_outputs').upsert({
-  case_id: caseId,
-  module_id: moduleId,
-  output_text: output,
-});
-
-// Load cases on dashboard
-const { data: cases } = await supabase.from('cases')
-  .select('*')
-  .order('created_at', { ascending: false });
-```
+The system auto-classifies every case and recommends the appropriate tier.
 
 ---
 
 ## FY Update Procedure
 
-When a new financial year is announced:
+When a new financial year starts (e.g., FY 2026-27):
 
-1. **Update CII in `lib/compute.js`:**
-   Add the new year's CII value to the CII object.
-
-2. **Update FY_CONFIG in `lib/compute.js`:**
-   Add the new FY entry with AY and due date.
-
-3. **Update prompts in `lib/skills.js`:**
-   If tax rules change (new rates, new thresholds), update the BASE prompt
-   and any module-specific rules.
-
-4. **Update the UI year selector** in the dashboard.
-
-5. **Test with a sample case** using the new FY.
-
----
-
-## Estimated Costs
-
-| Service | Free Tier | Typical Monthly |
-|---------|-----------|-----------------|
-| Supabase | 50K rows, 500MB storage, 2GB bandwidth | Free for 100+ cases |
-| Anthropic API | — | ~₹200–500 per case (10 modules × ~3K tokens each) |
-| Vercel | 100GB bandwidth, serverless | Free for <1000 cases/month |
-| Domain | — | ~₹800/year |
-
-**Total cost per NRI case: approximately ₹200–500 in AI calls.**
-**Revenue per case: ₹8,000–75,000.**
+1. Add new CII value to `CII` object in `lib/compute.js`
+2. Add new FY entry to `FY_CONFIG` in `lib/compute.js`
+3. Update `BASE` prompt in `lib/skills.js` if tax rules change
+4. Update year selector in `app/client/page.js` and `app/dashboard/page.js`
+5. Test with a sample case
+6. Deploy
 
 ---
 
 ## What to Build Next (Priority Order)
 
-1. **Full UI integration** — Move artifact code into dashboard page (1 day)
-2. **Auth flow** — Supabase email+password login (1 day)
-3. **Case persistence** — Save/load cases from database (1 day)
-4. **DOCX download buttons** — Wire deliverable buttons to API (half day)
-5. **Client email templates** — Auto-generate document request emails (1 day)
-6. **Document upload** — PDF upload + text extraction for AIS/26AS (3 days)
-7. **Client portal** — Read-only view for clients to see deliverables (2 days)
-8. **Team roles** — Preparer/reviewer/partner workflow (2 days)
-9. **Payment integration** — Razorpay for engagement fee collection (1 day)
-10. **Analytics dashboard** — Case stats, revenue tracking (1 day)
+| # | Feature | Effort | Impact |
+|---|---------|--------|--------|
+| 1 | **Email notifications** when new case is submitted | 2 hours | Don't miss leads |
+| 2 | **Document upload** — AIS/26AS PDF parsing | 3 days | Better reconciliation |
+| 3 | **Client portal** — clients log in to track case status | 2 days | Professional feel |
+| 4 | **Razorpay payment** — pay engagement fee online | 1 day | Faster conversion |
+| 5 | **Email integration** — send deliverables directly | 1 day | Smoother delivery |
+| 6 | **Analytics dashboard** — cases by month, revenue, etc. | 1 day | Business intelligence |
+| 7 | **Multi-FY support** — FY 2026-27 when announced | 2 hours | Future-ready |
+| 8 | **API authentication** — protect AI/deliverables endpoints | Half day | Security |
 
-**Total to full production: 2-3 weeks of focused development.**
+---
+
+## Troubleshooting
+
+| Error | Fix |
+|-------|-----|
+| `npm: command not found` | Install Node.js from nodejs.org, restart terminal |
+| `Module not found` | Run `npm install` again |
+| `ANTHROPIC_API_KEY not set` | Check `.env.local` — no spaces around `=` |
+| `Supabase connection refused` | Check URL and keys in `.env.local` — no trailing spaces |
+| `RLS policy violation` | Run the full `schema.sql` in Supabase SQL Editor |
+| `DOCX download fails` | Check server logs — likely a `docx` package issue, run `npm install docx` |
+| `AI returns error` | Check Anthropic dashboard for credits — add $5 if empty |
+| Dashboard shows no cases | Create a test case via `/client` first, or check Supabase table directly |
+| Auto-run timeout on Vercel | Hobby plan limits functions to 60s. Use Pro plan or split the pipeline |
+
+---
+
+## License
+
+Proprietary. Built for MKW Advisors / Legal Suvidha ecosystem.
+
+---
+
+*Built with the NRI Tax Suite Skill Pack — 10 AI modules, 4 support assets, FY 2025-26 compliant.*
