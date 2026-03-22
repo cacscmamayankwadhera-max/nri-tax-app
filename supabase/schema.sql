@@ -47,7 +47,7 @@ create table public.cases (
   fy text not null default '2025-26',
   ay text not null default '2026-27',
   classification text check (classification in ('Green','Amber','Red')) default 'Green',
-  status text check (status in ('intake','in_progress','review','filed','closed')) default 'intake',
+  status text check (status in ('intake','in_progress','review','findings_ready','filing','filed','closed')) default 'intake',
   
   -- Intake form data (full JSON)
   intake_data jsonb not null default '{}',

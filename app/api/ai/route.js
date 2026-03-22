@@ -5,6 +5,16 @@ import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request) {
+  // Basic protection: require either auth cookie or same-origin
+  const origin = request.headers.get('origin') || request.headers.get('referer') || '';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  if (!origin.startsWith(appUrl) && !request.headers.get('cookie')?.includes('auth-token')) {
+    // Allow in dev mode but log
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
   try {
     const { moduleId, formData, fy, moduleOutputs } = await request.json();
     

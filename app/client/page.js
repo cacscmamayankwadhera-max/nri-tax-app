@@ -11,6 +11,7 @@ export default function ClientIntake() {
   const [narr, setNarr] = useState('');
   const [prs, setPrs] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [caseRef, setCaseRef] = useState(null);
   const [parseDone, setParseDone] = useState(false);
   const [fadeDir, setFadeDir] = useState('in');
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
@@ -43,13 +44,17 @@ export default function ClientIntake() {
 
   async function handleSubmit() {
     // Save case via API (no auth required for initial submission)
+    let ref = null;
     try {
-      await fetch('/api/cases/public', {
+      const res = await fetch('/api/cases/public', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ formData: f, fy, classification: classifyCase(f) })
       });
+      const data = await res.json();
+      ref = data.caseRef || null;
     } catch (e) { /* continue even if save fails */ }
+    setCaseRef(ref);
     setSubmitted(true);
   }
 
@@ -131,6 +136,16 @@ export default function ClientIntake() {
         </div>
 
         <div className="max-w-2xl mx-auto py-10 px-4">
+          {/* Case reference link for portal tracking */}
+          {caseRef && (
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6 text-center">
+              <div className="text-sm font-semibold text-blue-800 mb-1">Your Case Reference</div>
+              <div className="font-mono text-2xl font-bold text-blue-900 tracking-wider mb-2">{caseRef}</div>
+              <a href={`/portal?ref=${caseRef}`} className="text-blue-600 text-sm underline">Track your case status {'\u2192'}</a>
+              <p className="text-xs text-blue-400 mt-2">Save this reference to check your case progress anytime</p>
+            </div>
+          )}
+
           {/* Hero savings or completion banner */}
           {cgData ? (
             <div className="text-center mb-10">

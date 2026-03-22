@@ -17,7 +17,7 @@ function triggerAutoRun(caseId, formData, fy) {
     // Fire and forget — do NOT await this
     fetch(`${baseUrl}/api/auto-run`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-internal-secret': process.env.INTERNAL_SECRET || '' },
       body: JSON.stringify({ caseId, formData, fy }),
     })
       .then(res => {

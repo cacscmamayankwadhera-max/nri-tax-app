@@ -150,35 +150,20 @@ export default function Home() {
             className="font-serif text-4xl md:text-6xl leading-[1.15] mb-6"
             style={{ color: 'var(--text-primary)', fontWeight: 400, transition: 'color 0.3s ease' }}
           >
-            {isDark ? (
-              <>
-                Precision Tax Advisory
-                <br />
-                <span style={{ color: 'var(--stat-number)' }}>for Non-Resident Indians</span>
-              </>
-            ) : (
-              <>
-                Tax Advisory That
-                <br />
-                Respects Your Time
-              </>
-            )}
+            NRI Tax Filing, Advisory
+            <br />
+            <span style={{ color: 'var(--stat-number)' }}>&amp; Compliance — Done Right</span>
           </h1>
 
-          {/* Decorative line (dark theme) */}
-          {isDark && (
-            <div className="w-24 h-px mx-auto mb-6" style={{ background: 'var(--accent)' }} />
-          )}
+          {/* Decorative line */}
+          <div className="w-24 h-px mx-auto mb-6" style={{ background: 'var(--accent)', opacity: 0.6 }} />
 
           {/* Subtext */}
           <p
             className="text-lg max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'var(--text-secondary)', fontWeight: 300, transition: 'color 0.3s ease' }}
           >
-            {isDark
-              ? 'Navigate India\u2019s tax complexities with confidence. Bespoke advisory for cross-border income, property transactions, and global compliance.'
-              : 'Expert-led cross-border tax compliance for discerning NRIs. Thoughtful analysis, clear communication, and meticulous execution.'
-            }
+            AI-assisted tax advisory for Non-Resident Indians. From residential status review to capital gains dual-option computation.
           </p>
 
           {/* CTA Buttons */}
@@ -187,35 +172,24 @@ export default function Home() {
               href="/client"
               className="px-8 py-3.5 rounded-lg text-sm font-bold transition-all duration-300 shadow-lg hover:scale-[1.03]"
               style={{
-                background: isDark ? 'var(--bg-cta)' : 'var(--text-primary)',
-                color: isDark ? 'var(--text-on-cta)' : 'var(--text-on-dark)',
-                letterSpacing: isDark ? '0.05em' : 'normal',
+                background: 'var(--bg-cta)',
+                color: 'var(--text-on-cta)',
               }}
             >
-              {isDark ? 'Begin Your Assessment \u2192' : 'Start Your Tax Filing \u2192'}
+              Start Your Tax Filing &rarr;
             </a>
             <a
               href="#how"
               className="px-8 py-3.5 rounded-lg text-sm font-semibold transition-all duration-300"
               style={{
-                border: isDark ? '1px solid var(--accent)' : '2px solid var(--text-primary)',
-                color: isDark ? 'var(--accent)' : 'var(--text-primary)',
+                border: '1px solid var(--accent)',
+                color: 'var(--accent)',
                 background: 'transparent',
               }}
-              onMouseEnter={e => {
-                if (isDark) {
-                  e.target.style.background = 'rgba(196,154,60,0.1)';
-                } else {
-                  e.target.style.background = 'var(--text-primary)';
-                  e.target.style.color = 'var(--text-on-dark)';
-                }
-              }}
-              onMouseLeave={e => {
-                e.target.style.background = 'transparent';
-                if (!isDark) e.target.style.color = 'var(--text-primary)';
-              }}
+              onMouseEnter={e => { e.target.style.background = 'rgba(196,154,60,0.1)'; }}
+              onMouseLeave={e => { e.target.style.background = 'transparent'; }}
             >
-              {isDark ? 'View Services' : 'How It Works'}
+              How It Works
             </a>
           </div>
 
@@ -260,13 +234,12 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-6 py-20">
           {/* Section label */}
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
-            {isDark ? '' : '\u2014 '}Our Process{isDark ? '' : ' \u2014'}
+            Our Process
           </p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-4" style={{ color: 'var(--text-primary)', fontWeight: 400 }}>
             How It Works
           </h2>
-          {isDark && <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)' }} />}
-          {!isDark && <div className="mb-12" />}
+          <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)', opacity: 0.5 }} />
 
           <div className="grid md:grid-cols-4 gap-6">
             {STEPS.map((s, i) => (
@@ -280,7 +253,7 @@ export default function Home() {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--border-hover)';
-                  e.currentTarget.style.boxShadow = isDark ? '0 4px 24px rgba(196,154,60,0.08)' : '0 8px 24px rgba(0,0,0,0.08)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--border)';
@@ -301,16 +274,15 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════
          WHAT WE HANDLE (always dark section)
          ══════════════════════════════════════════════════════════ */}
-      <div style={{ background: isDark ? 'var(--bg-secondary)' : 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
+      <div style={{ background: 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
-            {isDark ? 'Our Expertise' : '\u2014 Our Services \u2014'}
+            Our Services
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: isDark ? 'var(--text-primary)' : '#ffffff' }}>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: 'var(--text-on-dark)' }}>
             What We Handle
           </h2>
-          {isDark && <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)' }} />}
-          {!isDark && <div className="mb-12" />}
+          <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)', opacity: 0.5 }} />
 
           <div className="grid md:grid-cols-3 gap-4">
             {FEATURES.map((s, i) => (
@@ -318,17 +290,17 @@ export default function Home() {
                 key={i}
                 className="rounded-lg p-6 transition-all duration-300"
                 style={{
-                  background: isDark ? 'var(--bg-card)' : '#252525',
-                  border: isDark ? '1px solid var(--border)' : '1px solid #3a3a3a',
-                  borderTop: isDark ? '2px solid rgba(196,154,60,0.5)' : undefined,
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderTop: '2px solid rgba(196,154,60,0.4)',
                   transition: 'background-color 0.3s ease, border-color 0.3s ease',
                 }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = isDark ? 'var(--border)' : '#3a3a3a'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
               >
                 <div className="text-2xl mb-3">{s.ic}</div>
-                <h3 className="font-bold text-sm mb-1" style={{ color: isDark ? 'var(--text-primary)' : '#ffffff' }}>{s.t}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: isDark ? 'var(--text-secondary)' : '#9ca3af' }}>{s.d}</p>
+                <h3 className="font-bold text-sm mb-1" style={{ color: 'var(--text-on-dark)' }}>{s.t}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>{s.d}</p>
               </div>
             ))}
           </div>
@@ -342,13 +314,12 @@ export default function Home() {
       <div style={{ background: 'var(--bg-primary)', transition: 'background-color 0.3s ease' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
-            {isDark ? 'Engagement Models' : '\u2014 Engagement Options \u2014'}
+            Engagement Options
           </p>
           <h2 className="font-serif text-3xl md:text-4xl text-center mb-4" style={{ color: 'var(--text-primary)', fontWeight: 400 }}>
             Transparent Pricing
           </h2>
-          {isDark && <div className="w-16 h-px mx-auto mb-14" style={{ background: 'var(--accent)' }} />}
-          {!isDark && <p className="text-center max-w-md mx-auto mb-14" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Our fees reflect the depth of expertise applied to your situation. No surprises.</p>}
+          <p className="text-center max-w-md mx-auto mb-14" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Our fees reflect the depth of expertise applied to your situation. No surprises.</p>
 
           <div className="grid md:grid-cols-4 gap-5">
             {PRICING.map((s, i) => (
@@ -356,9 +327,9 @@ export default function Home() {
                 key={i}
                 className="rounded-xl p-6 flex flex-col relative transition-all duration-300"
                 style={{
-                  background: s.pop && !isDark ? 'var(--bg-primary)' : 'var(--bg-card)',
+                  background: 'var(--bg-card)',
                   border: s.pop ? '2px solid var(--accent)' : '1px solid var(--border)',
-                  boxShadow: s.pop ? (isDark ? '0 4px 32px rgba(196,154,60,0.12)' : '0 8px 32px rgba(0,0,0,0.08)') : 'none',
+                  boxShadow: s.pop ? '0 8px 32px rgba(0,0,0,0.08)' : 'none',
                   transition: 'background-color 0.3s ease, border-color 0.3s ease',
                 }}
                 onMouseEnter={e => {
@@ -396,12 +367,12 @@ export default function Home() {
                 <button
                   className="mt-4 w-full py-2.5 rounded-md text-xs font-semibold tracking-wide uppercase transition-all duration-300"
                   style={s.pop ? {
-                    background: isDark ? 'var(--accent)' : 'var(--text-primary)',
-                    color: isDark ? 'var(--text-on-cta)' : 'var(--text-on-dark)',
+                    background: 'var(--bg-cta)',
+                    color: 'var(--text-on-cta)',
                     fontFamily: 'system-ui',
                   } : {
-                    border: isDark ? '1px solid rgba(196,154,60,0.4)' : '1px solid var(--text-primary)',
-                    color: isDark ? 'var(--accent)' : 'var(--text-primary)',
+                    border: '1px solid var(--accent)',
+                    color: 'var(--accent)',
                     background: 'transparent',
                     fontFamily: 'system-ui',
                   }}
@@ -449,8 +420,8 @@ export default function Home() {
             href="/client"
             className="inline-block px-8 py-3.5 rounded-lg font-bold transition-all duration-300 hover:scale-[1.03]"
             style={{
-              background: isDark ? 'var(--bg-primary)' : 'var(--text-primary)',
-              color: isDark ? 'var(--text-primary)' : 'var(--text-on-dark)',
+              background: 'var(--text-primary)',
+              color: 'var(--bg-primary)',
             }}
           >
             Start Now — Free to Begin
@@ -465,7 +436,7 @@ export default function Home() {
       <div
         className="py-16"
         style={{
-          background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+          background: 'var(--bg-secondary)',
           transition: 'background-color 0.3s ease',
         }}
       >

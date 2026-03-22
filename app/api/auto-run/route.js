@@ -49,7 +49,7 @@ async function saveModuleOutput(supabase, caseId, moduleId, output) {
   const { error } = await supabase.from('module_outputs').upsert({
     case_id: caseId,
     module_id: moduleId,
-    output: output,
+    output_text: output,
     completed_at: new Date().toISOString(),
   }, {
     onConflict: 'case_id,module_id',
@@ -78,6 +78,12 @@ async function updateCaseStatus(supabase, caseId, status, modulesCompleted) {
 
 export async function POST(request) {
   const startTime = Date.now();
+
+  // P0-4: Internal secret check — protect auto-run from external calls
+  const secret = request.headers.get('x-internal-secret');
+  if (secret !== process.env.INTERNAL_SECRET && process.env.INTERNAL_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   try {
     const { caseId, formData, fy } = await request.json();

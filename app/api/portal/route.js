@@ -45,7 +45,7 @@ export async function GET(request) {
     // Fetch module outputs for this case
     const { data: modules, error: moduleError } = await supabase
       .from('module_outputs')
-      .select('module_id, completed_at, output')
+      .select('module_id, completed_at, output_text')
       .eq('case_id', caseData.id)
       .order('completed_at', { ascending: true });
 
@@ -62,8 +62,8 @@ export async function GET(request) {
       module_id: m.module_id,
       completed_at: m.completed_at,
       // Only include output text for modules that produce client-visible findings
-      has_output: !!m.output && !m.output.startsWith('[AUTO-RUN ERROR]'),
-      has_error: m.output ? m.output.startsWith('[AUTO-RUN ERROR]') : false,
+      has_output: !!m.output_text && !m.output_text.startsWith('[AUTO-RUN ERROR]'),
+      has_error: m.output_text ? m.output_text.startsWith('[AUTO-RUN ERROR]') : false,
     }));
 
     // Build sanitized case object — exclude internal fields
@@ -78,8 +78,19 @@ export async function GET(request) {
       modules_completed: caseData.modules_completed || 0,
       created_at: caseData.created_at,
       updated_at: caseData.updated_at,
-      // Include intake_data for computing findings client-side
-      intake_data: caseData.intake_data || {},
+      // Include only non-PII fields from intake_data for client-side computations
+      intake_data: {
+        salePrice: caseData.intake_data?.salePrice,
+        purchaseCost: caseData.intake_data?.purchaseCost,
+        propertyAcqFY: caseData.intake_data?.propertyAcqFY,
+        propertySale: caseData.intake_data?.propertySale,
+        rent: caseData.intake_data?.rent,
+        rentalMonthly: caseData.intake_data?.rentalMonthly,
+        foreignSalary: caseData.intake_data?.foreignSalary,
+        name: caseData.intake_data?.name, // client's own name is fine
+        country: caseData.intake_data?.country,
+        // Explicitly exclude: email, phone, nroInterest, fdInterest, notes, occupation
+      },
     };
 
     return NextResponse.json({
