@@ -274,13 +274,13 @@ export default function ClientIntake() {
                 className="bg-[#C49A3C] text-[#1a1a1a] px-8 py-3 rounded-xl font-bold text-sm hover:bg-amber-400 transition inline-block">
                 Email Us to Proceed {'\u2192'}
               </a>
-              <a href={`https://wa.me/919876543210?text=${waText}`}
+              <a href={`https://wa.me/919667744073?text=${waText}`}
                 target="_blank" rel="noopener noreferrer"
                 className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-green-700 transition inline-block">
                 WhatsApp Us
               </a>
             </div>
-            <p className="text-sm text-gray-500 mt-4">Or call: <strong>+91-98765 43210</strong></p>
+            <p className="text-sm text-gray-500 mt-4">Or call: <strong>+91-96677 44073</strong></p>
           </div>
 
           {/* Confidentiality footer */}

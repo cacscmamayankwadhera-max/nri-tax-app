@@ -596,7 +596,7 @@ function ContactBar() {
       <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
         <span className="text-gray-500 text-xs hidden md:inline">Questions?</span>
         <a
-          href="https://wa.me/919876543210"
+          href="https://wa.me/919667744073"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 text-green-400 hover:text-green-300 transition font-semibold text-xs"
@@ -611,10 +611,10 @@ function ContactBar() {
           tax@mkwadvisors.com
         </a>
         <a
-          href="tel:+919876543210"
+          href="tel:+919667744073"
           className="text-gray-300 hover:text-white transition text-xs"
         >
-          +91-98765 43210
+          +91-96677 44073
         </a>
       </div>
     </div>
