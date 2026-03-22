@@ -419,6 +419,18 @@ export default function ClientIntake() {
                 <I l="Bought or planning to buy new house?" wide tip="Important \u2014 this can eliminate your capital gains tax entirely">
                   <S v={f.section54} ch={v => u('section54', v)} o={['Not sure', 'Yes \u2014 bought new house', 'Planning to buy', 'Considering government bonds', 'No']} />
                 </I>
+                <I l="Acquisition type" tip="If inherited/gifted, we use the previous owner's purchase cost for tax computation">
+                  <S v={f.acquisitionType} ch={v => u('acquisitionType', v)} o={['Self-purchased', 'Inherited', 'Gifted', 'Partition/Settlement']} />
+                </I>
+                <I l="Holding period" tip="Less than 24 months = Short-Term Capital Gain (taxed at higher slab rates)">
+                  <S v={f.holdingPeriod} ch={v => u('holdingPeriod', v)} o={['Less than 24 months', '24 months or more', 'Not sure']} />
+                </I>
+                <I l="Joint ownership?" wide>
+                  <S v={f.jointOwnership} ch={v => u('jointOwnership', v)} o={['No \u2014 sole owner', 'Yes \u2014 joint with spouse', 'Yes \u2014 joint with others']} />
+                </I>
+                {f.jointOwnership && f.jointOwnership !== 'No \u2014 sole owner' && (
+                  <I l="Your ownership %" v={f.ownershipPercent || 100} ch={v => u('ownershipPercent', parseInt(v) || 100)} ph="100" type="number" />
+                )}
               </>}
             </div>
           </div>
@@ -433,7 +445,7 @@ export default function ClientIntake() {
           <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-5 shadow-sm">
             <div className="text-sm font-semibold mb-4">What Indian income do you have? <span className="text-gray-400 font-normal">(tick all that apply)</span></div>
             <div className="grid grid-cols-2 gap-1">
-              {[['salary', 'Salary in India'], ['rent', 'Rental income'], ['interest', 'Bank / FD interest'], ['dividend', 'Dividends'], ['cgShares', 'Sold shares'], ['cgMF', 'Sold mutual funds'], ['cgESOPRSU', 'ESOP / RSU sale'], ['business', 'Business / consulting']].map(([k, l]) =>
+              {[['salary', 'Salary in India'], ['rent', 'Rental income'], ['interest', 'Bank / FD interest'], ['dividend', 'Dividends'], ['cgShares', 'Sold shares'], ['cgMF', 'Sold mutual funds'], ['cgESOPRSU', 'ESOP / RSU sale'], ['business', 'Business / consulting'], ['crypto', 'Crypto / Virtual Digital Assets']].map(([k, l]) =>
                 <C key={k} l={l} c={f[k]} ch={v => u(k, v)} />
               )}
             </div>
@@ -454,6 +466,25 @@ export default function ClientIntake() {
               </div>
             </div>}
           </div>}
+          {(f.cgShares || f.cgMF || f.cgESOPRSU) && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-6">
+              <div className="text-sm font-semibold mb-3">Capital gains amounts <span className="text-gray-400 font-normal">(from broker/demat statement)</span></div>
+              <div className="grid grid-cols-2 gap-5">
+                {f.cgShares && <>
+                  <I l="Listed shares LTCG (\u20B9)" v={f.sharesLTCG} ch={v => u('sharesLTCG', parseInt(v) || 0)} ph="0" type="number" tip="Gains on shares held >12 months" />
+                  <I l="Listed shares STCG (\u20B9)" v={f.sharesSTCG} ch={v => u('sharesSTCG', parseInt(v) || 0)} ph="0" type="number" tip="Gains on shares held \u226412 months" />
+                </>}
+                {f.cgMF && <>
+                  <I l="MF LTCG (\u20B9)" v={f.mfLTCG} ch={v => u('mfLTCG', parseInt(v) || 0)} ph="0" type="number" tip="Equity MF held >12 months, Debt MF >24 months" />
+                  <I l="MF STCG (\u20B9)" v={f.mfSTCG} ch={v => u('mfSTCG', parseInt(v) || 0)} ph="0" type="number" tip="Short-term MF gains" />
+                </>}
+                {f.cgESOPRSU && <>
+                  <I l="ESOP/RSU perquisite value (\u20B9)" v={f.esopPerquisite} ch={v => u('esopPerquisite', parseInt(v) || 0)} ph="0" type="number" tip="FMV at exercise minus exercise price" />
+                  <I l="ESOP/RSU sale gain (\u20B9)" v={f.esopSaleGain} ch={v => u('esopSaleGain', parseInt(v) || 0)} ph="0" type="number" tip="Sale price minus FMV at exercise" />
+                </>}
+              </div>
+            </div>
+          )}
           <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-5 shadow-sm">
             <div className="text-sm font-semibold mb-4">Foreign income</div>
             <div className="grid grid-cols-2 gap-1">
@@ -462,6 +493,21 @@ export default function ClientIntake() {
             </div>
             {f.foreignSalary && <div className="mt-4"><I l="Details" v={f.foreignDetails} ch={v => u('foreignDetails', v)} ph="e.g. UK salary GBP 72,000, UK tax paid" wide /></div>}
           </div>
+          {f.dividend && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-6">
+              <I l="Total Indian dividends received (\u20B9)" v={f.dividendAmount} ch={v => u('dividendAmount', parseInt(v) || 0)} ph="50000" type="number" tip="Dividends from Indian companies \u2014 taxable at slab rate" />
+            </div>
+          )}
+          {f.crypto && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-8 mb-6">
+              <div className="text-sm font-semibold mb-3">Crypto / VDA</div>
+              <div className="grid grid-cols-2 gap-5">
+                <I l="Sale/transfer value (\u20B9)" v={f.cryptoSale} ch={v => u('cryptoSale', parseInt(v) || 0)} ph="0" type="number" />
+                <I l="Cost of acquisition (\u20B9)" v={f.cryptoCost} ch={v => u('cryptoCost', parseInt(v) || 0)} ph="0" type="number" />
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Taxed at 30% flat rate. No deductions except cost. 1% TDS under Section 194S.</p>
+            </div>
+          )}
           <div className="flex gap-3 mt-5">
             <button onClick={() => goStep(1)} className="flex-1 border border-gray-300 bg-white py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors">{'\u2190'} Back</button>
             <button onClick={() => goStep(3)} className="flex-[2] bg-[#1a1a1a] text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-colors">Continue {'\u2192'}</button>
@@ -476,6 +522,9 @@ export default function ClientIntake() {
               <I l="Total Indian assets?"><S v={f.indianAssets} ch={v => u('indianAssets', v)} o={['Below \u20B950 Lakhs', '\u20B950L \u2013 \u20B91 Crore', 'Above \u20B91 Crore', 'Not sure']} /></I>
               <I l="Any prior tax notices?"><S v={f.priorNotices} ch={v => u('priorNotices', v)} o={['None', 'Yes', 'Not sure']} /></I>
               <I l="What help do you need?"><S v={f.serviceNeed} ch={v => u('serviceNeed', v)} o={['Just file my return', 'Filing + advice on my situation', 'Tax planning + filing', 'Just want to understand what I owe']} /></I>
+            </div>
+            <div className="mt-5">
+              <I l="Home loan interest on rented property (\u20B9/year)" v={f.homeLoanInterest} ch={v => u('homeLoanInterest', parseInt(v) || 0)} ph="0" type="number" tip="Deductible against rental income \u2014 no cap for let-out property" />
             </div>
             <div className="mt-5"><I l="Anything else we should know?" wide>
               <textarea value={f.notes || ''} onChange={e => u('notes', e.target.value)} rows={3}
