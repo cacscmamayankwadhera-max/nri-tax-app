@@ -28,9 +28,9 @@ const MODULE_NAMES = [
 
 const CLS_COLORS = { Green: '#2A6B4A', Amber: '#B07D3A', Red: '#A04848' };
 const CLS_MEANINGS = {
-  Green: 'Straightforward case — simple filing with limited complexity.',
-  Amber: 'Moderate complexity — advisory review recommended alongside filing.',
-  Red:   'Significant complexity — premium compliance service recommended.',
+  Green: 'Straightforward case \u2014 simple filing with limited complexity.',
+  Amber: 'Moderate complexity \u2014 advisory review recommended alongside filing.',
+  Red:   'Significant complexity \u2014 premium compliance service recommended.',
 };
 
 const NEXT_STEPS = [
@@ -91,13 +91,14 @@ function computeFindings(intakeData, fy) {
 export default function ClientPortalPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#f5f2ec]">
-        <nav className="bg-[#1a1a1a] px-6 md:px-12 h-14 flex items-center">
-          <span className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</span>
+      <div className="min-h-screen bg-theme">
+        <div className="gold-gradient-line" />
+        <nav className="bg-theme-nav px-6 md:px-12 h-14 flex items-center">
+          <span className="font-serif text-theme-accent font-bold tracking-wide">NRI TAX SUITE</span>
         </nav>
         <div className="max-w-lg mx-auto px-6 pt-32 text-center">
-          <div className="inline-block w-10 h-10 border-4 border-gray-200 border-t-[#C49A3C] rounded-full animate-spin" />
-          <p className="text-gray-500 mt-4 text-sm">Loading portal...</p>
+          <div className="inline-block w-10 h-10 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
+          <p className="text-theme-muted mt-4 text-sm">Loading portal...</p>
         </div>
       </div>
     }>
@@ -118,8 +119,20 @@ function ClientPortal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [vis, setVis] = useState(false);
+  const [theme, setTheme] = useState('light');
 
-  useEffect(() => { setVis(true); }, []);
+  useEffect(() => {
+    setVis(true);
+    const saved = localStorage.getItem('nri-theme') || 'light';
+    setTheme(saved);
+  }, []);
+
+  function toggleTheme() {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('nri-theme', next);
+    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
+  }
 
   const fetchCase = useCallback(async (caseRef) => {
     if (!caseRef || caseRef.length < 6) {
@@ -186,22 +199,24 @@ function ClientPortal() {
   const stage = caseData ? determineStage(caseData, modulesCompleted) : 0;
   const findings = caseData ? computeFindings(caseData.intake_data, caseData.fy) : null;
   const completedModuleIds = modules.filter(m => m.has_output).map(m => m.module_id);
+  const isDark = theme === 'dark';
 
   // ═══ Render: Lookup Form (no case loaded) ═══
   if (!caseData && !loading) {
     return (
-      <div className="min-h-screen bg-[#f5f2ec]">
-        <Nav />
+      <div className="min-h-screen bg-theme">
+        <div className="gold-gradient-line" />
+        <Nav isDark={isDark} toggleTheme={toggleTheme} />
         <TrustBar />
         <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="text-center mb-10">
             <div className="text-4xl mb-4">{'\uD83D\uDD0D'}</div>
-            <h1 className="font-serif text-3xl font-bold text-[#1a1a1a] mb-2">Track Your Case</h1>
-            <p className="text-gray-500">Enter the case reference you received after submitting your intake.</p>
+            <h1 className="font-serif text-3xl font-bold text-theme mb-2">Track Your Case</h1>
+            <p className="text-theme-secondary">Enter the case reference you received after submitting your intake.</p>
           </div>
 
-          <form onSubmit={handleLookup} className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-            <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+          <form onSubmit={handleLookup} className="card-theme p-8 shadow-sm">
+            <label className="block text-xs font-semibold text-theme-muted mb-2 uppercase tracking-wide">
               Case Reference
             </label>
             <input
@@ -210,19 +225,23 @@ function ClientPortal() {
               onChange={e => setInputRef(e.target.value.toUpperCase())}
               placeholder="e.g. ABCD1234"
               maxLength={12}
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg text-lg font-mono tracking-widest text-center bg-white focus:ring-2 focus:ring-[#C49A3C] focus:border-[#C49A3C] outline-none transition-shadow"
+              className="input-theme text-lg font-mono tracking-widest text-center"
               autoFocus
             />
-            <p className="text-[10px] text-gray-400 mt-2 text-center">
+            <p className="text-[10px] text-theme-muted mt-2 text-center">
               The 8-character code from your intake confirmation
             </p>
 
             {error && (
-              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+              <div className="mt-4 rounded-lg px-4 py-3 text-sm" style={{
+                background: 'rgba(160,72,72,0.08)',
+                border: '1px solid rgba(160,72,72,0.2)',
+                color: 'var(--red)',
+              }}>
                 {error}
                 {error.includes('not found') && (
                   <span className="block mt-1">
-                    <a href="/client" className="text-red-800 underline font-semibold">Submit a new intake</a>
+                    <a href="/client" className="underline font-semibold" style={{ color: 'var(--red)' }}>Submit a new intake</a>
                   </span>
                 )}
               </div>
@@ -231,15 +250,15 @@ function ClientPortal() {
             <button
               type="submit"
               disabled={inputRef.trim().length < 6}
-              className="w-full mt-6 bg-[#C49A3C] text-[#1a1a1a] py-3 rounded-lg font-bold text-sm hover:bg-amber-400 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn-primary w-full mt-6 py-3"
             >
               Look Up My Case
             </button>
           </form>
 
           <div className="text-center mt-8">
-            <p className="text-xs text-gray-400">
-              Do not have a reference? <a href="/client" className="text-[#C49A3C] font-semibold hover:underline">Start your intake here</a>
+            <p className="text-xs text-theme-muted">
+              Do not have a reference? <a href="/client" className="text-theme-accent font-semibold hover:underline">Start your intake here</a>
             </p>
           </div>
         </div>
@@ -251,12 +270,13 @@ function ClientPortal() {
   // ═══ Render: Loading ═══
   if (loading && !caseData) {
     return (
-      <div className="min-h-screen bg-[#f5f2ec]">
-        <Nav />
+      <div className="min-h-screen bg-theme">
+        <div className="gold-gradient-line" />
+        <Nav isDark={isDark} toggleTheme={toggleTheme} />
         <TrustBar />
         <div className="max-w-lg mx-auto px-6 pt-32 text-center">
-          <div className="inline-block w-10 h-10 border-4 border-gray-200 border-t-[#C49A3C] rounded-full animate-spin" />
-          <p className="text-gray-500 mt-4 text-sm">Looking up your case...</p>
+          <div className="inline-block w-10 h-10 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
+          <p className="text-theme-muted mt-4 text-sm">Looking up your case...</p>
         </div>
       </div>
     );
@@ -264,8 +284,9 @@ function ClientPortal() {
 
   // ═══ Render: Portal Dashboard ═══
   return (
-    <div className="min-h-screen bg-[#f5f2ec] pb-24">
-      <Nav />
+    <div className="min-h-screen bg-theme pb-24">
+      <div className="gold-gradient-line" />
+      <Nav isDark={isDark} toggleTheme={toggleTheme} />
       <TrustBar />
 
       <div className={`max-w-3xl mx-auto px-4 md:px-6 pt-8 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -273,29 +294,29 @@ function ClientPortal() {
         {/* Case ref header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <div className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Case Reference</div>
-            <div className="font-mono text-lg font-bold text-[#1a1a1a] tracking-wider">
+            <div className="text-xs text-theme-muted font-semibold uppercase tracking-wide">Case Reference</div>
+            <div className="font-mono text-lg font-bold text-theme tracking-wider">
               {(caseData.id || '').slice(0, 8).toUpperCase()}
             </div>
           </div>
           {loading && (
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <div className="w-3 h-3 border-2 border-gray-300 border-t-[#C49A3C] rounded-full animate-spin" />
+            <div className="flex items-center gap-2 text-xs text-theme-muted">
+              <div className="w-3 h-3 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
               Refreshing...
             </div>
           )}
         </div>
 
-        {/* ── Section 1: Case Summary Card ── */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+        {/* -- Section 1: Case Summary Card -- */}
+        <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h2 className="font-serif text-xl font-bold text-[#1a1a1a]">{caseData.client_name || 'Client'}</h2>
-              <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-500">
+              <h2 className="font-serif text-xl font-bold text-theme">{caseData.client_name || 'Client'}</h2>
+              <div className="flex flex-wrap gap-3 mt-2 text-sm text-theme-secondary">
                 <span>{caseData.country}</span>
-                <span className="text-gray-300">|</span>
+                <span className="text-theme-muted">|</span>
                 <span>FY {caseData.fy} (AY {caseData.ay})</span>
-                <span className="text-gray-300">|</span>
+                <span className="text-theme-muted">|</span>
                 <span>Submitted {formatDate(caseData.created_at)}</span>
               </div>
             </div>
@@ -313,14 +334,14 @@ function ClientPortal() {
             )}
           </div>
           {caseData.classification && (
-            <p className="text-xs text-gray-400 mt-3">{CLS_MEANINGS[caseData.classification]}</p>
+            <p className="text-xs text-theme-muted mt-3">{CLS_MEANINGS[caseData.classification]}</p>
           )}
         </div>
 
-        {/* ── Section 2: Process Timeline (hero) ── */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
-          <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-6">Your Case Progress</h3>
-          <div className="relative">
+        {/* -- Section 2: Process Timeline (hero) -- */}
+        <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '60ms' }}>
+          <h3 className="font-serif text-lg font-bold text-theme mb-6">Your Case Progress</h3>
+          <div className="relative stagger-children">
             {STAGES.map((s, i) => {
               const stageNum = i + 1;
               const isCompleted = stageNum < stage;
@@ -328,16 +349,16 @@ function ClientPortal() {
               const isFuture = stageNum > stage;
 
               return (
-                <div key={s.key} className="flex gap-4 mb-1 last:mb-0">
+                <div key={s.key} className="flex gap-4 mb-1 last:mb-0 animate-fade-in-up">
                   {/* Vertical line + circle */}
                   <div className="flex flex-col items-center" style={{ minWidth: 40 }}>
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center text-base flex-shrink-0 transition-all duration-500 ${
-                        isCurrent ? 'ring-4 ring-[#C49A3C]/20' : ''
+                        isCurrent ? 'animate-pulse-gold' : ''
                       }`}
                       style={{
-                        background: isCompleted ? '#2A6B4A' : isCurrent ? '#C49A3C' : '#e5e7eb',
-                        color: isCompleted || isCurrent ? '#fff' : '#9ca3af',
+                        background: isCompleted ? 'var(--green)' : isCurrent ? 'var(--accent)' : 'var(--border)',
+                        color: isCompleted || isCurrent ? '#fff' : 'var(--text-muted)',
                       }}
                       role="img"
                       aria-label={isCompleted ? 'Completed' : isCurrent ? 'In progress' : 'Pending'}
@@ -356,7 +377,7 @@ function ClientPortal() {
                         className="w-0.5 flex-1 my-1 rounded-full transition-all duration-500"
                         style={{
                           minHeight: 24,
-                          background: isCompleted ? '#2A6B4A' : '#e5e7eb',
+                          background: isCompleted ? 'var(--green)' : 'var(--border)',
                         }}
                       />
                     )}
@@ -365,19 +386,22 @@ function ClientPortal() {
                   {/* Label + description */}
                   <div className={`pt-2 pb-4 ${isFuture ? 'opacity-40' : ''}`}>
                     <div className="flex items-center gap-2">
-                      <span className={`font-semibold text-sm ${isCurrent ? 'text-[#C49A3C]' : isCompleted ? 'text-[#1a1a1a]' : 'text-gray-400'}`}>
+                      <span className={`font-semibold text-sm ${isCurrent ? 'text-theme-accent' : isCompleted ? 'text-theme' : 'text-theme-muted'}`}>
                         {s.label}
                       </span>
                       {isCurrent && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#C49A3C] bg-amber-50 px-2 py-0.5 rounded-full">
-                          <span className="w-1.5 h-1.5 bg-[#C49A3C] rounded-full animate-pulse" />
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{
+                          color: 'var(--accent)',
+                          background: 'rgba(196,154,60,0.1)',
+                        }}>
+                          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                           CURRENT
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{s.desc}</p>
+                    <p className="text-xs text-theme-secondary mt-0.5 leading-relaxed">{s.desc}</p>
                     {isCompleted && getStageTimestamp(s.key, caseData, modules) && (
-                      <p className="text-[10px] text-gray-400 mt-1">
+                      <p className="text-[10px] text-theme-muted mt-1">
                         Completed {formatDate(getStageTimestamp(s.key, caseData, modules))}
                       </p>
                     )}
@@ -388,35 +412,35 @@ function ClientPortal() {
           </div>
         </div>
 
-        {/* ── Section 3: Key Findings (stage 3+) ── */}
+        {/* -- Section 3: Key Findings (stage 3+) -- */}
         {stage >= 3 && findings && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
-            <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-5">Key Findings</h3>
+          <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+            <h3 className="font-serif text-lg font-bold text-theme mb-5">Key Findings</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {findings.cgSavings > 0 && (
                 <FindingCard
                   label="Tax Savings Identified"
                   value={`${formatINR(findings.cgSavings)} savings via Option ${findings.cgBetter}`}
-                  accent="#2A6B4A"
-                  bg="#f0fdf4"
-                  border="#bbf7d0"
+                  accent="var(--green)"
+                  bg="rgba(42,107,74,0.06)"
+                  border="rgba(42,107,74,0.2)"
                 />
               )}
               {findings.tdsRefund > 0 && (
                 <FindingCard
                   label="Estimated TDS Refund"
                   value={`${formatINR(findings.tdsRefund)} refund expected`}
-                  accent="#2A6B4A"
-                  bg="#f0fdf4"
-                  border="#bbf7d0"
+                  accent="var(--green)"
+                  bg="rgba(42,107,74,0.06)"
+                  border="rgba(42,107,74,0.2)"
                 />
               )}
               <FindingCard
                 label="Residency Status"
                 value={findings.residencyStatus}
-                accent="#1a1a1a"
-                bg="#f5f2ec"
-                border="#e5e1d8"
+                accent="var(--text-primary)"
+                bg="var(--bg-primary)"
+                border="var(--border)"
               />
               {caseData.classification && (
                 <FindingCard
@@ -437,22 +461,22 @@ function ClientPortal() {
           </div>
         )}
 
-        {/* ── Section 4: What We're Doing (modules) ── */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
+        {/* -- Section 4: What We're Doing (modules) -- */}
+        <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '180ms' }}>
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-serif text-lg font-bold text-[#1a1a1a]">What We Are Doing</h3>
-            <span className="text-xs text-gray-400 font-semibold">
+            <h3 className="font-serif text-lg font-bold text-theme">What We Are Doing</h3>
+            <span className="text-xs text-theme-muted font-semibold">
               {completedModuleIds.length} of {MODULE_NAMES.length} complete
             </span>
           </div>
 
           {/* Progress bar */}
-          <div className="w-full h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
+          <div className="w-full h-2 rounded-full mb-6 overflow-hidden" style={{ background: 'var(--border)' }}>
             <div
               className="h-full rounded-full transition-all duration-1000 ease-out"
               style={{
                 width: `${Math.round((completedModuleIds.length / MODULE_NAMES.length) * 100)}%`,
-                background: completedModuleIds.length === MODULE_NAMES.length ? '#2A6B4A' : '#C49A3C',
+                background: completedModuleIds.length === MODULE_NAMES.length ? 'var(--green)' : 'var(--accent)',
               }}
             />
           </div>
@@ -467,36 +491,37 @@ function ClientPortal() {
               return (
                 <div
                   key={mod.id}
-                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors ${
-                    isCurrent ? 'bg-amber-50' : ''
-                  }`}
+                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors`}
+                  style={{
+                    background: isCurrent ? 'rgba(196,154,60,0.08)' : 'transparent',
+                  }}
                 >
                   {/* Status indicator */}
                   {isComplete ? (
-                    <div className="w-6 h-6 rounded-full bg-[#2A6B4A] flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--green)' }}>
                       <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
                   ) : isCurrent ? (
-                    <div className="w-6 h-6 rounded-full border-2 border-[#C49A3C] flex items-center justify-center flex-shrink-0">
-                      <div className="w-2 h-2 bg-[#C49A3C] rounded-full animate-pulse" />
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: '2px solid var(--accent)' }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                     </div>
                   ) : (
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex-shrink-0" />
+                    <div className="w-6 h-6 rounded-full flex-shrink-0" style={{ background: 'var(--border)' }} />
                   )}
 
                   {/* Module name */}
                   <span className={`text-sm ${
-                    isComplete ? 'text-[#1a1a1a] font-medium' :
-                    isCurrent ? 'text-[#C49A3C] font-semibold' :
-                    'text-gray-400'
+                    isComplete ? 'text-theme font-medium' :
+                    isCurrent ? 'text-theme-accent font-semibold' :
+                    'text-theme-muted'
                   }`}>
                     {mod.label}
                   </span>
 
                   {isCurrent && (
-                    <span className="text-[10px] text-[#C49A3C] font-semibold ml-auto">In progress...</span>
+                    <span className="text-[10px] text-theme-accent font-semibold ml-auto">In progress...</span>
                   )}
                 </div>
               );
@@ -504,29 +529,29 @@ function ClientPortal() {
           </div>
         </div>
 
-        {/* ── Section 5: Documents Shared (stage 4+) ── */}
+        {/* -- Section 5: Documents Shared (stage 4+) -- */}
         {stage >= 4 && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm mb-6">
-            <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-4">Documents</h3>
+          <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
+            <h3 className="font-serif text-lg font-bold text-theme mb-4">Documents</h3>
             {stage >= 6 ? (
               <div className="space-y-3">
                 {['CG Computation Sheet', 'Client Advisory Memo', 'Tax Position Report', 'ITR Acknowledgement'].map((doc, i) => (
-                  <div key={i} className="flex items-center justify-between bg-[#f5f2ec] rounded-lg px-4 py-3">
+                  <div key={i} className="flex items-center justify-between rounded-lg px-4 py-3" style={{ background: 'var(--bg-primary)' }}>
                     <div className="flex items-center gap-3">
                       <span className="text-lg">{'\uD83D\uDCC4'}</span>
-                      <span className="text-sm font-medium text-[#1a1a1a]">{doc}</span>
+                      <span className="text-sm font-medium text-theme">{doc}</span>
                     </div>
-                    <span className="text-xs text-gray-400">Available</span>
+                    <span className="text-xs text-theme-muted">Available</span>
                   </div>
                 ))}
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-theme-muted mt-2">
                   Your advisor will share download links directly via email or WhatsApp.
                 </p>
               </div>
             ) : (
-              <div className="bg-[#f5f2ec] rounded-lg px-5 py-6 text-center">
+              <div className="rounded-lg px-5 py-6 text-center" style={{ background: 'var(--bg-primary)' }}>
                 <div className="text-2xl mb-2">{'\uD83D\uDCC1'}</div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-theme-secondary">
                   Your advisor will share documents once the review is complete.
                 </p>
               </div>
@@ -534,15 +559,15 @@ function ClientPortal() {
           </div>
         )}
 
-        {/* ── Section 6: What Happens Next ── */}
-        <div className="bg-amber-50 border-2 border-[#C49A3C] rounded-2xl p-6 md:p-8 mb-6">
-          <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3">What Happens Next</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
+        {/* -- Section 6: What Happens Next -- */}
+        <div className="card-theme-gold-left p-6 md:p-8 mb-6 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <h3 className="font-serif text-lg font-bold text-theme mb-3">What Happens Next</h3>
+          <p className="text-sm text-theme-secondary leading-relaxed">
             {NEXT_STEPS[stage] || NEXT_STEPS[1]}
           </p>
           {stage <= 2 && (
-            <div className="mt-4 flex items-center gap-2 text-xs text-gray-500">
-              <div className="w-2 h-2 bg-[#C49A3C] rounded-full animate-pulse" />
+            <div className="mt-4 flex items-center gap-2 text-xs text-theme-muted">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
               This page updates automatically every 15 seconds
             </div>
           )}
@@ -556,13 +581,26 @@ function ClientPortal() {
 
 // ═══ Sub-components ═══
 
-function Nav() {
+function Nav({ isDark, toggleTheme }) {
   return (
-    <nav className="bg-[#1a1a1a] px-6 md:px-12 h-14 flex items-center justify-between">
-      <a href="/" className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</a>
+    <nav className="bg-theme-nav px-6 md:px-12 h-14 flex items-center justify-between">
+      <a href="/" className="logo-gold-underline font-serif text-theme-accent font-bold tracking-wide">
+        NRI TAX SUITE
+      </a>
       <div className="flex gap-3 items-center">
-        <a href="/client" className="text-gray-400 text-sm hover:text-white transition">New Intake</a>
-        <a href="/portal" className="text-[#C49A3C] text-sm font-semibold">Track Case</a>
+        <a href="/client" className="text-sm transition-colors hover:opacity-80" style={{ color: 'var(--text-muted)' }}>New Intake</a>
+        <a href="/portal" className="text-theme-accent text-sm font-semibold">Track Case</a>
+        <button
+          onClick={toggleTheme}
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all duration-300 hover:scale-110 ml-2"
+          style={{
+            background: 'rgba(196,154,60,0.15)',
+            color: 'var(--accent)',
+          }}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}
+        </button>
       </div>
     </nav>
   );
@@ -570,8 +608,8 @@ function Nav() {
 
 function TrustBar() {
   return (
-    <div className="bg-[#1a1a1a] border-t border-gray-800 text-center py-1.5">
-      <span className="text-[11px] text-gray-400 tracking-wide">
+    <div className="bg-theme-nav text-center py-1.5" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <span className="text-[11px] text-theme-muted tracking-wide">
         MKW Advisors &mdash; CA &middot; CS &middot; CMA Certified &nbsp;|&nbsp; Trusted by 500+ NRIs
       </span>
     </div>
@@ -581,10 +619,10 @@ function TrustBar() {
 function FindingCard({ label, value, accent, bg, border }) {
   return (
     <div
-      className="rounded-xl p-5 border"
+      className="rounded-xl p-5 border transition-colors"
       style={{ background: bg, borderColor: border }}
     >
-      <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">{label}</div>
+      <div className="text-xs text-theme-muted font-semibold uppercase tracking-wide mb-1">{label}</div>
       <div className="font-bold text-base" style={{ color: accent }}>{value}</div>
     </div>
   );
@@ -592,9 +630,9 @@ function FindingCard({ label, value, accent, bg, border }) {
 
 function ContactBar() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-gray-800 py-3 px-4 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-theme-nav z-50 py-3 px-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
       <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
-        <span className="text-gray-500 text-xs hidden md:inline">Questions?</span>
+        <span className="text-theme-muted text-xs hidden md:inline">Questions?</span>
         <a
           href="https://wa.me/919667744073"
           target="_blank"
@@ -606,13 +644,13 @@ function ContactBar() {
         </a>
         <a
           href="mailto:tax@mkwadvisors.com"
-          className="text-gray-300 hover:text-white transition text-xs"
+          className="transition text-xs" style={{ color: 'var(--text-on-dark)' }}
         >
           tax@mkwadvisors.com
         </a>
         <a
           href="tel:+919667744073"
-          className="text-gray-300 hover:text-white transition text-xs"
+          className="transition text-xs" style={{ color: 'var(--text-on-dark)' }}
         >
           +91-96677 44073
         </a>

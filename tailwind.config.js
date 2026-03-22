@@ -8,7 +8,10 @@ module.exports = {
         brand: { dark:'#1A1A1A', gray:'#6B6256', light:'#F5F2EC', border:'#E8E0D4' },
         cls: { green:'#2A6B4A', amber:'#B07D3A', red:'#A04848' },
       },
-      fontFamily: { serif:['Georgia','serif'], sans:['system-ui','sans-serif'] },
+      fontFamily: {
+        serif: ['DM Serif Display', 'Georgia', 'serif'],
+        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [],
