@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/portal?ref=ABCD1234
 // Returns sanitized case data + module outputs (no internal pricing details)
 export async function GET(request) {
