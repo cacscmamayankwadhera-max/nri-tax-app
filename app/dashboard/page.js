@@ -9,7 +9,7 @@ const MODS = [
   { id:"intake", l:"Case Intake", ic:"📋", c:"#C49A3C" },
   { id:"residency", l:"Residency", ic:"🌍", c:"#4A7C5E" },
   { id:"income", l:"Income Map", ic:"📊", c:"#5670A8" },
-  { id:"pricing", l:"Pricing", ic:"💰", c:"#B07D3A" },
+  { id:"pricing", l:"Scope & Fee", ic:"💰", c:"#B07D3A", int:true },
   { id:"recon", l:"AIS Recon", ic:"🔍", c:"#7B5FA0", cp:"Senior Associate reviews classification and reconciliation readiness" },
   { id:"filing", l:"Form Select", ic:"📄", c:"#3D7D8F" },
   { id:"cg", l:"Capital Gains", ic:"🏠", c:"#A04848" },
@@ -21,7 +21,8 @@ const DELS = [
   { id:"cg_sheet", l:"CG Computation Sheet", n:["cg"], d:"Dual-option tax computation with Section 54 planning", apiType:"cg_sheet" },
   { id:"memo_doc", l:"Client Advisory Memo", n:["memo"], d:"Professional advisory — facts, issues, risk flags, actions", apiType:"memo" },
   { id:"position", l:"Tax Position Report", n:["income","pricing"], d:"Diagnostic: residency, income, scope assessment", apiType:"position" },
-  { id:"quote", l:"Engagement Quote", n:["pricing"], d:"Service tier, fee band, scope inclusions/exclusions", apiType:"quote" },
+  { id:"total_income", l:"Computation of Total Income", n:["income","cg"], d:"Formal ITR-ready statement — all heads, tax, TDS, refund", apiType:"total_income" },
+  { id:"quote", l:"Scope & Fee Note", n:["pricing"], d:"Internal: service tier, fee band, scope inclusions/exclusions", apiType:"quote" },
 ];
 const CLS_COLORS = { Green:"#2A6B4A", Amber:"#B07D3A", Red:"#A04848" };
 
@@ -143,13 +144,16 @@ function CGPreview({ f, fy, cg }) {
       <p className="text-xs"><strong>Section 54EC:</strong> Bonds within 6 months. Max ₹50L. Tax saved: <strong>{formatINR(cg.sec54ecSaved)}</strong></p>
       <p className="text-xs"><strong>Status:</strong> {f.section54 || "NOT YET DISCUSSED"}</p>
 
-      <h3 className="font-serif text-sm font-bold mt-4 mb-1">6. TDS</h3>
-      <T h={["","Details"]} r={[["Section","194-IA (1%) or 195 (NRI)"],["Est. TDS (194-IA)",formatINR(cg.tds194IA)],["Form 16B","Required from buyer"]]} />
+      <h3 className="font-serif text-sm font-bold mt-4 mb-1">6. TDS (Section 195 — NRI)</h3>
+      <T h={["","Details"]} r={[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]]} />
+      <div className="bg-blue-50 border border-blue-300 rounded p-2 my-2 text-xs font-bold text-blue-800">
+        KEY INSIGHT: TDS of {formatINR(cg.tds195)} is deducted but actual tax is only {formatINR(cg.netTax)}. Estimated refund: {formatINR(cg.tdsRefund)}
+      </div>
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1">7. Net Tax Summary</h3>
-      <T h={["Scenario","Tax","After TDS"]} r={[
-        ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.netAfterTDS)],
-        ["Full Section 54","₹0","Refund "+formatINR(cg.tds194IA)]
+      <T h={["Scenario","Tax","TDS Paid","Refund / Payable"]} r={[
+        ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.tds195),"Refund "+formatINR(cg.tdsRefund)],
+        ["Full Section 54","₹0",formatINR(cg.tds195),"Refund "+formatINR(cg.tds195)]
       ]} />
 
       <div className="mt-6 border-t-2 border-amber-500 pt-3 text-[10px] text-gray-400 italic">

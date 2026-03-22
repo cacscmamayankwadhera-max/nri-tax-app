@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, HeadingLevel, BorderStyle, WidthType, ShadingType,
   LevelFormat } from 'docx';
-import { computeCapitalGains, computeHouseProperty, formatINR, FY_CONFIG, CII } from '@/lib/compute';
+import { computeCapitalGains, computeHouseProperty, computeTotalIncome, computeAdvanceTax, formatINR, FY_CONFIG, CII } from '@/lib/compute';
 
 const FIRM = process.env.FIRM_NAME || 'MKW Advisors';
 const TAG = process.env.FIRM_TAGLINE || 'NRI Tax Filing · Advisory · Compliance';
@@ -141,13 +141,14 @@ function generateCGSheet(caseData, fy){
     bullet("Maximum: ₹50,00,000. Lock-in: 5 years"),
     bullet("Tax saved: "+formatINR(cg.sec54ecSaved)),
     gap(),
-    h2("6. TDS Position"),
-    dataTable(["","Details"],[["Section","194-IA (1%) or 195 (NRI rate)"],["Est. TDS (194-IA)",formatINR(cg.tds194IA)],["Form 16B","Required from buyer"]],cw2), gap(),
+    h2("6. TDS Position (Section 195 — NRI)"),
+    dataTable(["","Details"],[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]],cw2), gap(),
+    alertBox(`KEY INSIGHT: TDS of ${formatINR(cg.tds195)} deducted but actual tax is only ${formatINR(cg.netTax)}. Estimated refund: ${formatINR(cg.tdsRefund)}`,"blue"), gap(80),
     h2("7. Net Tax Summary"),
-    dataTable(["Scenario","Tax","After TDS"],[
-      ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.netAfterTDS)],
-      ["Full Section 54","₹0","Refund "+formatINR(cg.tds194IA)],
-    ],[3200,3224,3224]),
+    dataTable(["Scenario","Tax","TDS Paid","Refund / Payable"],[
+      ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.tds195),"Refund "+formatINR(cg.tdsRefund)],
+      ["Full Section 54","₹0",formatINR(cg.tds195),"Refund "+formatINR(cg.tds195)],
+    ],[2400,2400,2424,2424]),
     ...disclaimer(),
   ];
   return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
@@ -306,17 +307,206 @@ function generatePositionReport(caseData, fy){
   return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
 }
 
+// ══════ TOTAL INCOME COMPUTATION ══════
+function generateTotalIncome(caseData, fy){
+  const fd = caseData.formData || caseData;
+  const ti = computeTotalIncome(fd, fy);
+  const cw2=[5400,TW-5400], cw3=[4000,2824,2824];
+
+  // ── Capital gains reference ──
+  const cgHead = ti.heads.find(h=>h.head.includes("Capital Gains"));
+  const cg = cgHead ? cgHead.computation : null;
+
+  // ── House property reference ──
+  const hpHead = ti.heads.find(h=>h.head==="House Property");
+  const hp = hpHead ? hpHead.computation : null;
+
+  // ── Income summary rows ──
+  const incomeRows = [];
+  if (fd.salary) incomeRows.push(["Salary","Indian employer",formatINR(0)+"*"]);
+  if (hp) incomeRows.push(["House Property","Rental income",formatINR(hp.taxableIncome)]);
+  if (cg){
+    const betterLtcg = cg.better==="B" ? cg.optionB.ltcg : cg.optionA.ltcg;
+    incomeRows.push(["Capital Gains (LTCG)","Property sale — Option "+cg.better,formatINR(betterLtcg)]);
+  }
+  if (fd.nroInterest) incomeRows.push(["Other Sources","NRO interest",formatINR(fd.nroInterest)]);
+  if (fd.fdInterest) incomeRows.push(["Other Sources","FD interest",formatINR(fd.fdInterest)]);
+  if (fd.dividendAmount) incomeRows.push(["Other Sources","Dividends",formatINR(fd.dividendAmount)]);
+  if (fd.business) incomeRows.push(["Business/Profession","As declared",formatINR(0)+"*"]);
+  incomeRows.push(["GROSS TOTAL INCOME","",formatINR(ti.grossTotal)]);
+
+  // ── Slab tax breakdown ──
+  const cgAmount = cgHead ? cgHead.amount : 0;
+  const nonCG = Math.max(0, ti.taxableIncome - cgAmount);
+  const slabRows = [];
+  const slabs = [
+    { upto:400000, rate:0 }, { upto:800000, rate:5 }, { upto:1200000, rate:10 },
+    { upto:1600000, rate:15 }, { upto:2000000, rate:20 }, { upto:2400000, rate:25 },
+    { upto:Infinity, rate:30 },
+  ];
+  let rem = nonCG, prev = 0;
+  for (const slab of slabs){
+    const bracket = slab.upto === Infinity ? rem : slab.upto - prev;
+    const taxable = Math.min(rem, bracket);
+    if (taxable > 0){
+      const label = slab.upto === Infinity
+        ? "Above "+formatINR(prev)
+        : formatINR(prev)+" — "+formatINR(slab.upto);
+      slabRows.push([label, slab.rate+"%", formatINR(taxable), formatINR(Math.round(taxable*slab.rate/100))]);
+      rem -= taxable;
+    }
+    prev = slab.upto;
+    if (rem <= 0) break;
+  }
+
+  // ── Advance tax ──
+  const advTax = computeAdvanceTax(ti.totalWithCess, ti.tds.total, fy);
+
+  // ── Build document ──
+  const children = [
+    ...header("Computation of Total Income", `NRI Tax Statement — FY ${fy} (AY ${FY_CONFIG[fy]?.ay||"2026-27"})`, caseData, fy),
+    p("Tax Regime: New Regime (Section 115BAC)", {b:true, c:"2E5E8C"}),
+    p("Status: Non-Resident", {b:true}),
+    gap(),
+
+    // ─── 1. Income under each head ───
+    h2("1. Income Under Each Head"),
+
+    ...(hp ? [
+      h3("A. House Property"),
+      dataTable(["Particulars","Amount"],[
+        ["Gross Annual Rent", formatINR(hp.grossRent)],
+        ["Less: Standard Deduction (30%)", "("+formatINR(hp.standardDeduction)+")"],
+        ["Net Taxable (House Property)", formatINR(hp.taxableIncome)],
+      ], cw2), gap(80),
+    ] : []),
+
+    ...(cg ? [
+      h3("B. Capital Gains (LTCG — Property)"),
+      dataTable(["Particulars","Option A (20% Indexed)","Option B (12.5% Flat)"],[
+        ["Cost of Acquisition", formatINR(fd.purchaseCost||0), formatINR(fd.purchaseCost||0)],
+        ["Indexed Cost", formatINR(cg.indexedCost), "N/A"],
+        ["Sale Consideration", formatINR(fd.salePrice||0), formatINR(fd.salePrice||0)],
+        ["LTCG", formatINR(cg.optionA.ltcg), formatINR(cg.optionB.ltcg)],
+        ["Tax", formatINR(cg.optionA.tax), formatINR(cg.optionB.tax)],
+      ], cw3),
+      alertBox(`CHOSEN: Option ${cg.better} — LTCG ${formatINR(cg.better==="B"?cg.optionB.ltcg:cg.optionA.ltcg)} (saves ${formatINR(cg.savings)})`, "green"),
+      gap(80),
+    ] : []),
+
+    ...((fd.nroInterest||fd.fdInterest||fd.dividendAmount) ? [
+      h3("C. Other Sources"),
+      dataTable(["Source","Amount"],[
+        ...(fd.nroInterest ? [["NRO Savings Interest", formatINR(fd.nroInterest)]] : []),
+        ...(fd.fdInterest ? [["Fixed Deposit Interest", formatINR(fd.fdInterest)]] : []),
+        ...(fd.dividendAmount ? [["Dividends", formatINR(fd.dividendAmount)]] : []),
+        ["Total — Other Sources", formatINR((fd.nroInterest||0)+(fd.fdInterest||0)+(fd.dividendAmount||0))],
+      ], cw2), gap(80),
+    ] : []),
+
+    ...(fd.foreignSalary ? [
+      h3("D. Foreign Salary"),
+      alertBox("Foreign salary is NOT taxable in India — taxpayer is Non-Resident. Not included in total income.", "amber"),
+      gap(80),
+    ] : []),
+
+    h3("Summary — All Heads"),
+    dataTable(["Head","Source","Amount"], incomeRows, cw3), gap(),
+
+    // ─── 2. Deductions ───
+    h2("2. Deductions"),
+    dataTable(["Deduction","Section","Amount"],[
+      ...(fd.salary ? [["Standard Deduction (Salaried)","New Regime",formatINR(75000)]] : []),
+      ["Chapter VI-A (New Regime)","Limited / Nil",formatINR(0)],
+      ["TOTAL DEDUCTIONS","",formatINR(ti.deductions)],
+    ], cw3), gap(80),
+    alertBox("TOTAL INCOME: "+formatINR(ti.taxableIncome), "green"), gap(),
+
+    // ─── 3. Tax Computation ───
+    h2("3. Tax Computation"),
+
+    h3("A. Tax on Normal Income (Slab Rates — New Regime FY 2025-26)"),
+    p("Taxable normal income (excluding LTCG): "+formatINR(nonCG), {b:true}),
+    dataTable(["Slab","Rate","Taxable Amount","Tax"], slabRows, [2800,1200,2824,2824]),
+    p("Tax on normal income: "+formatINR(ti.slabTax), {b:true}), gap(80),
+
+    ...(cg ? [
+      h3("B. Tax on LTCG"),
+      p(`Option ${cg.better}: ${cg.better==="B"?"12.5%":"20%"} on ${formatINR(cg.better==="B"?cg.optionB.ltcg:cg.optionA.ltcg)} = ${formatINR(ti.cgTax)}`, {b:true}),
+      gap(80),
+    ] : []),
+
+    dataTable(["Component","Amount"],[
+      ["Tax on normal income (slab rates)", formatINR(ti.slabTax)],
+      ...(cg ? [["Tax on LTCG (Option "+cg.better+")", formatINR(ti.cgTax)]] : []),
+      ["Total Tax", formatINR(ti.totalTax)],
+      ["Health & Education Cess (4%)", formatINR(ti.cess)],
+      ["TOTAL TAX PAYABLE", formatINR(ti.totalWithCess)],
+    ], cw2), gap(),
+    alertBox("Section 87A rebate is NOT available to Non-Resident Indians.", "red"), gap(),
+
+    // ─── 4. TDS Credit ───
+    h2("4. TDS Credit"),
+    dataTable(["Section","Source","TDS Rate","Amount"],[
+      ...(ti.tds.property > 0 ? [["195","Property sale (NRI)","20.8% of sale price",formatINR(ti.tds.property)]] : []),
+      ...(ti.tds.interest > 0 ? [["194A / 195","NRO / FD interest","30%",formatINR(ti.tds.interest)]] : []),
+      ["","TOTAL TDS","",formatINR(ti.tds.total)],
+    ], [1600,3200,1600,TW-6400]), gap(),
+
+    // ─── 5. Net Tax Position ───
+    h2("5. Net Tax Position"),
+    dataTable(["Particulars","Amount"],[
+      ["Total Tax Payable", formatINR(ti.totalWithCess)],
+      ["Less: TDS Credit", "("+formatINR(ti.tds.total)+")"],
+      [ti.isRefund ? "REFUND DUE" : "BALANCE PAYABLE", formatINR(Math.abs(ti.refundOrPayable))],
+    ], cw2), gap(80),
+    alertBox(
+      ti.isRefund
+        ? "REFUND DUE: "+formatINR(Math.abs(ti.refundOrPayable))+" — File ITR to claim refund"
+        : "BALANCE PAYABLE: "+formatINR(Math.abs(ti.refundOrPayable)),
+      ti.isRefund ? "green" : "red"
+    ), gap(),
+
+    // ─── 6. Advance Tax Schedule ───
+    ...(advTax && advTax.required ? [
+      h2("6. Advance Tax Schedule"),
+      p("Balance payable exceeds Rs 10,000 — advance tax is applicable under Section 208.", {b:true}),
+      dataTable(["Installment Date","Cumulative %","Amount Due"],[
+        ...advTax.schedule.map(s => [s.date, s.percent+"%", formatINR(s.amount)]),
+      ], cw3),
+      p("Interest under Section 234B (non-payment) and Section 234C (deferment) applies if advance tax is not paid on schedule.", {i:true, c:"6B6256", sz:20}),
+      gap(),
+    ] : [
+      h2("6. Advance Tax"),
+      p("No advance tax obligation — balance payable is below Rs 10,000 or a refund is due.", {c:"2E7D32", b:true}),
+      gap(),
+    ]),
+
+    // ─── 7. Important Notes ───
+    h2("7. Important Notes"),
+    bullet("Section 87A rebate is NOT available to Non-Resident Indians. Tax is payable from the first rupee of taxable income under applicable slab rates."),
+    ...(fd.foreignSalary ? [bullet("Foreign salary earned in "+((caseData.country||fd.country)||"abroad")+" is not taxable in India as the taxpayer is a Non-Resident. This income is excluded from the computation.")] : []),
+    ...(cg ? [bullet("Section 54/54EC planning: "+(fd.section54||"NOT YET DISCUSSED")+". If a new residential property is purchased within 2 years (or constructed within 3 years) of sale, LTCG can be fully or partially exempt under Section 54.")] : []),
+    bullet("Form 15CA/15CB is required before remitting sale proceeds or other taxable income outside India. Ensure these are filed before repatriation."),
+    bullet("This computation is based on information provided to date. Final figures may change upon receipt of sale deed, 26AS/AIS reconciliation, and document verification."),
+    ...disclaimer(),
+  ].filter(Boolean);
+
+  return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
+}
+
 // ═══ API HANDLER ═══
 export async function POST(request) {
   try {
     const { type, caseData, fy, moduleOutputs } = await request.json();
-    
+
     let doc;
     switch(type) {
       case 'cg_sheet': doc = generateCGSheet(caseData, fy); break;
       case 'memo': doc = generateMemo(caseData, fy, moduleOutputs); break;
       case 'quote': doc = generateQuote(caseData, fy); break;
       case 'position': doc = generatePositionReport(caseData, fy); break;
+      case 'total_income': doc = generateTotalIncome(caseData, fy); break;
       default: return NextResponse.json({ error: 'Unknown type' }, { status: 400 });
     }
     
