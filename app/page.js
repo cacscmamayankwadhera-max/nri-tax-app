@@ -1,99 +1,519 @@
 'use client';
 import { useState, useEffect } from 'react';
 
+/* ─────────────────────────────────────────────────────────────
+   SHARED DATA
+   ───────────────────────────────────────────────────────────── */
+
+const STATS = [
+  { value: '2,800+', label: 'NRI Clients Served' },
+  { value: '18+', label: 'Countries Covered' },
+  { value: '₹120Cr+', label: 'Tax Computed' },
+  { value: '99.7%', label: 'Filing Accuracy' },
+];
+
+const STEPS = [
+  { n: '1', t: 'Describe Your Situation', d: 'Type in plain English or fill a simple form. AI extracts and organizes everything.', ic: '📋' },
+  { n: '2', t: 'AI Analyzes', d: '10 specialist modules review residency, income, capital gains, DTAA, and more.', ic: '🤖' },
+  { n: '3', t: 'Get Deliverables', d: 'Download professional computation sheets, advisory memos, and engagement documents.', ic: '📄' },
+  { n: '4', t: 'File with Confidence', d: 'Expert-reviewed filing with pre-filing risk check and post-filing support.', ic: '✅' },
+];
+
+const FEATURES = [
+  { t: 'Property Sale Tax', d: 'Dual computation (20% indexed vs 12.5% flat), Section 54/54EC planning', ic: '🏠' },
+  { t: 'Residential Status', d: 'Stay-day analysis, RNOR review, deemed resident check', ic: '🌍' },
+  { t: 'DTAA / FTC', d: 'Treaty benefit analysis, foreign tax credit eligibility', ic: '🌐' },
+  { t: 'Rental Income', d: 'House property computation, standard deduction, loan interest', ic: '🏢' },
+  { t: 'Investments', d: 'NRO/FD interest, dividends, MF gains, ESOP/RSU', ic: '📈' },
+  { t: 'AIS Reconciliation', d: 'Mismatch detection, TDS credit verification', ic: '🔍' },
+];
+
+const PRICING = [
+  { t: 'Basic Filing', p: '₹8,000–15,000', d: 'Simple profile, 1-2 income sources', tag: 'Green', c: 'var(--green)' },
+  { t: 'Advisory Filing', p: '₹18,000–30,000', d: 'Residency review, multiple income heads', tag: 'Amber', c: 'var(--amber)' },
+  { t: 'Premium', p: '₹35,000–75,000', d: 'Property sale, ESOP, dual CG, DTAA', tag: 'Popular', c: 'var(--red)', pop: true },
+  { t: 'Retainer', p: '₹1,00,000+/yr', d: 'HNI, ongoing planning, priority', tag: 'Premium', c: 'var(--text-primary)' },
+];
+
+
+/* ─────────────────────────────────────────────────────────────
+   HOME PAGE
+   ───────────────────────────────────────────────────────────── */
+
 export default function Home() {
   const [vis, setVis] = useState(false);
-  useEffect(() => setVis(true), []);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    setVis(true);
+    const saved = localStorage.getItem('nri-theme') || 'light';
+    setTheme(saved);
+  }, []);
+
+  function toggleTheme() {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('nri-theme', next);
+    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
+  }
+
+  const isDark = theme === 'dark';
 
   return (
-    <div className="min-h-screen bg-[#f5f2ec]">
-      <nav className="bg-[#1a1a1a] px-6 md:px-12 h-14 flex items-center justify-between">
-        <span className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</span>
-        <div className="flex gap-3 items-center">
-          <a href="/login" className="text-gray-400 text-sm hover:text-white transition">Team Login</a>
-          <a href="/client" className="bg-[#C49A3C] text-[#1a1a1a] px-5 py-1.5 rounded-lg text-sm font-bold hover:bg-amber-400 transition">Start Filing →</a>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
+
+      {/* ══════════════════════════════════════════════════════════
+         NAV
+         ══════════════════════════════════════════════════════════ */}
+      <nav style={{ background: 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ border: '1px solid var(--accent)' }}
+            >
+              <span className="text-xs font-bold" style={{ color: 'var(--accent)', fontFamily: 'system-ui' }}>NT</span>
+            </div>
+            <span className="font-serif text-lg tracking-wide" style={{ color: 'var(--text-nav)' }}>
+              NRI Tax Suite
+            </span>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110"
+              style={{
+                background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(255,255,255,0.12)',
+                color: 'var(--accent)',
+                border: '1px solid rgba(196,154,60,0.3)',
+              }}
+              aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+              title={isDark ? 'Switch to Luxury Consultancy theme' : 'Switch to Premium Financial theme'}
+            >
+              {isDark ? '\u2600' : '\u263D'}
+            </button>
+
+            <a href="/login" className="text-sm transition hidden sm:inline-block" style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
+              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
+            >
+              Team Login
+            </a>
+            <a
+              href="/client"
+              className="px-5 py-2 rounded-lg text-sm font-bold transition-all duration-300 hover:scale-[1.03]"
+              style={{
+                background: 'var(--bg-cta)',
+                color: 'var(--text-on-cta)',
+              }}
+            >
+              Start Filing &rarr;
+            </a>
+          </div>
         </div>
       </nav>
 
-      <div className={`max-w-5xl mx-auto px-6 pt-20 pb-16 text-center transition-all duration-700 ${vis?'opacity-100 translate-y-0':'opacity-0 translate-y-4'}`}>
-        <div className="inline-block bg-amber-100 text-amber-700 px-4 py-1 rounded-full text-xs font-bold mb-6">FY 2025-26 · AY 2026-27 · CII 376</div>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#1a1a1a] leading-tight">NRI Tax Filing, Advisory<br/>& Compliance — Done Right</h1>
-        <p className="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">AI-assisted tax advisory for Non-Resident Indians. From residential status review to capital gains dual-option computation.</p>
-        <div className="mt-8 flex justify-center gap-4 flex-wrap">
-          <a href="/client" className="bg-[#C49A3C] text-[#1a1a1a] px-8 py-3 rounded-lg text-base font-bold hover:bg-amber-400 transition shadow-lg">Start Your Tax Filing →</a>
-          <a href="#how" className="border-2 border-[#1a1a1a] text-[#1a1a1a] px-8 py-3 rounded-lg text-base font-semibold hover:bg-[#1a1a1a] hover:text-white transition">How It Works</a>
-        </div>
-        <p className="mt-4 text-xs text-gray-400">Free diagnostic · No obligation · Results in minutes</p>
-      </div>
 
-      <div className="bg-white border-y border-gray-200 py-6">
-        <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-8 text-center">
-          {[{n:"500+",l:"NRI Cases"},{n:"15+",l:"Countries"},{n:"₹50Cr+",l:"CG Computed"},{n:"100%",l:"Compliance"}].map((s,i)=>(
-            <div key={i}><div className="font-serif text-2xl font-bold">{s.n}</div><div className="text-xs text-gray-400 mt-1">{s.l}</div></div>
-          ))}
-        </div>
-      </div>
+      {/* ══════════════════════════════════════════════════════════
+         HERO
+         ══════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        {/* Radial glow for dark theme, subtle texture for light */}
+        {isDark && (
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.08) 0%, transparent 70%)',
+          }} />
+        )}
+        {!isDark && (
+          <div className="absolute inset-0 pointer-events-none opacity-[0.015]" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        )}
 
-      <div id="how" className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="font-serif text-3xl font-bold text-center mb-12">How It Works</h2>
-        <div className="grid md:grid-cols-4 gap-6">
-          {[{n:"1",t:"Describe Your Situation",d:"Type in plain English or fill a simple form. AI extracts and organizes everything.",ic:"📋"},{n:"2",t:"AI Analyzes",d:"10 specialist modules review residency, income, capital gains, DTAA, and more.",ic:"🤖"},{n:"3",t:"Get Deliverables",d:"Download professional computation sheets, advisory memos, and engagement documents.",ic:"📄"},{n:"4",t:"File with Confidence",d:"Expert-reviewed filing with pre-filing risk check and post-filing support.",ic:"✅"}].map((s,i)=>(
-            <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:shadow-lg transition">
-              <div className="text-3xl mb-3">{s.ic}</div>
-              <div className="text-[10px] font-bold text-[#C49A3C] mb-1">STEP {s.n}</div>
-              <h3 className="font-serif font-bold mb-2">{s.t}</h3>
-              <p className="text-xs text-gray-500 leading-relaxed">{s.d}</p>
+        <div className={`max-w-4xl mx-auto px-6 pt-24 pb-20 text-center relative z-10 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          {/* Badge */}
+          <div
+            className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-8"
+            style={{
+              background: 'var(--bg-badge)',
+              color: 'var(--text-badge)',
+              transition: 'background-color 0.3s ease, color 0.3s ease',
+            }}
+          >
+            FY 2025-26 &middot; AY 2026-27 &middot; CII 376
+          </div>
+
+          {/* Heading */}
+          <h1
+            className="font-serif text-4xl md:text-6xl leading-[1.15] mb-6"
+            style={{ color: 'var(--text-primary)', fontWeight: 400, transition: 'color 0.3s ease' }}
+          >
+            {isDark ? (
+              <>
+                Precision Tax Advisory
+                <br />
+                <span style={{ color: 'var(--stat-number)' }}>for Non-Resident Indians</span>
+              </>
+            ) : (
+              <>
+                Tax Advisory That
+                <br />
+                Respects Your Time
+              </>
+            )}
+          </h1>
+
+          {/* Decorative line (dark theme) */}
+          {isDark && (
+            <div className="w-24 h-px mx-auto mb-6" style={{ background: 'var(--accent)' }} />
+          )}
+
+          {/* Subtext */}
+          <p
+            className="text-lg max-w-xl mx-auto mb-10 leading-relaxed"
+            style={{ color: 'var(--text-secondary)', fontWeight: 300, transition: 'color 0.3s ease' }}
+          >
+            {isDark
+              ? 'Navigate India\u2019s tax complexities with confidence. Bespoke advisory for cross-border income, property transactions, and global compliance.'
+              : 'Expert-led cross-border tax compliance for discerning NRIs. Thoughtful analysis, clear communication, and meticulous execution.'
+            }
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex justify-center gap-4 flex-wrap mb-6">
+            <a
+              href="/client"
+              className="px-8 py-3.5 rounded-lg text-sm font-bold transition-all duration-300 shadow-lg hover:scale-[1.03]"
+              style={{
+                background: isDark ? 'var(--bg-cta)' : 'var(--text-primary)',
+                color: isDark ? 'var(--text-on-cta)' : 'var(--text-on-dark)',
+                letterSpacing: isDark ? '0.05em' : 'normal',
+              }}
+            >
+              {isDark ? 'Begin Your Assessment \u2192' : 'Start Your Tax Filing \u2192'}
+            </a>
+            <a
+              href="#how"
+              className="px-8 py-3.5 rounded-lg text-sm font-semibold transition-all duration-300"
+              style={{
+                border: isDark ? '1px solid var(--accent)' : '2px solid var(--text-primary)',
+                color: isDark ? 'var(--accent)' : 'var(--text-primary)',
+                background: 'transparent',
+              }}
+              onMouseEnter={e => {
+                if (isDark) {
+                  e.target.style.background = 'rgba(196,154,60,0.1)';
+                } else {
+                  e.target.style.background = 'var(--text-primary)';
+                  e.target.style.color = 'var(--text-on-dark)';
+                }
+              }}
+              onMouseLeave={e => {
+                e.target.style.background = 'transparent';
+                if (!isDark) e.target.style.color = 'var(--text-primary)';
+              }}
+            >
+              {isDark ? 'View Services' : 'How It Works'}
+            </a>
+          </div>
+
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Free diagnostic &middot; No obligation &middot; Results in minutes
+          </p>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════════════════════════
+         STATS STRIP
+         ══════════════════════════════════════════════════════════ */}
+      <div
+        className="py-8"
+        style={{
+          background: 'var(--bg-secondary)',
+          borderTop: '1px solid var(--border)',
+          borderBottom: '1px solid var(--border)',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease',
+        }}
+      >
+        <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-center gap-10 text-center">
+          {STATS.map((s, i) => (
+            <div key={i} className="px-4 py-1">
+              <div className="font-serif text-2xl md:text-3xl font-bold" style={{ color: 'var(--stat-number)', transition: 'color 0.3s ease' }}>
+                {s.value}
+              </div>
+              <div className="text-xs mt-1 tracking-wider uppercase" style={{ color: 'var(--text-muted)', transition: 'color 0.3s ease' }}>
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-[#1a1a1a] py-16">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="font-serif text-3xl font-bold text-white text-center mb-10">What We Handle</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {[{t:"Property Sale Tax",d:"Dual computation (20% indexed vs 12.5% flat), Section 54/54EC planning",ic:"🏠"},{t:"Residential Status",d:"Stay-day analysis, RNOR review, deemed resident check",ic:"🌍"},{t:"DTAA / FTC",d:"Treaty benefit analysis, foreign tax credit eligibility",ic:"🌐"},{t:"Rental Income",d:"House property computation, standard deduction, loan interest",ic:"🏢"},{t:"Investments",d:"NRO/FD interest, dividends, MF gains, ESOP/RSU",ic:"📈"},{t:"AIS Reconciliation",d:"Mismatch detection, TDS credit verification",ic:"🔍"}].map((s,i)=>(
-              <div key={i} className="bg-[#252525] rounded-lg border border-gray-700 p-5 hover:border-[#C49A3C] transition">
-                <div className="text-2xl mb-2">{s.ic}</div>
-                <h3 className="font-bold text-white text-sm mb-1">{s.t}</h3>
-                <p className="text-gray-400 text-xs leading-relaxed">{s.d}</p>
+
+      {/* ══════════════════════════════════════════════════════════
+         HOW IT WORKS
+         ══════════════════════════════════════════════════════════ */}
+      <div id="how" style={{ background: 'var(--bg-primary)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          {/* Section label */}
+          <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
+            {isDark ? '' : '\u2014 '}Our Process{isDark ? '' : ' \u2014'}
+          </p>
+          <h2 className="font-serif text-3xl md:text-4xl text-center mb-4" style={{ color: 'var(--text-primary)', fontWeight: 400 }}>
+            How It Works
+          </h2>
+          {isDark && <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)' }} />}
+          {!isDark && <div className="mb-12" />}
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {STEPS.map((s, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-6 text-center transition-all duration-300 group"
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--border-hover)';
+                  e.currentTarget.style.boxShadow = isDark ? '0 4px 24px rgba(196,154,60,0.08)' : '0 8px 24px rgba(0,0,0,0.08)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div className="text-3xl mb-3">{s.ic}</div>
+                <div className="text-[10px] font-bold mb-1" style={{ color: 'var(--accent)' }}>STEP {s.n}</div>
+                <h3 className="font-serif font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{s.t}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.d}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="font-serif text-3xl font-bold text-center mb-10">Transparent Pricing</h2>
-        <div className="grid md:grid-cols-4 gap-4">
-          {[{t:"Basic Filing",p:"₹8,000–15,000",d:"Simple profile, 1-2 income sources",tag:"Green",c:"#2A6B4A"},{t:"Advisory Filing",p:"₹18,000–30,000",d:"Residency review, multiple income heads",tag:"Amber",c:"#B07D3A"},{t:"Premium",p:"₹35,000–75,000",d:"Property sale, ESOP, dual CG, DTAA",tag:"Popular",c:"#A04848",pop:true},{t:"Retainer",p:"₹1,00,000+/yr",d:"HNI, ongoing planning, priority",tag:"Premium",c:"#1a1a1a"}].map((s,i)=>(
-            <div key={i} className={`bg-white rounded-xl p-5 ${s.pop?'border-2 border-[#C49A3C] shadow-lg relative':'border border-gray-200'}`}>
-              {s.pop&&<div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C49A3C] text-[#1a1a1a] px-3 py-0.5 rounded-full text-[10px] font-bold">MOST POPULAR</div>}
-              <div className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mb-2" style={{background:s.c+'18',color:s.c}}>{s.tag}</div>
-              <h3 className="font-serif font-bold mb-1">{s.t}</h3>
-              <div className="font-bold text-lg mb-2">{s.p}</div>
-              <p className="text-xs text-gray-500">{s.d}</p>
+
+      {/* ══════════════════════════════════════════════════════════
+         WHAT WE HANDLE (always dark section)
+         ══════════════════════════════════════════════════════════ */}
+      <div style={{ background: isDark ? 'var(--bg-secondary)' : 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
+            {isDark ? 'Our Expertise' : '\u2014 Our Services \u2014'}
+          </p>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: isDark ? 'var(--text-primary)' : '#ffffff' }}>
+            What We Handle
+          </h2>
+          {isDark && <div className="w-16 h-px mx-auto mb-12" style={{ background: 'var(--accent)' }} />}
+          {!isDark && <div className="mb-12" />}
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {FEATURES.map((s, i) => (
+              <div
+                key={i}
+                className="rounded-lg p-6 transition-all duration-300"
+                style={{
+                  background: isDark ? 'var(--bg-card)' : '#252525',
+                  border: isDark ? '1px solid var(--border)' : '1px solid #3a3a3a',
+                  borderTop: isDark ? '2px solid rgba(196,154,60,0.5)' : undefined,
+                  transition: 'background-color 0.3s ease, border-color 0.3s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = isDark ? 'var(--border)' : '#3a3a3a'}
+              >
+                <div className="text-2xl mb-3">{s.ic}</div>
+                <h3 className="font-bold text-sm mb-1" style={{ color: isDark ? 'var(--text-primary)' : '#ffffff' }}>{s.t}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: isDark ? 'var(--text-secondary)' : '#9ca3af' }}>{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+
+      {/* ══════════════════════════════════════════════════════════
+         PRICING
+         ══════════════════════════════════════════════════════════ */}
+      <div style={{ background: 'var(--bg-primary)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
+            {isDark ? 'Engagement Models' : '\u2014 Engagement Options \u2014'}
+          </p>
+          <h2 className="font-serif text-3xl md:text-4xl text-center mb-4" style={{ color: 'var(--text-primary)', fontWeight: 400 }}>
+            Transparent Pricing
+          </h2>
+          {isDark && <div className="w-16 h-px mx-auto mb-14" style={{ background: 'var(--accent)' }} />}
+          {!isDark && <p className="text-center max-w-md mx-auto mb-14" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Our fees reflect the depth of expertise applied to your situation. No surprises.</p>}
+
+          <div className="grid md:grid-cols-4 gap-5">
+            {PRICING.map((s, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-6 flex flex-col relative transition-all duration-300"
+                style={{
+                  background: s.pop && !isDark ? 'var(--bg-primary)' : 'var(--bg-card)',
+                  border: s.pop ? '2px solid var(--accent)' : '1px solid var(--border)',
+                  boxShadow: s.pop ? (isDark ? '0 4px 32px rgba(196,154,60,0.12)' : '0 8px 32px rgba(0,0,0,0.08)') : 'none',
+                  transition: 'background-color 0.3s ease, border-color 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  if (!s.pop) e.currentTarget.style.borderColor = 'var(--border-hover)';
+                }}
+                onMouseLeave={e => {
+                  if (!s.pop) e.currentTarget.style.borderColor = 'var(--border)';
+                }}
+              >
+                {s.pop && (
+                  <div
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase"
+                    style={{
+                      background: 'var(--accent)',
+                      color: 'var(--text-on-cta)',
+                      fontFamily: 'system-ui',
+                    }}
+                  >
+                    Most Popular
+                  </div>
+                )}
+
+                {/* Tag dot + label */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.c }} />
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                    {s.tag}
+                  </span>
+                </div>
+
+                <h3 className="font-serif font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{s.t}</h3>
+                <div className="font-bold text-xl mb-2 font-serif" style={{ color: 'var(--text-primary)' }}>{s.p}</div>
+                <p className="text-xs flex-1 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.d}</p>
+
+                <button
+                  className="mt-4 w-full py-2.5 rounded-md text-xs font-semibold tracking-wide uppercase transition-all duration-300"
+                  style={s.pop ? {
+                    background: isDark ? 'var(--accent)' : 'var(--text-primary)',
+                    color: isDark ? 'var(--text-on-cta)' : 'var(--text-on-dark)',
+                    fontFamily: 'system-ui',
+                  } : {
+                    border: isDark ? '1px solid rgba(196,154,60,0.4)' : '1px solid var(--text-primary)',
+                    color: isDark ? 'var(--accent)' : 'var(--text-primary)',
+                    background: 'transparent',
+                    fontFamily: 'system-ui',
+                  }}
+                >
+                  Select Plan
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <a
+              href="/client"
+              className="inline-block px-10 py-3.5 rounded-lg font-bold transition-all duration-300 hover:scale-[1.03]"
+              style={{
+                background: 'var(--bg-cta)',
+                color: 'var(--text-on-cta)',
+              }}
+            >
+              Get Your Free Diagnostic &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+      {/* ══════════════════════════════════════════════════════════
+         CTA BANNER (gold in both themes)
+         ══════════════════════════════════════════════════════════ */}
+      <div style={{ background: 'var(--accent)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-3xl mx-auto px-6 py-14 text-center">
+          <h2
+            className="font-serif text-2xl md:text-3xl font-bold mb-3"
+            style={{ color: 'var(--text-on-cta)' }}
+          >
+            Sold Property in India? Don&rsquo;t Overpay Tax.
+          </h2>
+          <p
+            className="mb-6 leading-relaxed"
+            style={{ color: 'var(--text-on-cta)', opacity: 0.75 }}
+          >
+            Our dual-option computation saves NRI clients ₹1.5L+ per property transaction on average.
+          </p>
+          <a
+            href="/client"
+            className="inline-block px-8 py-3.5 rounded-lg font-bold transition-all duration-300 hover:scale-[1.03]"
+            style={{
+              background: isDark ? 'var(--bg-primary)' : 'var(--text-primary)',
+              color: isDark ? 'var(--text-primary)' : 'var(--text-on-dark)',
+            }}
+          >
+            Start Now — Free to Begin
+          </a>
+        </div>
+      </div>
+
+
+      {/* ══════════════════════════════════════════════════════════
+         TESTIMONIAL (light theme only, matches Style C)
+         ══════════════════════════════════════════════════════════ */}
+      <div
+        className="py-16"
+        style={{
+          background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+          transition: 'background-color 0.3s ease',
+        }}
+      >
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <div className="text-4xl font-serif mb-5" style={{ color: 'var(--accent)' }}>&ldquo;</div>
+          <p
+            className="text-lg md:text-xl leading-relaxed mb-6 font-serif italic"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            After years of struggling with cross-border compliance, this team brought clarity and peace of mind. Their attention to detail on my property sale was exceptional.
+          </p>
+          <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+            Rajesh K., Software Engineer &mdash; Singapore
+          </p>
+        </div>
+      </div>
+
+
+      {/* ══════════════════════════════════════════════════════════
+         FOOTER (always dark)
+         ══════════════════════════════════════════════════════════ */}
+      <footer style={{ background: 'var(--bg-footer)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="flex flex-wrap justify-between items-start gap-8">
+            <div>
+              <div className="font-serif text-lg font-bold" style={{ color: 'var(--accent)' }}>MKW Advisors</div>
+              <div className="text-xs mt-1" style={{ color: '#6b7280' }}>NRI Tax Filing &middot; Advisory &middot; Compliance</div>
+              <div className="text-xs mt-3" style={{ color: '#4b5563' }}>CA | CS | CMA | IBBI Registered Valuer</div>
             </div>
-          ))}
+            <div className="text-xs" style={{ color: '#6b7280' }}>
+              <div className="font-bold mb-2" style={{ color: '#9ca3af' }}>Services</div>
+              <div>NRI ITR Filing</div>
+              <div>Capital Gains Advisory</div>
+              <div>DTAA / FTC Review</div>
+            </div>
+            <div className="text-xs" style={{ color: '#6b7280' }}>
+              <div className="font-bold mb-2" style={{ color: '#9ca3af' }}>Quick Links</div>
+              <a href="/client" className="block hover:text-white transition">Start Filing</a>
+              <a href="/login" className="block hover:text-white transition">Team Login</a>
+            </div>
+          </div>
+          <div
+            className="mt-8 pt-6 text-center text-xs"
+            style={{ borderTop: '1px solid #1f2937', color: '#4b5563' }}
+          >
+            &copy; {new Date().getFullYear()} MKW Advisors. All rights reserved.
+          </div>
         </div>
-        <div className="text-center mt-8"><a href="/client" className="bg-[#C49A3C] text-[#1a1a1a] px-10 py-3 rounded-lg font-bold hover:bg-amber-400 transition inline-block">Get Your Free Diagnostic →</a></div>
-      </div>
-
-      <div className="bg-[#C49A3C] py-12">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-2xl font-bold text-[#1a1a1a] mb-3">Sold Property in India? Don't Overpay Tax.</h2>
-          <p className="text-[#1a1a1a]/70 mb-6">Our dual-option computation saves NRI clients ₹1.5L+ per property transaction on average.</p>
-          <a href="/client" className="bg-[#1a1a1a] text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-800 transition inline-block">Start Now — Free to Begin</a>
-        </div>
-      </div>
-
-      <footer className="bg-[#1a1a1a] py-10">
-        <div className="max-w-5xl mx-auto px-6 flex flex-wrap justify-between items-start gap-8">
-          <div><div className="font-serif text-[#C49A3C] font-bold text-lg">MKW Advisors</div><div className="text-gray-500 text-xs mt-1">NRI Tax Filing · Advisory · Compliance</div><div className="text-gray-600 text-xs mt-3">CA | CS | CMA | IBBI Registered Valuer</div></div>
-          <div className="text-xs text-gray-500"><div className="font-bold text-gray-400 mb-2">Services</div><div>NRI ITR Filing</div><div>Capital Gains Advisory</div><div>DTAA / FTC Review</div></div>
-          <div className="text-xs text-gray-500"><div className="font-bold text-gray-400 mb-2">Quick Links</div><a href="/client" className="block hover:text-white">Start Filing</a><a href="/login" className="block hover:text-white">Team Login</a></div>
-        </div>
-        <div className="max-w-5xl mx-auto px-6 border-t border-gray-800 mt-8 pt-6 text-center text-xs text-gray-600">© {new Date().getFullYear()} MKW Advisors. All rights reserved.</div>
       </footer>
     </div>
   );

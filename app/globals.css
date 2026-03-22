@@ -1,4 +1,70 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { font-family: system-ui, -apple-system, sans-serif; background: #f5f2ec; }
+
+:root {
+  /* Theme C (default) — Luxury Consultancy */
+  --bg-primary: #f5f2ec;
+  --bg-secondary: #ffffff;
+  --bg-nav: #1a1a1a;
+  --bg-card: #ffffff;
+  --bg-card-hover: #faf8f4;
+  --bg-footer: #1a1a1a;
+  --bg-cta: #C49A3C;
+  --bg-badge: #fef3c7;
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6256;
+  --text-muted: #9ca3af;
+  --text-nav: #C49A3C;
+  --text-on-dark: #ffffff;
+  --text-on-cta: #1a1a1a;
+  --text-badge: #92400e;
+
+  --accent: #C49A3C;
+  --accent-hover: #d4a843;
+  --border: #e5e0d8;
+  --border-hover: #C49A3C;
+
+  --stat-number: #C49A3C;
+  --green: #2A6B4A;
+  --amber: #B07D3A;
+  --red: #A04848;
+}
+
+[data-theme="dark"] {
+  /* Theme A — Premium Financial Services */
+  --bg-primary: #0a0f1a;
+  --bg-secondary: #0f1625;
+  --bg-nav: #060a12;
+  --bg-card: #1a2332;
+  --bg-card-hover: #1f2a3d;
+  --bg-footer: #060a12;
+  --bg-cta: #C49A3C;
+  --bg-badge: #1a2332;
+
+  --text-primary: #f0ece4;
+  --text-secondary: #8b95a8;
+  --text-muted: #5a6478;
+  --text-nav: #C49A3C;
+  --text-on-dark: #f0ece4;
+  --text-on-cta: #0a0f1a;
+  --text-badge: #C49A3C;
+
+  --accent: #C49A3C;
+  --accent-hover: #D4AF37;
+  --border: #2a3548;
+  --border-hover: #C49A3C;
+
+  --stat-number: #D4AF37;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
