@@ -33,6 +33,7 @@ export async function POST(request) {
     const message = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 3000,
+      temperature: 0,
       system: systemPrompt,
       messages: [{
         role: 'user',
