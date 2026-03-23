@@ -499,6 +499,160 @@ const TOOLS = {
       };
     },
   },
+
+  'old-vs-new-regime': {
+    title: 'Old vs New Regime Calculator',
+    subtitle: 'Which Tax Regime Saves You More? — NRI Edition',
+    icon: '🔄',
+    description: 'Compare your tax under both regimes with NRI-specific rules (no Section 87A rebate).',
+    steps: [
+      { q: 'Total Indian income (₹) — NRO interest + rental + salary + capital gains + dividends', type: 'number', placeholder: 'e.g. 1200000 for ₹12 lakh' },
+      { q: 'Do you have Indian salary income?', type: 'select', options: [
+        { label: 'Yes — Indian salary', value: 'yes' },
+        { label: 'No — only investment/rental/CG income', value: 'no' },
+      ]},
+      { q: 'Section 80C investments (₹) — LIC, ELSS, PPF, tuition fees (old regime only)', type: 'number', placeholder: '0 if none (max ₹150000)' },
+      { q: 'Section 80D health insurance premium (₹) — self + family + parents', type: 'number', placeholder: '0 if none' },
+      { q: 'Home loan interest (₹) — on self-occupied property (old regime: ₹2L cap)', type: 'number', placeholder: '0 if none' },
+    ],
+    getResult: (answers) => {
+      const income = parseInt(answers[0]) || 0;
+      const hasSalary = answers[1] === 'yes';
+      const sec80c = Math.min(parseInt(answers[2]) || 0, 150000);
+      const sec80d = parseInt(answers[3]) || 0;
+      const homeLoan = Math.min(parseInt(answers[4]) || 0, 200000);
+
+      const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+      // NEW REGIME calculation
+      const stdDedNew = hasSalary ? 75000 : 0;
+      const taxableNew = Math.max(0, income - stdDedNew);
+      let taxNew = 0;
+      const slabsNew = [[400000,0],[400000,0.05],[400000,0.10],[400000,0.15],[400000,0.20],[400000,0.25],[Infinity,0.30]];
+      let rem = taxableNew;
+      for (const [slab, rate] of slabsNew) {
+        const amt = Math.min(rem, slab);
+        taxNew += amt * rate;
+        rem -= amt;
+        if (rem <= 0) break;
+      }
+      taxNew = Math.round(taxNew * 1.04); // + 4% cess
+
+      // OLD REGIME calculation
+      const stdDedOld = hasSalary ? 50000 : 0;
+      const deductions = sec80c + sec80d + homeLoan + stdDedOld;
+      const taxableOld = Math.max(0, income - deductions);
+      let taxOld = 0;
+      const slabsOld = [[250000,0],[250000,0.05],[500000,0.20],[Infinity,0.30]];
+      rem = taxableOld;
+      for (const [slab, rate] of slabsOld) {
+        const amt = Math.min(rem, slab);
+        taxOld += amt * rate;
+        rem -= amt;
+        if (rem <= 0) break;
+      }
+      taxOld = Math.round(taxOld * 1.04);
+
+      const savings = Math.abs(taxNew - taxOld);
+      const winner = taxNew <= taxOld ? 'New' : 'Old';
+
+      return {
+        status: `${winner} Regime Wins`,
+        color: '#059669',
+        title: `${winner} Regime saves you ${fmt(savings)}`,
+        summary: `With ${fmt(income)} income${deductions > 0 ? ` and ${fmt(deductions)} deductions` : ''}, the ${winner} Tax Regime gives lower tax.`,
+        taxImpact: `New Regime: ${fmt(taxNew)} | Old Regime: ${fmt(taxOld)} | You save: ${fmt(savings)}`,
+        table: [
+          ['', 'New Regime', 'Old Regime'],
+          ['Gross Income', fmt(income), fmt(income)],
+          ['Standard Deduction', fmt(stdDedNew), fmt(stdDedOld)],
+          ['80C Deduction', 'Not Available', fmt(sec80c)],
+          ['80D Deduction', 'Not Available', fmt(sec80d)],
+          ['Home Loan Interest', 'Not Available', fmt(homeLoan)],
+          ['Taxable Income', fmt(taxableNew), fmt(taxableOld)],
+          ['Tax + 4% Cess', fmt(taxNew), fmt(taxOld)],
+          ['', taxNew <= taxOld ? '✅ BETTER' : '', taxOld < taxNew ? '✅ BETTER' : ''],
+          ['Section 87A Rebate', 'NOT for NRI', 'NOT for NRI'],
+        ],
+        actions: [
+          `Choose ${winner} Regime — saves ${fmt(savings)}`,
+          winner === 'Old' ? 'File Form 10-IEA before July 31, 2026 to opt out of new regime' : 'New regime is default — no action needed',
+          'Section 87A rebate is NOT available for NRIs under either regime',
+          income > 5000000 ? 'Surcharge may apply — consult CA for exact computation' : '',
+          'This is an estimate — consult MKW Advisors for precise computation',
+        ].filter(Boolean),
+      };
+    },
+  },
+
+  'tds-refund-estimator': {
+    title: 'TDS Refund Estimator',
+    subtitle: 'How Much Excess TDS Can You Recover?',
+    icon: '💰',
+    description: 'Enter your TDS deducted and income to estimate your refund. Most NRIs are owed ₹50K-₹5L.',
+    steps: [
+      { q: 'TDS deducted on NRO interest (₹)', type: 'number', placeholder: 'Check Form 26AS' },
+      { q: 'TDS deducted on property sale (₹), if any', type: 'number', placeholder: '0 if no property sale' },
+      { q: 'TDS deducted on rent/dividends/other (₹)', type: 'number', placeholder: '0 if none' },
+      { q: 'Your total Indian taxable income (₹) — exclude NRE interest', type: 'number', placeholder: 'Total of NRO interest + rent + CG + dividends' },
+    ],
+    getResult: (answers) => {
+      const tdsNRO = parseInt(answers[0]) || 0;
+      const tdsProp = parseInt(answers[1]) || 0;
+      const tdsOther = parseInt(answers[2]) || 0;
+      const totalTDS = tdsNRO + tdsProp + tdsOther;
+      const income = parseInt(answers[3]) || 0;
+
+      const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+      // Estimate tax under new regime
+      let tax = 0;
+      const slabs = [[400000,0],[400000,0.05],[400000,0.10],[400000,0.15],[400000,0.20],[400000,0.25],[Infinity,0.30]];
+      let rem = income;
+      for (const [slab, rate] of slabs) {
+        const amt = Math.min(rem, slab);
+        tax += amt * rate;
+        rem -= amt;
+        if (rem <= 0) break;
+      }
+      tax = Math.round(tax * 1.04);
+
+      const refund = Math.max(0, totalTDS - tax);
+      const overpayment = totalTDS > 0 ? Math.round((refund / totalTDS) * 100) : 0;
+
+      return {
+        status: refund > 0 ? `Refund: ${fmt(refund)}` : 'No Refund',
+        color: refund > 0 ? '#059669' : '#F59E0B',
+        title: refund > 0 ? `You may be owed ${fmt(refund)} in TDS refund!` : 'Your TDS matches your tax liability',
+        summary: refund > 0
+          ? `Total TDS of ${fmt(totalTDS)} was deducted, but your estimated tax is only ${fmt(tax)}. That's ${overpayment}% excess TDS locked with the government.`
+          : `Your TDS of ${fmt(totalTDS)} is close to your estimated tax of ${fmt(tax)}.`,
+        taxImpact: `TDS Deducted: ${fmt(totalTDS)} | Estimated Tax: ${fmt(tax)} | Refund: ${fmt(refund)}`,
+        table: [
+          ['Source', 'TDS Deducted'],
+          ['NRO Interest TDS', fmt(tdsNRO)],
+          ['Property Sale TDS', fmt(tdsProp)],
+          ['Rent/Dividends/Other TDS', fmt(tdsOther)],
+          ['Total TDS', fmt(totalTDS)],
+          ['', ''],
+          ['Estimated Tax (New Regime)', fmt(tax)],
+          ['Estimated Refund', fmt(refund)],
+        ],
+        actions: refund > 0 ? [
+          `File ITR-2 to claim ${fmt(refund)} refund`,
+          'Download Form 26AS to verify all TDS credits match',
+          'Reconcile AIS before filing — mismatches delay refunds',
+          'Pre-validate your NRO bank account on the e-filing portal',
+          'E-verify immediately after filing for faster processing (30-90 days)',
+          refund > 100000 ? 'Consider MKW Advisors for professional filing to maximize refund' : '',
+        ].filter(Boolean) : [
+          'Your TDS and tax are aligned — good compliance',
+          'Still file ITR if income exceeds ₹4L or you have capital gains',
+          'Check if old regime gives lower tax using our Old vs New Regime calculator',
+        ],
+      };
+    },
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════════
