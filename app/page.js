@@ -95,6 +95,12 @@ export default function Home() {
               {isDark ? '\u2600' : '\u263D'}
             </button>
 
+            <a href="/blog" className="text-sm transition hidden sm:inline-block" style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
+              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
+            >
+              Knowledge Hub
+            </a>
             <a href="/login" className="text-sm transition hidden sm:inline-block" style={{ color: 'var(--text-muted)' }}
               onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
               onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
