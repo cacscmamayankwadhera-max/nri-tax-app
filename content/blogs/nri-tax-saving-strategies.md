@@ -6,7 +6,7 @@ date: "2026-03-23"
 category: "NRI Taxation"
 tags: ["NRI tax saving", "Section 80C NRI", "NRI deductions India", "old vs new regime NRI", "NRE interest exemption", "capital gains NRI", "GIFT City tax", "Section 197 lower TDS", "FY 2025-26 tax"]
 slug: "nri-tax-saving-strategies-india-2026"
-canonical: "/blog/nri-tax-saving-strategies-india-2026"
+canonical: "/blog/nri-tax-saving-strategies"
 ---
 
 # Tax Saving Strategies for NRIs in India — Complete Deduction & Exemption Guide (2026)

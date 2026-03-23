@@ -21,7 +21,7 @@ tags:
   - NRI Professional Income
   - NRI Upwork Tax
 keywords: "NRI freelancer tax India 2026, NRI consultant tax FTS, Section 115A FTS rate, TDS Section 195 NRI, ITR-3 NRI freelancer, Section 44ADA NRI, DTAA FTS India US UK UAE, NRI GST registration, digital nomad tax India, NRI Upwork tax, NRI professional fees TDS, NRI consulting income India, NRI freelance income taxable India, advance tax NRI freelancer, permanent establishment risk NRI"
-canonical: "/blog/nri-freelancer-consultant-tax-india-fts-tds-itr3-guide-2026"
+canonical: "/blog/nri-freelancer-consultant-tax"
 schema_type: "Article"
 faq_schema: true
 ---

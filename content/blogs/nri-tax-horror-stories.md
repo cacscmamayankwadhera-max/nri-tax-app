@@ -430,6 +430,6 @@ Do not wait for a notice. Do not wait for a penalty. Do not wait for an ED offic
 ---
 
 **Related Reading:**
-- [28 NRI Tax Mistakes That Cost Lakhs](/blog/nri-tax-mistakes)
+- [28 NRI Tax Mistakes That Cost Lakhs](/blog/nri-tax-mistakes-guide)
 - [NRI Tax Case Studies -- How We Solved Complex Problems](/blog/nri-tax-case-studies)
 - [NRI Compliance Scorecard -- Check Your Risk Now](/client)

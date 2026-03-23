@@ -30,7 +30,7 @@ tags:
   - FY 2025-26
   - Tax Saving
   - Compliance
-canonical: "/blog/nri-year-end-tax-planning-march-2026"
+canonical: "/blog/nri-year-end-tax-planning-march"
 schema:
   type: "Article"
   datePublished: "2026-03-23"

@@ -19,7 +19,7 @@ tags:
   - Foreign Asset Disclosure Scheme
   - FBAR vs Schedule FA
 slug: "nri-schedule-fa-foreign-asset-disclosure-2026"
-canonical: "/blog/nri-schedule-fa-foreign-asset-disclosure-2026"
+canonical: "/blog/nri-schedule-fa-foreign-assets"
 keywords:
   - schedule fa foreign assets India
   - NRI becoming resident foreign asset reporting

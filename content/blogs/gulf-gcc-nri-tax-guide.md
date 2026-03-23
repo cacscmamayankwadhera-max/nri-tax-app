@@ -54,7 +54,7 @@ schema:
   type: "BlogPosting"
   author: "CA Mayank Wadhera"
   organization: "MKW Advisors"
-canonical: "/blog/gulf-gcc-nri-tax-guide-saudi-qatar-oman-bahrain-kuwait-2026"
+canonical: "/blog/gulf-gcc-nri-tax-guide"
 ---
 
 # Gulf/GCC NRI Tax Guide 2026 — Saudi Arabia, Qatar, Oman, Bahrain & Kuwait: DTAA, Zero-Tax Trap & Complete Compliance Roadmap

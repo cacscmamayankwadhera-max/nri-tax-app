@@ -22,7 +22,7 @@ tags:
   - NRI India Investment
   - Tax-Efficient SIP
 slug: "nri-sip-investment-strategy-2026"
-canonical: "/blog/nri-sip-investment-strategy-2026"
+canonical: "/blog/nri-sip-investment-strategy"
 keywords:
   - NRI SIP investment strategy 2026
   - step-up SIP for NRI

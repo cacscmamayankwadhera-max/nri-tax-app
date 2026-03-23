@@ -18,7 +18,7 @@ tags:
   - NRI Tax Planning FY 2025-26
   - Indian Tax for NRIs
 slug: "nri-tax-myths-busted-2026"
-canonical: "/blog/nri-tax-myths-busted-2026"
+canonical: "/blog/nri-tax-myths-busted"
 featured: true
 reading_time: "14 min"
 ---

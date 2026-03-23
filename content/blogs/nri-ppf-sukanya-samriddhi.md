@@ -19,7 +19,7 @@ tags:
   - NRI retirement planning
 slug: "nri-ppf-sukanya-samriddhi-yojana-rules-2026"
 featured: true
-canonical: "/blog/nri-ppf-sukanya-samriddhi-yojana-rules-2026"
+canonical: "/blog/nri-ppf-sukanya-samriddhi"
 ---
 
 # PPF & Sukanya Samriddhi Yojana for NRIs — Rules, Restrictions & What to Do in 2026

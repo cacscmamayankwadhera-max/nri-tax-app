@@ -18,7 +18,7 @@ tags:
   - NRI residential status India
   - NRI repatriation planning
 slug: "nri-returning-to-india-rnor-tax-planning-checklist-2026"
-canonical: "/blog/nri-returning-to-india-rnor-tax-planning-checklist-2026"
+canonical: "/blog/nri-returning-to-india"
 keywords: "NRI returning to India 2026, RNOR status benefits, NRI tax planning India return, FCNR to RFC conversion, NRE account on return to India, Schedule FA foreign assets NRI, RNOR vs ROR tax, NRI return checklist, EPF PPF NPS NRI return, NRI health insurance India"
 faq: true
 schema: "Article"

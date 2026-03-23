@@ -570,10 +570,10 @@ The differences between NRI and Resident taxation are not just academic -- they 
 - Email: [contact@mkwadvisors.com](mailto:contact@mkwadvisors.com)
 
 **Related Resources:**
-- [NRI Property Sale TDS Guide](/blog/nri-property-sale-tds)
-- [DTAA Benefits for NRIs](/blog/dtaa-benefits-nri)
-- [NRE vs NRO Account Tax Implications](/blog/nre-vs-nro-tax)
-- [Schedule FA Filing Guide for Residents](/blog/schedule-fa-guide)
+- [NRI Property Sale TDS Guide](/blog/nri-tds-rates-refund)
+- [DTAA Benefits for NRIs](/blog/dtaa-double-taxation-ftc)
+- [NRE vs NRO Account Tax Implications](/blog/nre-nro-fcnr-banking)
+- [Schedule FA Filing Guide for Residents](/blog/nri-schedule-fa-foreign-assets)
 
 ---
 

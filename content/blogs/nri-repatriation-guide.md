@@ -37,7 +37,7 @@ tags:
   - RFC account
   - property sale
   - inheritance
-canonical: "/blog/nri-money-repatriation-india-form-15ca-15cb-limits-process-2026"
+canonical: "/blog/nri-repatriation-guide"
 structured_data:
   type: "Article"
   author_credentials: "CA|CS|CMA|IBBI Registered Valuer"

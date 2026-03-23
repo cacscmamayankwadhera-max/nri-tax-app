@@ -427,7 +427,7 @@ We help NRIs in the US, UK, UAE, Singapore, Canada, and Australia build tax-effi
 ---
 
 **Related Reading:**
-- [Understanding GIFT City IFSC for NRIs](/blog/gift-city-ifsc-nri-guide)
-- [NRE vs NRO Account: Complete Guide](/blog/nre-nro-account-guide)
-- [NRI Mutual Fund Investment Guide](/blog/nri-mutual-fund-guide)
-- [NRI Fixed Deposit Tax Planning](/blog/nri-fixed-deposit-tax-planning)
+- [Understanding GIFT City IFSC for NRIs](/blog/gift-city-nri-investment)
+- [NRE vs NRO Account: Complete Guide](/blog/nre-nro-fcnr-banking)
+- [NRI Mutual Fund Investment Guide](/blog/nri-investment-mutual-funds)
+- [NRI Fixed Deposit Tax Planning](/blog/nri-fixed-deposit-strategies)

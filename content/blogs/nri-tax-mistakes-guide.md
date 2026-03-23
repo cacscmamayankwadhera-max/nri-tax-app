@@ -9,7 +9,7 @@ tags: ["NRI tax mistakes", "NRI income tax India 2026", "NRI TDS", "NRI property
 category: "NRI Tax & Compliance"
 slug: "nri-tax-mistakes-guide"
 canonical: "/blog/nri-tax-mistakes-guide"
-featured_image: "/images/blog/nri-tax-mistakes-2026.jpg"
+featured_image: "/images/blog/nri-tax-mistakes-guide.jpg"
 cta_link: "/client"
 cta_whatsapp: "+91-96677 44073"
 cta_email: "contact@mkwadvisors.com"

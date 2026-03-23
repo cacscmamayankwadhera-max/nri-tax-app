@@ -39,7 +39,7 @@ keywords:
   - NRI ITR-1 restriction
   - NRI Section 87A rebate
   - NRI HRA restriction
-featured_image: "/images/blog/nri-restrictions-prohibitions-india-2026.webp"
+featured_image: "/images/blog/nri-things-banned-restricted.webp"
 schema_type: "Article"
 faq: true
 reading_time: "14 min"

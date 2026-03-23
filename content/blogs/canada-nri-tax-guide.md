@@ -32,7 +32,7 @@ tags:
   - Capital Gains
   - Property Sale
 category: "NRI Tax Guides"
-canonical: "/blog/canada-nri-tax-guide-dtaa-t1135-rrsp-cross-border-filing-2026"
+canonical: "/blog/canada-nri-tax-guide"
 schema_type: "Article"
 faq: true
 ---

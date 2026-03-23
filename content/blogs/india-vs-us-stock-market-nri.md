@@ -17,7 +17,7 @@ tags:
   - currency hedging NRI
   - FCNR deposits
 slug: "india-vs-us-stock-market-nri-returns-tax-allocation-2026"
-canonical: "/blog/india-vs-us-stock-market-nri-returns-tax-allocation-2026"
+canonical: "/blog/india-vs-us-stock-market-nri"
 featured: true
 ---
 

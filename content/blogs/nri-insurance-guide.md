@@ -619,10 +619,10 @@ At MKW Advisors, we provide comprehensive NRI advisory services covering insuran
 ---
 
 **Related Reading:**
-- [NRI Tax Filing Guide 2026](/content/blog/nri-tax-filing-guide)
+- [NRI Tax Filing Guide 2026](/content/blog/nri-tax-filing-itr)
 - [FEMA Compliance for NRIs](/content/blog/fema-compliance-nri)
-- [Capital Gains Tax for NRIs on Property Sale](/content/blog/nri-capital-gains-property)
-- [NRO vs NRE Account: Complete Guide](/content/blog/nro-nre-account-guide)
+- [Capital Gains Tax for NRIs on Property Sale](/content/blog/nri-property-sale-capital-gains)
+- [NRO vs NRE Account: Complete Guide](/content/blog/nre-nro-fcnr-banking)
 
 ---
 
