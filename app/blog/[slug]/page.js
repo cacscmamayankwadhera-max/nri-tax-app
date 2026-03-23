@@ -65,7 +65,45 @@ export default function BlogPost() {
     );
   }
 
-  const relatedBlogs = BLOGS.filter(b => b.slug !== slug && (b.category === blog.category || b.tags.some(t => blog.tags.includes(t)))).slice(0, 3);
+  const relatedBlogs = BLOGS.filter(b => b.slug !== slug && (b.category === blog.category || b.tags.some(t => blog.tags.includes(t)))).slice(0, 6);
+
+  // Next/Prev navigation
+  const currentIdx = BLOGS.findIndex(b => b.slug === slug);
+  const prevBlog = currentIdx > 0 ? BLOGS[currentIdx - 1] : null;
+  const nextBlog = currentIdx < BLOGS.length - 1 ? BLOGS[currentIdx + 1] : null;
+
+  // Share + email state
+  const [shareMsg, setShareMsg] = useState('');
+  const [emailResult, setEmailResult] = useState('');
+  const [resultEmail, setResultEmail] = useState('');
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareText = blog ? `${blog.title} — ${blog.subtitle}` : '';
+
+  const handleShare = (platform) => {
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedText = encodeURIComponent(shareText);
+    const urls = {
+      whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      copy: null,
+    };
+    if (platform === 'copy') {
+      navigator.clipboard?.writeText(shareUrl).then(() => { setShareMsg('Link copied!'); setTimeout(() => setShareMsg(''), 2000); });
+    } else {
+      window.open(urls[platform], '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleEmailSave = (e) => {
+    e.preventDefault();
+    if (!resultEmail) return;
+    const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
+    leads.push({ email: resultEmail, source: `blog-${slug}`, ts: new Date().toISOString() });
+    localStorage.setItem('nri-leads', JSON.stringify(leads));
+    setEmailResult('sent');
+    setResultEmail('');
+  };
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
@@ -247,22 +285,71 @@ export default function BlogPost() {
           </div>
         </div>
 
-        {/* RELATED GUIDES */}
+        {/* SHARE BUTTONS */}
+        <div className="flex items-center gap-3 mb-10 pb-6" style={{ borderBottom: '1px solid var(--border)' }}>
+          <span className="text-xs font-bold" style={{ color: 'var(--text-muted)' }}>SHARE:</span>
+          <button onClick={() => handleShare('whatsapp')} className="px-3 py-1.5 rounded-lg text-xs transition-all hover:scale-105" style={{ background: '#25D366', color: '#fff' }}>WhatsApp</button>
+          <button onClick={() => handleShare('twitter')} className="px-3 py-1.5 rounded-lg text-xs transition-all hover:scale-105" style={{ background: '#1DA1F2', color: '#fff' }}>Twitter</button>
+          <button onClick={() => handleShare('linkedin')} className="px-3 py-1.5 rounded-lg text-xs transition-all hover:scale-105" style={{ background: '#0077B5', color: '#fff' }}>LinkedIn</button>
+          <button onClick={() => handleShare('copy')} className="px-3 py-1.5 rounded-lg text-xs transition-all hover:scale-105" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+            {shareMsg || 'Copy Link'}
+          </button>
+        </div>
+
+        {/* EMAIL THIS GUIDE */}
+        <div className="rounded-xl p-5 mb-10" style={{ background: isDark ? 'rgba(196,154,60,0.06)' : 'rgba(196,154,60,0.04)', border: '1px solid rgba(196,154,60,0.2)' }}>
+          {emailResult === 'sent' ? (
+            <div className="text-center">
+              <p className="text-sm font-bold">&#x2705; Saved! Check your email for the guide + bonus tax checklist.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleEmailSave} className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-1">
+                <p className="text-sm font-bold mb-0.5">Email this guide to yourself</p>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Get a copy + our free NRI tax checklist</p>
+              </div>
+              <input type="email" placeholder="your@email.com" value={resultEmail} onChange={e => setResultEmail(e.target.value)} required className="px-4 py-2.5 rounded-lg text-sm w-full sm:w-64" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }} />
+              <button type="submit" className="px-5 py-2.5 rounded-lg text-sm font-bold flex-shrink-0" style={{ background: 'var(--bg-cta)', color: 'var(--text-on-cta)' }}>Send &rarr;</button>
+            </form>
+          )}
+        </div>
+
+        {/* RELATED GUIDES (expanded to 6) */}
         {relatedBlogs.length > 0 && (
-          <section className="mb-12">
-            <h2 className="font-serif text-2xl mb-6">Related Guides</h2>
+          <section className="mb-10">
+            <h2 className="font-serif text-2xl mb-2">Keep Reading</h2>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-muted)' }}>Related guides you might find useful</p>
             <div className="grid md:grid-cols-3 gap-4">
               {relatedBlogs.map(rb => (
                 <a key={rb.slug} href={`/blog/${rb.slug}`} className="group rounded-xl p-4 transition-all hover:scale-[1.02]" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                   <div className="h-1 rounded-full mb-3" style={{ background: rb.color }} />
-                  <p className="text-lg mb-1">{rb.icon}</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">{rb.icon}</span>
+                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{rb.readTime}</span>
+                  </div>
                   <h3 className="font-serif text-sm mb-1 group-hover:underline">{rb.title}</h3>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{rb.readTime}</p>
+                  <p className="text-xs line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{rb.excerpt}</p>
                 </a>
               ))}
             </div>
           </section>
         )}
+
+        {/* NEXT / PREV NAVIGATION */}
+        <div className="grid grid-cols-2 gap-4 mb-10">
+          {prevBlog ? (
+            <a href={`/blog/${prevBlog.slug}`} className="rounded-xl p-4 transition-all hover:scale-[1.01]" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>&larr; Previous</p>
+              <p className="text-sm font-bold line-clamp-1">{prevBlog.icon} {prevBlog.title}</p>
+            </a>
+          ) : <div />}
+          {nextBlog ? (
+            <a href={`/blog/${nextBlog.slug}`} className="rounded-xl p-4 text-right transition-all hover:scale-[1.01]" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Next &rarr;</p>
+              <p className="text-sm font-bold line-clamp-1">{nextBlog.title} {nextBlog.icon}</p>
+            </a>
+          ) : <div />}
+        </div>
 
         {/* AUTHOR BIO */}
         <div className="rounded-2xl p-6 mb-12" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>

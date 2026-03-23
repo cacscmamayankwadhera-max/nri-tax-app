@@ -8,7 +8,7 @@ lastUpdated: "2026-03-23"
 category: "NRI Taxation"
 tags: ["NRI crypto tax India", "VDA tax NRI", "Section 115BBH", "Section 194S TDS crypto", "crypto tax 30 percent India", "NRI virtual digital asset tax", "crypto gifting tax India", "mining staking tax NRI", "DeFi tax India NRI", "FBAR crypto reporting", "NRI Indian exchange tax", "crypto capital gains NRI"]
 slug: "nri-crypto-vda-tax"
-canonical: "/blogs/nri-crypto-vda-tax"
+canonical: "/blog/nri-crypto-vda-tax"
 featured: true
 ---
 

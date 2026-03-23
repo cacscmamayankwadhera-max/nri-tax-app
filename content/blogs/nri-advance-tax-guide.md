@@ -33,7 +33,7 @@ tags:
   - capital gains
   - rental income
   - FY 2025-26
-canonical: "/blogs/nri-advance-tax-guide-2026"
+canonical: "/blog/nri-advance-tax-guide-2026"
 structured_data:
   type: "Article"
   author: "CA Mayank Wadhera"

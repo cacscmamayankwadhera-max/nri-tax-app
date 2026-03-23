@@ -29,7 +29,7 @@ tags:
 reading_time: "6 min"
 schema_type: "Article"
 faq_schema: true
-canonical_note: "For detailed explanations, Section 197 certificate process, refund walkthrough, and worked examples, see our comprehensive guide: /blog/nri-tds-rates-refund-section-197-guide-2026"
+canonical_note: "For detailed explanations, Section 197 certificate process, refund walkthrough, and worked examples, see our comprehensive guide: /blog/nri-tds-rates-refund"
 ---
 
 # NRI TDS Rate Card 2026 -- Complete Quick-Reference Table (Print & Save)
@@ -50,7 +50,7 @@ This is a **printable, bookmarkable quick-reference card** containing every TDS 
 2. **DTAA treaty rates (Table 2) override domestic rates when lower**, but only if you furnish a valid Tax Residency Certificate (TRC) and Form 10F to the payer before payment. No documents, no benefit.
 3. **Surcharge applies only when total Indian income (including capital gains) crosses Rs. 50 lakh.** If your total Indian income is below Rs. 50 lakh, ignore surcharge rows -- your effective rate is the base rate plus 4% cess.
 
-**Looking for detailed explanations, Section 197 lower TDS certificate process, refund walkthrough, or worked examples?** Read our comprehensive guide: [TDS on NRI Income -- Rates, Refund & Section 197 Guide](/blog/nri-tds-rates-refund-section-197-guide-2026).
+**Looking for detailed explanations, Section 197 lower TDS certificate process, refund walkthrough, or worked examples?** Read our comprehensive guide: [TDS on NRI Income -- Rates, Refund & Section 197 Guide](/blog/nri-tds-rates-refund).
 
 ---
 

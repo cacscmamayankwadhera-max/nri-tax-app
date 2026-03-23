@@ -34,7 +34,7 @@ keywords:
   - NRI joint property purchase spouse
   - Form 15CA 15CB property sale NRI
   - Budget 2026 TAN requirement NRI
-canonical: "/blogs/nri-buying-property-india"
+canonical: "/blog/nri-buying-property-india"
 schema_type: "Article"
 ---
 

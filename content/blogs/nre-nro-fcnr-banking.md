@@ -24,7 +24,7 @@ tags:
   - PIS Account
   - NRI Bank Account Guide 2026
   - Form 15CA 15CB
-canonical_url: "/blog/nre-nro-fcnr-account-nri-banking-guide-2026"
+canonical_url: "/blog/nre-nro-fcnr-banking"
 schema_type: "Article"
 faq_schema: true
 reading_time: "14 min"

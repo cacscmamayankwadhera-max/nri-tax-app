@@ -21,8 +21,8 @@ tags:
   - NRI financial planning
   - NRI advance tax India
 keywords: "NRI India visit checklist 2026, NRI tax checklist India, NRI 182 day rule, NRI KYC update banks, DTAA tax certificate NRI, NRI property sale tax, NRI repatriation from India, NRI ITR filing checklist, NRI financial planning India visit, NRI banking checklist India"
-featured_image: "/images/blogs/nri-india-visit-checklist-2026.jpg"
-canonical_url: "https://mkwadvisors.com/blog/nri-india-visit-tax-financial-checklist-2026"
+featured_image: "/images/blog/nri-india-visit-checklist-2026.jpg"
+canonical_url: "https://mkwadvisors.com/blog/nri-india-visit-checklist"
 schema_type: "Article"
 reading_time: "12 min"
 ---

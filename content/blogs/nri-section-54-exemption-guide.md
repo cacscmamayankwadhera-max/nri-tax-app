@@ -20,7 +20,7 @@ tags:
   - NRI Tax Filing
   - FY 2025-26
 keywords: "section 54 exemption NRI, section 54EC bonds NRI, section 54F NRI guide, NRI capital gains exemption 2026, NRI property sale tax saving, CGAS deposit NRI, section 54 ₹10 crore cap, NHAI REC bonds capital gains, NRI residential house exemption, capital gains tax planning NRI India"
-featured_image: "/images/blogs/nri-section-54-exemption-guide.webp"
+featured_image: "/images/blog/nri-section-54-exemption-guide.webp"
 cta_link: "/client"
 cta_whatsapp: "+91-96677 44073"
 cta_email: "contact@mkwadvisors.com"

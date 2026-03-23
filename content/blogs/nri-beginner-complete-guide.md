@@ -11,7 +11,7 @@ category: "NRI Guide"
 tags: ["new NRI guide 2026", "just became NRI India", "NRI beginner tax guide", "NRI first steps", "NRI bank account conversion", "NRE vs NRO beginner", "NRI tax filing basics", "NRI FEMA compliance", "NRI investment starter", "NRI checklist 2026", "182 day rule NRI", "MKW Advisors"]
 schema_type: "Article"
 faq_schema: true
-canonical: "/blog/nri-beginner-complete-guide-tax-finance-2026"
+canonical: "/blog/nri-beginner-complete-guide"
 word_count: 4200
 ---
 

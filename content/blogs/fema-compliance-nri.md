@@ -28,7 +28,7 @@ tags:
   - schedule fa foreign assets
   - nri fema violations
   - rbi nri regulations
-canonical_url: "/blog/fema-compliance-nri-rules-penalties-mistakes-2026"
+canonical_url: "/blog/fema-compliance-nri"
 schema_type: "Article"
 faq_schema: true
 ecosystem:

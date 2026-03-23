@@ -33,7 +33,7 @@ keywords:
   - NRI PIS account direct equity
   - NRI DTAA tax benefit FD
 featured: true
-canonical: /blogs/nri-investment-comparison-nre-fd-gift-city-mf
+canonical: /blog/nri-investment-comparison-nre-fd-gift-city-mf
 structured_data: Article
 faq: true
 ---
@@ -427,7 +427,7 @@ We help NRIs in the US, UK, UAE, Singapore, Canada, and Australia build tax-effi
 ---
 
 **Related Reading:**
-- [Understanding GIFT City IFSC for NRIs](/blogs/gift-city-ifsc-nri-guide)
-- [NRE vs NRO Account: Complete Guide](/blogs/nre-nro-account-guide)
-- [NRI Mutual Fund Investment Guide](/blogs/nri-mutual-fund-guide)
-- [NRI Fixed Deposit Tax Planning](/blogs/nri-fixed-deposit-tax-planning)
+- [Understanding GIFT City IFSC for NRIs](/blog/gift-city-ifsc-nri-guide)
+- [NRE vs NRO Account: Complete Guide](/blog/nre-nro-account-guide)
+- [NRI Mutual Fund Investment Guide](/blog/nri-mutual-fund-guide)
+- [NRI Fixed Deposit Tax Planning](/blog/nri-fixed-deposit-tax-planning)

@@ -28,7 +28,7 @@ featured: true
 
 **"Ghar toh apna hona chahiye"** -- this one sentence has cost NRIs more money than almost any other financial decision. The emotional pull of owning property back home is powerful. But is it financially rational?
 
-This is not a guide on *how* to buy property in India. If you have already decided to buy, we have a [separate step-by-step guide for that](/blogs/nri-buying-property-india). This blog addresses the question that should come *before* -- **whether buying makes more sense than renting, given your specific circumstances as an NRI in FY 2025-26.**
+This is not a guide on *how* to buy property in India. If you have already decided to buy, we have a [separate step-by-step guide for that](/blog/nri-buying-property-india). This blog addresses the question that should come *before* -- **whether buying makes more sense than renting, given your specific circumstances as an NRI in FY 2025-26.**
 
 We will walk through hard numbers, tax implications, liquidity analysis, NRI-specific complications, and a side-by-side SIP vs EMI projection. By the end, you will have a clear, data-driven framework to make this decision -- not an emotional one.
 

@@ -31,7 +31,7 @@ tags:
   - Remittance
   - UPI NRI
 category: "NRI Finance & Compliance"
-canonical: "/blogs/nri-money-transfer-india"
+canonical: "/blog/nri-money-transfer-india"
 structured_data:
   type: "Article"
   author: "CA Mayank Wadhera"

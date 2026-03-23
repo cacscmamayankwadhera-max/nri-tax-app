@@ -54,7 +54,7 @@ schema:
   type: "BlogPosting"
   author: "CA Mayank Wadhera"
   organization: "MKW Advisors"
-canonical: "/blogs/gulf-gcc-nri-tax-guide-saudi-qatar-oman-bahrain-kuwait-2026"
+canonical: "/blog/gulf-gcc-nri-tax-guide-saudi-qatar-oman-bahrain-kuwait-2026"
 ---
 
 # Gulf/GCC NRI Tax Guide 2026 — Saudi Arabia, Qatar, Oman, Bahrain & Kuwait: DTAA, Zero-Tax Trap & Complete Compliance Roadmap
@@ -72,7 +72,7 @@ Every single one of these countries levies zero or near-zero personal income tax
 
 This belief — comforting, widespread, and completely wrong — costs Gulf NRIs crores in aggregate every year through missed refunds, excess TDS, penalties under Sections 234A/B/C, FEMA violations, and reassessment notices. The Indian Income Tax Department does not care that your host country does not tax you. It cares about what you earn from Indian sources, and it will tax every rupee.
 
-This guide covers all five GCC countries (excluding the UAE, which has its own [dedicated guide](/blogs/uae-dubai-nri-tax-guide-india-uae-dtaa-2026)) with country-specific DTAA rates, TRC processes, and the critical Kuwait exception where no DTAA exists at all.
+This guide covers all five GCC countries (excluding the UAE, which has its own [dedicated guide](/blog/uae-nri-tax-guide)) with country-specific DTAA rates, TRC processes, and the critical Kuwait exception where no DTAA exists at all.
 
 ---
 

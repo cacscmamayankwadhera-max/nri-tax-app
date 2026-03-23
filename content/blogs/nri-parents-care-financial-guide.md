@@ -21,7 +21,7 @@ tags:
   - NRI parent POA India
   - HUF NRI parents
 featured: true
-canonical: "/blogs/nri-parents-care-financial-guide"
+canonical: "/blog/nri-parents-care-financial-guide"
 ---
 
 # NRI Parents Care Guide — Health Insurance, Tax Benefits & Financial Planning from Abroad (2026)

@@ -23,8 +23,8 @@ tags:
   - NRI TDS REIT InvIT
   - FY 2025-26 NRI investment
 slug: "nri-reits-invits-guide"
-canonical: "/blogs/nri-reits-invits-guide"
-featured_image: "/images/blogs/nri-reits-invits-guide.jpg"
+canonical: "/blog/nri-reits-invits-guide"
+featured_image: "/images/blog/nri-reits-invits-guide.jpg"
 faq_schema: true
 article_schema: true
 ---

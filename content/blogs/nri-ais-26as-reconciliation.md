@@ -21,8 +21,8 @@ tags:
   - SFT reporting NRI
   - AIS errors NRI
 slug: "nri-ais-26as-tis-reconciliation-avoid-tax-notices-2026"
-canonical: "/blog/nri-ais-26as-tis-reconciliation-avoid-tax-notices-2026"
-featured_image: "/images/blog/ais-26as-tis-reconciliation-nri.webp"
+canonical: "/blog/nri-ais-26as-reconciliation"
+featured_image: "/images/blog/nri-ais-26as-reconciliation.webp"
 reading_time: "14 min read"
 ---
 

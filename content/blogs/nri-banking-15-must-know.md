@@ -37,7 +37,7 @@ keywords:
   - nri auto sweep fd
   - nri banking mistakes to avoid
 featured: true
-canonical: "/blogs/nri-banking-15-must-know-essentials-2026"
+canonical: "/blog/nri-banking-15-must-know-essentials-2026"
 schema_type: "Article"
 faq: true
 ---

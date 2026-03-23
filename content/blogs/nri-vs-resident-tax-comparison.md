@@ -33,7 +33,7 @@ keywords:
   - nri itr filing 2026
   - nri bank account types
   - nri deductions 80c 80d
-featured_image: "/images/blogs/nri-vs-resident-tax-comparison.webp"
+featured_image: "/images/blog/nri-vs-resident-tax-comparison.webp"
 schema_type: "Article"
 faq_schema: true
 ---
@@ -570,10 +570,10 @@ The differences between NRI and Resident taxation are not just academic -- they 
 - Email: [contact@mkwadvisors.com](mailto:contact@mkwadvisors.com)
 
 **Related Resources:**
-- [NRI Property Sale TDS Guide](/blogs/nri-property-sale-tds)
-- [DTAA Benefits for NRIs](/blogs/dtaa-benefits-nri)
-- [NRE vs NRO Account Tax Implications](/blogs/nre-vs-nro-tax)
-- [Schedule FA Filing Guide for Residents](/blogs/schedule-fa-guide)
+- [NRI Property Sale TDS Guide](/blog/nri-property-sale-tds)
+- [DTAA Benefits for NRIs](/blog/dtaa-benefits-nri)
+- [NRE vs NRO Account Tax Implications](/blog/nre-vs-nro-tax)
+- [Schedule FA Filing Guide for Residents](/blog/schedule-fa-guide)
 
 ---
 

@@ -12,7 +12,7 @@ author:
   website: https://mkwadvisors.com
   contact_email: contact@mkwadvisors.com
   whatsapp: "+91-96677 44073"
-canonical_url: https://mkwadvisors.com/blog/nri-investment-india-mutual-funds-stocks-sip-guide-2026
+canonical_url: https://mkwadvisors.com/blog/nri-investment-mutual-funds
 category: NRI Tax & Investment
 tags:
   - NRI Investment India

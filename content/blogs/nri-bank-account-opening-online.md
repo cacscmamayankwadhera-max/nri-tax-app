@@ -37,7 +37,7 @@ keywords:
   - best NRI bank account India
   - NRI joint account rules
   - NRI nominee rules bank account
-featured_image: /images/blogs/nri-bank-account-opening-online.webp
+featured_image: /images/blog/nri-bank-account-opening-online.webp
 faq: true
 ---
 

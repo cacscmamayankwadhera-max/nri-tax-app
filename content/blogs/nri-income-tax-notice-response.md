@@ -40,7 +40,7 @@ tags:
   - Tax Penalty
   - Appeal Process
 schema_type: "Article"
-canonical_url: "/blogs/nri-income-tax-notice-response"
+canonical_url: "/blog/nri-income-tax-notice-response"
 ---
 
 # NRI Income Tax Notice — Types, Response & How to Handle (2026)

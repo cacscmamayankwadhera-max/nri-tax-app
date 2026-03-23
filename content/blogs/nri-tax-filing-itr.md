@@ -11,7 +11,7 @@ category: "NRI Taxation"
 tags: ["NRI tax filing India", "ITR for NRI AY 2026-27", "NRI income tax return", "NRI capital gains tax", "ITR-2 NRI", "new tax regime NRI", "NRO interest TDS refund", "Section 87A NRI", "MKW Advisors"]
 schema_type: "Article"
 faq_schema: true
-canonical: "/blog/nri-income-tax-filing-india-itr-guide-ay-2026-27"
+canonical: "/blog/nri-tax-filing-itr"
 word_count: 3200
 ---
 

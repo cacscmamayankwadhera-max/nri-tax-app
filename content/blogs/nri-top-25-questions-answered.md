@@ -62,7 +62,7 @@ keywords:
   - "CA Mayank Wadhera NRI tax"
   - "MKW Advisors NRI taxation"
 featured: true
-canonical: "/blogs/nri-top-25-tax-questions-answered"
+canonical: "/blog/nri-top-25-tax-questions-answered"
 schema_type: "FAQPage"
 ---
 
@@ -126,7 +126,7 @@ Budget 2020 also introduced the concept of **"deemed resident"** under Section 6
 
 Days of stay include the day of arrival but not the day of departure, as per CBDT Circular No. 2/2015. Keep passport stamps, boarding passes, and immigration records as proof.
 
-**Read more:** [NRI Residential Status -- Complete Guide](/blogs/nri-residential-status-guide)
+**Read more:** [NRI Residential Status -- Complete Guide](/blog/nri-residential-status-guide)
 
 ---
 
@@ -142,7 +142,7 @@ Filing is also mandatory if you want to carry forward capital losses (Section 74
 
 The due date for non-audit NRI returns is **July 31, 2026** for AY 2026-27. Belated returns can be filed until December 31, 2026, but attract penalties under Section 234F of up to Rs. 5,000.
 
-**Read more:** [NRI ITR Filing -- Complete Guide](/blogs/nri-itr-filing-guide)
+**Read more:** [NRI ITR Filing -- Complete Guide](/blog/nri-itr-filing-guide)
 
 ---
 
@@ -158,7 +158,7 @@ ITR-2 includes dedicated schedules that NRIs need: Schedule for Residential Stat
 
 File online through the e-filing portal at incometax.gov.in using your PAN credentials. Digital signature or Aadhaar OTP verification is required. NRIs without Aadhaar can use the verification code sent to their registered email and mobile.
 
-**Read more:** [Which ITR Form for NRI -- Decision Guide](/blogs/nri-itr-form-guide)
+**Read more:** [Which ITR Form for NRI -- Decision Guide](/blog/nri-itr-form-guide)
 
 ---
 
@@ -174,7 +174,7 @@ Additionally, interest on an **FCNR (Foreign Currency Non-Resident) account** is
 
 **Important note for returning NRIs:** If you return to India permanently, your NRE FDs can continue to earn tax-free interest until maturity during the RNOR period (typically 2-3 years). Plan your return timing to maximize this benefit.
 
-**Read more:** [NRE vs NRO Account Taxation -- Full Comparison](/blogs/nre-nro-account-taxation)
+**Read more:** [NRE vs NRO Account Taxation -- Full Comparison](/blog/nre-nro-account-taxation)
 
 ---
 
@@ -190,7 +190,7 @@ This is significantly higher than the 10% TDS that banks deduct on resident FD i
 
 Excess TDS already deducted can be claimed as a refund by filing your ITR.
 
-**Read more:** [TDS on NRI Income -- Rates, DTAA, and Refund Process](/blogs/tds-on-nri-income)
+**Read more:** [TDS on NRI Income -- Rates, DTAA, and Refund Process](/blog/tds-on-nri-income)
 
 ---
 
@@ -204,7 +204,7 @@ This creates a major cash flow problem for NRIs. On a Rs. 1 crore property sale 
 
 Capital gains are computed as: Sale Price minus Cost of Acquisition (with indexation up to FY 2024-25 if using the old 20% rate) minus Sale Expenses (brokerage, legal fees). Stamp duty value applies if sale consideration is less than stamp duty value by more than 10%.
 
-**Read more:** [NRI Property Sale Tax -- Complete Capital Gains Guide](/blogs/nri-property-sale-tax)
+**Read more:** [NRI Property Sale Tax -- Complete Capital Gains Guide](/blog/nri-property-sale-tax)
 
 ---
 
@@ -220,7 +220,7 @@ When an NRI sells property, TDS under Section 195 is deducted on the **entire sa
 
 **Pro tip:** If you are claiming Section 54 exemption (reinvestment in another house), include that in your Form 13 application to potentially get a nil or very low TDS certificate. This preserves your sale proceeds for reinvestment rather than locking them up in a TDS refund cycle that can take 6-12 months.
 
-**Read more:** [Section 197 Certificate for NRI -- Step-by-Step Application Guide](/blogs/section-197-certificate-nri)
+**Read more:** [Section 197 Certificate for NRI -- Step-by-Step Application Guide](/blog/section-197-certificate-nri)
 
 ---
 
@@ -236,7 +236,7 @@ This is one of the most significant tax disadvantages of NRI status and frequent
 
 There is no workaround or DTAA provision that overrides this restriction. The only solution is to become a Resident or RNOR, at which point the rebate becomes available. NRIs planning to return to India should time their return to qualify as Resident in a year when they can maximize the 87A benefit.
 
-**Read more:** [Section 87A Rebate -- Why NRIs Cannot Claim It](/blogs/section-87a-rebate-nri)
+**Read more:** [Section 87A Rebate -- Why NRIs Cannot Claim It](/blog/section-87a-rebate-nri)
 
 ---
 
@@ -256,7 +256,7 @@ Under Section 90 of the Income Tax Act, where India has a DTAA with a country, t
 
 Submit TRC and Form 10F to the payer (bank, property buyer, or tenant) before payment to get TDS at the treaty rate. Otherwise, claim DTAA benefit while filing your ITR using Schedule TR (Tax Relief) and get excess TDS refunded.
 
-**Read more:** [DTAA for NRIs -- Country-Wise Treaty Rates and Claim Process](/blogs/dtaa-for-nri-guide)
+**Read more:** [DTAA for NRIs -- Country-Wise Treaty Rates and Claim Process](/blog/dtaa-for-nri-guide)
 
 ---
 
@@ -280,7 +280,7 @@ If you paid taxes on the same income in both India and your country of residence
 
 FTC is limited to the **lower of** the tax payable in India on that income or the actual foreign tax paid.
 
-**Read more:** [Form 67 for Foreign Tax Credit -- Filing Guide for NRIs](/blogs/form-67-foreign-tax-credit-nri)
+**Read more:** [Form 67 for Foreign Tax Credit -- Filing Guide for NRIs](/blog/form-67-foreign-tax-credit-nri)
 
 ---
 
@@ -305,7 +305,7 @@ Payment in foreign currency, traveler's cheques, or cash is **not permitted**. A
 - TDS at 30% applies if tenant is paying rent exceeding Rs. 50,000 per month to an NRI (Section 195)
 - Joint purchase with another NRI or a Resident relative is permitted
 
-**Read more:** [NRI Property Purchase in India -- FEMA Rules and Tax Guide](/blogs/nri-property-purchase-india)
+**Read more:** [NRI Property Purchase in India -- FEMA Rules and Tax Guide](/blog/nri-property-purchase-india)
 
 ---
 
@@ -327,7 +327,7 @@ The Enforcement Directorate (ED) handles FEMA enforcement. In serious cases invo
 
 **Compounding of offenses** is available under Section 15 of FEMA, which allows violations to be settled by paying a compounding fee, typically a fraction of the total penalty. Apply to the RBI Compounding Authority within the prescribed period.
 
-**Read more:** [FEMA Compliance for NRIs -- Penalties, Violations, and Compounding](/blogs/fema-penalties-nri)
+**Read more:** [FEMA Compliance for NRIs -- Penalties, Violations, and Compounding](/blog/fema-penalties-nri)
 
 ---
 
@@ -349,7 +349,7 @@ The Enforcement Directorate (ED) handles FEMA enforcement. In serious cases invo
 
 **NRE account funds** (original foreign remittance plus interest) are **freely repatriable** without any cap and without 15CA/15CB requirements.
 
-**Read more:** [NRI Money Repatriation -- 15CA, 15CB, and Process Guide](/blogs/nri-repatriation-guide)
+**Read more:** [NRI Money Repatriation -- 15CA, 15CB, and Process Guide](/blog/nri-repatriation-guide)
 
 ---
 
@@ -368,7 +368,7 @@ An RNOR is taxed exactly like an NRI for income tax purposes -- only **Indian-so
 
 This makes RNOR status invaluable for tax planning. Actions to consider during the RNOR window: sell foreign stocks, withdraw from overseas retirement accounts, liquidate foreign fixed deposits, and consolidate foreign income while it remains tax-free in India.
 
-**Read more:** [RNOR Status for Returning NRIs -- Tax Planning Guide](/blogs/rnor-status-returning-nri)
+**Read more:** [RNOR Status for Returning NRIs -- Tax Planning Guide](/blog/rnor-status-returning-nri)
 
 ---
 
@@ -388,7 +388,7 @@ Under SEBI regulations, NRIs can invest in mutual funds on a repatriable basis (
 
 **Tax implications:** Equity mutual fund LTCG (held over 12 months) is taxed at 12.5% above Rs. 1.25 lakh. Debt fund gains are taxed at slab rates. TDS is deducted at 12.5% (equity LTCG) or 30% (debt/STCG) for NRI investors. NRIs cannot claim Section 87A rebate to offset this tax.
 
-**Read more:** [NRI Mutual Fund Investment -- Complete Guide](/blogs/nri-mutual-fund-investment)
+**Read more:** [NRI Mutual Fund Investment -- Complete Guide](/blog/nri-mutual-fund-investment)
 
 ---
 
@@ -415,7 +415,7 @@ GIFT IFSC operates as a jurisdiction outside India's domestic tax framework. Und
 
 GIFT IFSC is positioned as India's answer to Singapore and Dubai for NRI wealth management.
 
-**Read more:** [GIFT City for NRIs -- Zero-Tax Investing Explained](/blogs/gift-city-nri-investing)
+**Read more:** [GIFT City for NRIs -- Zero-Tax Investing Explained](/blog/gift-city-nri-investing)
 
 ---
 
@@ -438,7 +438,7 @@ The new regime does not allow most deductions -- Section 80C (Rs. 1.5 lakh), Sec
 
 **Important:** NRIs cannot claim the Section 87A rebate under either regime. Standard deduction of Rs. 75,000 is available under the new regime for salary income.
 
-**Read more:** [New vs Old Tax Regime for NRIs -- Detailed Comparison](/blogs/new-vs-old-regime-nri)
+**Read more:** [New vs Old Tax Regime for NRIs -- Detailed Comparison](/blog/new-vs-old-regime-nri)
 
 ---
 
@@ -461,7 +461,7 @@ Advance tax is essentially "pay-as-you-earn" tax. While most NRI income has TDS 
 
 **Practical tip for NRIs:** Most NRI income sources (NRO interest, capital gains, rental income) have TDS deducted. Advance tax typically becomes relevant only when you have large undisclosed capital gains, significant rental income from multiple properties, or income from business in India. If your TDS covers your full tax liability, advance tax is not required. Verify by computing your total estimated tax liability and comparing it against total TDS reflected in Form 26AS.
 
-**Read more:** [Advance Tax for NRIs -- When, How, and How Much to Pay](/blogs/advance-tax-nri)
+**Read more:** [Advance Tax for NRIs -- When, How, and How Much to Pay](/blog/advance-tax-nri)
 
 ---
 
@@ -486,7 +486,7 @@ This is the single most common FEMA violation among NRIs, and most people are un
 
 Many NRIs keep resident accounts active for convenience -- UPI payments, recurring SIPs, or loan EMIs. The compliant alternative is to run these through your NRO account, which supports all domestic transactions.
 
-**Read more:** [NRI Bank Account Compliance -- Resident to NRO Conversion Guide](/blogs/nri-bank-account-compliance)
+**Read more:** [NRI Bank Account Compliance -- Resident to NRO Conversion Guide](/blog/nri-bank-account-compliance)
 
 ---
 
@@ -510,7 +510,7 @@ The income tax department uses AIS data for **automated mismatch detection**. If
 
 **How to access:** Login to incometax.gov.in, go to Services, then Annual Information Statement. Review each entry, and use the **feedback mechanism** to report incorrect information (e.g., transactions that do not belong to you or duplicate entries).
 
-**Read more:** [AIS for NRIs -- How to Check and Respond to Discrepancies](/blogs/ais-guide-for-nri)
+**Read more:** [AIS for NRIs -- How to Check and Respond to Discrepancies](/blog/ais-guide-for-nri)
 
 ---
 
@@ -530,7 +530,7 @@ The income tax department uses AIS data for **automated mismatch detection**. If
 
 **Alternative -- Section 54EC:** Instead of buying a house, NRIs can invest up to Rs. 50 lakh in specified bonds (NHAI, REC, PFC, IRFC) with a 5-year lock-in to claim LTCG exemption under Section 54EC.
 
-**Read more:** [Section 54 Exemption for NRI Property Sale -- Complete Guide](/blogs/section-54-exemption-nri)
+**Read more:** [Section 54 Exemption for NRI Property Sale -- Complete Guide](/blog/section-54-exemption-nri)
 
 ---
 
@@ -556,7 +556,7 @@ FBAR (Foreign Bank Account Report) is a US reporting requirement under the Bank 
 
 US NRIs should also check if they need to file **FATCA Form 8938** (for higher thresholds: USD 50,000 on last day or USD 75,000 at any time for US residents; higher for expats).
 
-**Read more:** [FBAR Filing for US NRIs -- Requirements, Deadlines, and Penalties](/blogs/fbar-filing-us-nri)
+**Read more:** [FBAR Filing for US NRIs -- Requirements, Deadlines, and Penalties](/blog/fbar-filing-us-nri)
 
 ---
 
@@ -582,7 +582,7 @@ US NRIs should also check if they need to file **FATCA Form 8938** (for higher t
 
 **Exception for NRIs:** Repatriation from NRE/FCNR accounts is **not subject to TCS** as these are foreign currency accounts with already-remitted funds. TCS primarily affects Residents using LRS or NRIs remitting NRO funds.
 
-**Read more:** [TCS on Foreign Remittance -- Rates, Thresholds, and Refund Process](/blogs/tcs-foreign-remittance)
+**Read more:** [TCS on Foreign Remittance -- Rates, Thresholds, and Refund Process](/blog/tcs-foreign-remittance)
 
 ---
 
@@ -607,7 +607,7 @@ A Hindu Undivided Family is a unique concept under Indian tax law recognized und
 
 **Constraints:** HUF cannot hold NRE accounts. Clubbing provisions (Section 64) may apply if assets are transferred by Karta without adequate consideration. Gift from non-members above Rs. 50,000 to HUF is taxable. Proper documentation and genuine transactions are essential.
 
-**Read more:** [NRI HUF Creation -- Tax Benefits and Compliance Guide](/blogs/nri-huf-creation-guide)
+**Read more:** [NRI HUF Creation -- Tax Benefits and Compliance Guide](/blog/nri-huf-creation-guide)
 
 ---
 
@@ -640,7 +640,7 @@ A Hindu Undivided Family is a unique concept under Indian tax law recognized und
 
 Organize all documents by income type before starting the filing process. Missing documents cause delays, incorrect filings, and potential notices.
 
-**Read more:** [NRI ITR Document Checklist -- Complete Preparation Guide](/blogs/nri-itr-documents-checklist)
+**Read more:** [NRI ITR Document Checklist -- Complete Preparation Guide](/blog/nri-itr-documents-checklist)
 
 ---
 

@@ -37,7 +37,7 @@ schema:
   type: "BlogPosting"
   author: "CA Mayank Wadhera"
   organization: "MKW Advisors"
-canonical: "/blogs/uae-dubai-nri-tax-guide-india-uae-dtaa-2026"
+canonical: "/blog/uae-nri-tax-guide"
 ---
 
 # UAE/Dubai NRI Tax Guide 2026 — India-UAE DTAA, the Zero-Tax Trap & Full Compliance Roadmap

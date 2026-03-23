@@ -18,7 +18,7 @@ That advice is correct -- most of the time.
 
 But not all of the time. And the reluctance of the financial advisory industry to tell you **when to actually exit** is not a feature. It is a blind spot.
 
-This guide is the companion piece to our [NRI Market Crash Survival Guide](/blogs/nri-market-crash-guide), which covers what to do during market downturns -- the answer there is clear: continue your SIPs, do not panic sell, use the crash to harvest tax losses. That guide remains fully valid.
+This guide is the companion piece to our [NRI Market Crash Survival Guide](/blog/nri-market-crash-guide), which covers what to do during market downturns -- the answer there is clear: continue your SIPs, do not panic sell, use the crash to harvest tax losses. That guide remains fully valid.
 
 This guide covers the opposite question. Not what to do when markets are falling, but **when you should proactively choose to reduce or exit your Indian equity allocation** -- before the fall, during overvaluation, or because your personal financial circumstances demand it.
 
@@ -287,7 +287,7 @@ Knowing when to exit is valuable. Knowing when **not** to exit is equally import
 
 ### False Alarm 1: Panic During a Market Crash
 
-We covered this extensively in our [Market Crash Survival Guide](/blogs/nri-market-crash-guide). The short version: Indian markets have recovered from every crash in history. The 2008 global financial crisis (60% decline) recovered in 18 months. The 2020 COVID crash (38% decline) recovered in 12 months.
+We covered this extensively in our [Market Crash Survival Guide](/blog/nri-market-crash-guide). The short version: Indian markets have recovered from every crash in history. The 2008 global financial crisis (60% decline) recovered in 18 months. The 2020 COVID crash (38% decline) recovered in 12 months.
 
 If your time horizon is 5+ years and you are investing through SIPs, a crash is your friend, not your enemy. Selling during a crash converts a temporary paper loss into a permanent real loss. Do not confuse volatility with risk. Volatility is the price of admission. Risk is the permanent loss of capital, and that happens when you sell at the bottom.
 
@@ -542,7 +542,7 @@ Strategic exits involve complex tax calculations, FEMA compliance, GIFT City tra
 ---
 
 *Related reading:*
-- [NRI Market Crash Survival Guide -- What to Do When Indian Markets Fall (2026)](/blogs/nri-market-crash-guide)
+- [NRI Market Crash Survival Guide -- What to Do When Indian Markets Fall (2026)](/blog/nri-market-crash-guide)
 
 ---
 
