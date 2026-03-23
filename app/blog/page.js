@@ -20,9 +20,13 @@ const COUNTRIES = [
   { flag: '🇦🇪', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
   { flag: '🇬🇧', name: 'UK', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 15%' },
   { flag: '🇨🇦', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
+  { flag: '🇦🇺', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
   { flag: '🇸🇬', name: 'Singapore', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 15%' },
-  { flag: '🇦🇺', name: 'Australia', slug: 'dtaa-double-taxation-ftc', stat: 'CGT Credit' },
   { flag: '🇩🇪', name: 'Germany', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 10%' },
+  { flag: '🇸🇦', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
+  { flag: '🇶🇦', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
+  { flag: '🇴🇲', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
+  { flag: '🇰🇼', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
 ];
 
 const STATS_BAR = [
@@ -186,19 +190,40 @@ export default function BlogHub() {
           </section>
         )}
 
-        {/* ══ COUNTRY QUICK-ACCESS ══ */}
+        {/* ══ COUNTRY QUICK-ACCESS WITH ARROWS ══ */}
         {activeCategory === 'all' && !searchQuery && (
           <section className="mb-14">
             <h2 className="font-serif text-2xl mb-2">Guides by Country</h2>
             <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Country-specific tax guides tailored to your jurisdiction.</p>
-            <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-              {COUNTRIES.map(c => (
-                <a key={c.name} href={`/blog/${c.slug}`} className="flex-shrink-0 w-36 rounded-xl p-4 text-center transition-all duration-200 hover:scale-105" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                  <div className="text-3xl mb-2">{c.flag}</div>
-                  <div className="text-sm font-bold mb-1">{c.name}</div>
-                  <div className="text-xs" style={{ color: 'var(--accent)' }}>{c.stat}</div>
-                </a>
-              ))}
+            <div className="relative">
+              {/* Left arrow */}
+              <button
+                onClick={() => { const el = document.getElementById('country-scroll'); if (el) el.scrollBy({ left: -300, behavior: 'smooth' }); }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-lg transition-all hover:scale-110 hidden md:flex"
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--accent)' }}
+                aria-label="Scroll left"
+              >
+                &larr;
+              </button>
+              {/* Scrollable row */}
+              <div id="country-scroll" className="flex gap-3 overflow-x-auto pb-2 px-1 scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+                {COUNTRIES.map(c => (
+                  <a key={c.name} href={`/blog/${c.slug}`} className="flex-shrink-0 w-36 rounded-xl p-4 text-center transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                    <div className="text-3xl mb-2">{c.flag}</div>
+                    <div className="text-sm font-bold mb-1">{c.name}</div>
+                    <div className="text-xs" style={{ color: 'var(--accent)' }}>{c.stat}</div>
+                  </a>
+                ))}
+              </div>
+              {/* Right arrow */}
+              <button
+                onClick={() => { const el = document.getElementById('country-scroll'); if (el) el.scrollBy({ left: 300, behavior: 'smooth' }); }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-lg transition-all hover:scale-110 hidden md:flex"
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--accent)' }}
+                aria-label="Scroll right"
+              >
+                &rarr;
+              </button>
             </div>
           </section>
         )}
