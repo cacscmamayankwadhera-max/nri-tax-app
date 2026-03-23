@@ -1,394 +1,956 @@
-# NRI Tax Suite — Team Testing Guide
+# NRI Tax Suite — Complete Test Scenarios & QA Guide
 
 ## Credentials & URLs
 
-| Environment | URL | Notes |
-|------------|-----|-------|
-| **Production** | https://nri-tax-lw2nnr5ga-cacscmamayankwadhera-maxs-projects.vercel.app | Auto-deploys from GitHub |
-| **Local** | http://localhost:3000 | Run `npm run dev` |
-| **Supabase** | https://supabase.com/dashboard/project/zihohbpsjxujjuoglera | Database admin |
-| **GitHub** | https://github.com/cacscmamayankwadhera-max/nri-tax-app | Source code |
+| Environment | URL |
+|------------|-----|
+| **Production** | https://nri-tax-lw2nnr5ga-cacscmamayankwadhera-maxs-projects.vercel.app |
+| **Local** | http://localhost:3000 |
+| **Supabase** | https://supabase.com/dashboard/project/zihohbpsjxujjuoglera |
+| **GitHub** | https://github.com/cacscmamayankwadhera-max/nri-tax-app |
 
-### Test Accounts
+### Test Accounts (create via /signup)
 
-Create these accounts via `/signup` before testing:
-
-| Role | Email | Password | Purpose |
-|------|-------|----------|---------|
-| Admin | admin@mkwadvisors.com | Test@Admin2026 | Full dashboard access |
-| Preparer | preparer@mkwadvisors.com | Test@Prep2026 | Case processing |
-
-> **Note:** After creating accounts, confirm via email link in inbox. Supabase sends confirmation emails.
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@mkwadvisors.com | Test@Admin2026 |
+| Preparer | preparer@mkwadvisors.com | Test@Prep2026 |
 
 ---
 
-## Test Scenario 1: UK NRI — Property Sale (Most Common Case)
+# PART A — PROPERTY SALE SCENARIOS (22 Tests)
 
-**Client Profile:** Rajesh Mehta, IT Manager, London, UK since 2021
+## A1: Standard Property Sale — Pre-July 2024 Acquisition (UK NRI)
 
-### Step 1: Client Intake
-1. Open `/client`
-2. In the AI auto-fill box, type:
-   ```
-   I work in London since 2021. I came to India for about 38 days this year. I sold a residential flat in Mumbai for ₹80 lakhs, purchased in 2018 for ₹30 lakhs. I also have a flat in Pune rented at ₹25,000/month. NRO FD interest about ₹1.4 lakhs, NRE savings interest ₹50,000. UK salary GBP 72,000, UK tax paid. Want to know about property tax savings and foreign tax credit.
-   ```
-3. Click "Auto-Fill My Details"
+**Narrative:**
+```
+I work in London since 2021, came to India for 38 days. Sold a residential flat in Mumbai for ₹80 lakhs, purchased in 2018 for ₹30 lakhs. NRO FD interest ₹1.4 lakhs, NRE savings ₹50,000. UK salary GBP 72,000, UK tax paid.
+```
 
-**Expected Results:**
-| Field | Expected Value |
-|-------|---------------|
-| Country | United Kingdom (or UK) |
-| Sale Price | 8000000 |
-| Purchase Cost | 3000000 |
-| Foreign Salary | true |
-| Rent | true |
-| Interest | true |
-
-4. Fill any missing fields manually (name, stay days = 38)
-5. Complete all 5 steps
-6. On Step 5 (Review):
-   - Classification should be: **Amber or Red**
-   - CG Preview should show: **Option B saves money**
-
-### Step 2: Submit & Check Diagnostic
-7. Click "Get My Tax Diagnostic"
-
-**Expected Diagnostic:**
-| Item | Expected |
-|------|----------|
+| Check | Expected |
+|-------|----------|
 | Classification | Amber or Red |
-| Option B (12.5%) tax | ₹6,50,000 |
-| TDS u/s 195 (20%) | ~₹18,30,400 |
-| Potential refund | ~₹11,80,400 |
-| Tracking code | 24-character hex string |
-| WhatsApp link | Opens wa.me/919667744073 |
+| Option A (20% indexed) | LTCG ₹39,71,429 → Tax ₹8,26,057 |
+| Option B (12.5% flat) | LTCG ₹50,00,000 → Tax ₹6,50,000 |
+| Better option | B (saves ₹1,76,057) |
+| TDS u/s 195 | ~₹18,30,400 (20% of ₹80L + surcharge + cess) |
+| Refund | ~₹11,80,400 |
+| NRE interest | NOT included in taxable income (Section 10(4) exempt) |
+| Foreign salary | NOT taxable (NR) |
+| CG DOCX | All above numbers match |
 
-### Step 3: Team Dashboard
-8. Login at `/login` with admin credentials
-9. Check dashboard — new case should appear
-10. Click the case → sidebar shows 10 modules
+## A2: Standard Property Sale — Post-July 2024 Acquisition
 
-**If auto-run worked (may timeout on Hobby plan):**
-- All 9 modules should show ✓ checkmarks
-- Status should be "review"
+**Narrative:**
+```
+I work in Dubai. Bought a flat in Gurgaon in September 2024 for ₹1.2 crore. Sold it in February 2026 for ₹1.5 crore.
+```
 
-**If auto-run didn't complete:**
-- Click "Run Residency" → wait for output
-- Run at least: Residency, Income Map, Capital Gains, Advisory Memo
+| Check | Expected |
+|-------|----------|
+| Only 12.5% flat rate | No dual option (acquired post-July 2024) |
+| Holding period | ~17 months → Check if STCG (<24 months) |
+| If STCG | Slab rates, NOT 12.5% |
+| AI should flag | "Property held less than 24 months — STCG at slab rates" |
 
-### Step 4: Verify Module Outputs
-11. **Residency module** should say: Non-Resident (High Confidence), ~38 days
-12. **Income Map** should identify: HP (rental), CG (property), Other Sources (NRO interest), Foreign salary (NOT taxable)
-13. **Capital Gains** should reference VERIFIED COMPUTATION numbers:
-    - Option A: 20% indexed
-    - Option B: 12.5% flat
-    - Should recommend Option B
-    - Should mention TDS refund
-    - Should mention Section 54, 54EC
-14. **DTAA/FTC** should clarify: Foreign salary NOT taxable for NR, FTC not applicable
+## A3: High-Value Property (Surcharge Kicks In)
 
-### Step 5: Download Deliverables
-15. Click "CG Computation Sheet" → Download DOCX
+**Narrative:**
+```
+UK NRI. Sold flat in South Mumbai for ₹3.5 crore, purchased in 2012 for ₹80 lakhs.
+```
 
-**Verify in Word document:**
-| Item | Expected Value |
-|------|---------------|
-| Option B LTCG | ₹50,00,000 |
-| Option B Tax (12.5% + cess) | ₹6,50,000 |
-| TDS u/s 195 | ~₹18,30,400 |
-| TDS Refund | ~₹11,80,400 |
-| Section 54EC savings | ₹6,50,000 (if full ₹50L invested) |
-| Firm name | MKW Advisors |
+| Check | Expected |
+|-------|----------|
+| Option B LTCG | ₹2,70,00,000 |
+| Surcharge | 15% (LTCG > ₹1Cr, capped) |
+| TDS u/s 195 | 20% of ₹3.5Cr × 1.15 × 1.04 = ~₹83,72,000 |
+| Section 54 | Should be flagged prominently |
+| Section 54EC | ₹50L bond cap → saves significant amount |
 
-16. Download "Computation of Total Income" DOCX
+## A4: Inherited Property
 
-**Verify:**
-| Head | Expected |
-|------|----------|
-| House Property | ₹2,10,000 (₹3L rent - 30% SD) |
-| Capital Gains | ₹50,00,000 (Option B) |
-| Other Sources | ₹2,25,000 (₹1.4L NRO + ₹85K FD) |
-| Foreign salary | NOT included (NR exempt) |
-| NRE interest | NOT included (Section 10(4) exempt) |
+**Narrative:**
+```
+I work in Toronto since 2015. My father passed away in 2023. I inherited his flat in Pune — he bought it in 2005 for ₹12 lakhs. I sold it for ₹85 lakhs.
+```
 
-### Step 6: Client Portal
-17. Copy portal link from dashboard sidebar
-18. Open in incognito browser
-19. Should show case timeline with current stage
-20. Change status in dashboard to "Findings Ready" → portal should update
+| Check | Expected |
+|-------|----------|
+| Cost basis | Father's cost: ₹12L |
+| Indexation from | FY 2005-06 (CII = 117) |
+| Option A indexed cost | ₹12L × 376/117 = ₹38,56,410 |
+| Option A LTCG | ₹46,43,590 → Option A BETTER here |
+| AI note | "Inherited property: cost to previous owner" |
+
+## A5: Gifted Property
+
+**Narrative:**
+```
+Singapore NRI. Received a plot as gift from uncle in 2020. Uncle purchased it in 2010 for ₹15 lakhs. I sold it for ₹60 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Cost basis | Uncle's cost: ₹15L |
+| Indexation from | FY 2010-11 (CII = 167) |
+| Same as inherited | Gift = same cost basis rules |
+
+## A6: Plot/Land Sale (Not Residential — Section 54F)
+
+**Narrative:**
+```
+US NRI. Sold an agricultural plot (urban area) in Bangalore for ₹1.2 crore, purchased in 2016 for ₹35 lakhs. Planning to buy a flat for ₹80 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Section 54 | NOT applicable (not residential property) |
+| Section 54F | Applicable — proportional exemption |
+| 54F exemption | LTCG × (₹80L / ₹1.2Cr) = proportional |
+| AI should note | "Non-residential asset — Section 54F, not Section 54" |
+
+## A7: Commercial Property Sale
+
+**Narrative:**
+```
+UAE NRI. Sold a shop in Ahmedabad for ₹45 lakhs, purchased in 2014 for ₹18 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Section 54 | NOT applicable |
+| Section 54F | Applicable if buying residential house |
+| CG computation | Same dual option as residential |
+
+## A8: Multiple Property Sales
+
+**Narrative:**
+```
+UK NRI. Sold two properties this year — (1) Flat in Delhi for ₹1 crore, bought 2015 for ₹40 lakhs. (2) Plot in Noida for ₹50 lakhs, bought 2019 for ₹25 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Separate CG for each | Both computed independently |
+| Section 54 | Can use for BOTH if buying 1 new house (but exemption on only ONE) |
+| AI should flag | Multiple transactions need separate treatment |
+
+## A9: Property Held Less Than 24 Months (STCG)
+
+**Narrative:**
+```
+Singapore NRI. Bought flat in Hyderabad in April 2024, sold in January 2026 for ₹70 lakhs. Purchase cost ₹55 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Holding | ~21 months → STCG |
+| Tax rate | Slab rates (NOT 12.5%) |
+| TDS | 30% + surcharge + cess (higher for STCG NRI) |
+| Section 54 | NOT available for STCG |
+
+## A10: Joint Property Sale
+
+**Narrative:**
+```
+UK NRI. Sold jointly owned flat with spouse — 60% my share, 40% spouse. Total sale ₹90 lakhs, purchased 2017 for ₹35 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| My CG | 60% of total LTCG |
+| TDS | On full consideration, but proportional to share |
+| AI should note | "Joint property — each co-owner computes separately" |
+
+## A11: Property with Improvement Cost
+
+**Narrative:**
+```
+UK NRI. Sold flat in Pune for ₹75 lakhs, purchased 2016 for ₹30 lakhs. Spent ₹8 lakhs on renovation in 2020.
+```
+
+| Check | Expected |
+|-------|----------|
+| Improvement cost | ₹8L indexed from 2020-21 |
+| Option A | Indexed (purchase + improvement) |
+| Option B | ₹75L - ₹30L - ₹8L = ₹37L LTCG |
+
+## A12: Section 54 — House Already Purchased
+
+**Narrative:**
+```
+UK NRI. Sold flat for ₹80 lakhs (₹30L cost, 2018). Already bought new flat for ₹45 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Section 54 exempt | min(LTCG, ₹45L, ₹10Cr) = ₹45L |
+| Taxable after 54 | ₹5L |
+| Tax | ₹5L × 12.5% + cess = ₹65,000 |
+
+## A13: Section 54 — Planning to Buy
+
+| Check | Expected |
+|-------|----------|
+| AI advice | "Must purchase within 2 years or construct within 3 years" |
+| CGAS flag | "If not bought before ITR due date, deposit in CGAS" |
+
+## A14: Section 54 — ₹10Cr Cap Hit
+
+**Narrative:**
+```
+Sold property for ₹15 crore, LTCG ₹12 crore. Bought new house for ₹14 crore.
+```
+
+| Check | Expected |
+|-------|----------|
+| Exempt | Capped at ₹10Cr (not ₹12Cr) |
+| Taxable | ₹2Cr |
+
+## A15: Section 54EC Bonds
+
+| Check | Expected |
+|-------|----------|
+| Max investment | ₹50L in NHAI/REC bonds |
+| Lock-in | 5 years |
+| Timeline | Within 6 months of sale |
+| Tax saved | LTCG up to ₹50L exempt |
+
+## A16: Section 197 Lower TDS Certificate
+
+| Check | Expected |
+|-------|----------|
+| AI should flag | "Apply for Section 197 lower TDS certificate before sale to avoid cash flow impact" |
+| Saving | TDS at actual tax rate instead of 20% |
+
+## A17: Form 15CA/15CB for Repatriation
+
+| Check | Expected |
+|-------|----------|
+| AI should flag | "Form 15CA/15CB required for remitting sale proceeds abroad" |
+| FEMA limit | USD 1 million per FY |
+
+## A18: Under-Construction Property
+
+**Narrative:**
+```
+Sold an under-construction flat in Noida.
+```
+
+| Check | Expected |
+|-------|----------|
+| Section 54 | NOT available (not a completed "residential house") |
+| AI should flag | "Under-construction — Section 54 not applicable until completion" |
+
+## A19: Agricultural Land (Rural — Exempt)
+
+| Check | Expected |
+|-------|----------|
+| If rural | Exempt from capital gains entirely |
+| AI should ask | "Is the land within municipality limits?" |
+
+## A20: Agricultural Land (Urban — Taxable)
+
+| Check | Expected |
+|-------|----------|
+| If within municipal limits | Taxable as regular CG |
+
+## A21: Property Sale — Advance Tax Check
+
+| Check | Expected |
+|-------|----------|
+| If sale in Q1 (Apr-Jun) | 15% by 15 June |
+| If sale in Q2 (Jul-Sep) | 45% cumulative by 15 September |
+| Interest 234B/234C | Flagged if not paid on time |
+
+## A22: Property Sale — Both Spouses NRI
+
+| Check | Expected |
+|-------|----------|
+| Each files separately | Separate CG per ownership % |
+| Each gets TDS credit | Proportional to share |
 
 ---
 
-## Test Scenario 2: UAE NRI — Simple Interest Income (Green Case)
+# PART B — RENTAL INCOME SCENARIOS (6 Tests)
 
-**Client Profile:** Ahmed Khan, Engineer, Dubai, UAE
+## B1: Single Rental Property
 
-### Intake
+**Narrative:**
 ```
-I work in Dubai since 2019. I came to India for about 20 days for a family wedding. I have an NRO savings account with about ₹2 lakhs interest. FD with ICICI about ₹1.5 lakhs interest. No property transactions. UAE salary about AED 300,000. No Indian salary.
+Singapore NRI. Flat in Chennai rented at ₹35,000/month. No home loan.
 ```
 
-**Expected:**
-| Item | Expected |
-|------|----------|
-| Classification | **Green** (simple, interest only) |
-| Tax on interest | Slab rate on ₹3.5L (below ₹4L threshold in new regime → NIL tax, BUT NRI doesn't get 87A → tax applies) |
-| TDS on NRO interest | 30% = ₹1,05,000 |
-| DTAA note | UAE has no personal income tax — DTAA credit mechanism limited |
-| FTC | NOT applicable (NR foreign salary not taxable in India) |
+| Check | Expected |
+|-------|----------|
+| Gross rent | ₹4,20,000 |
+| 30% SD | ₹1,26,000 |
+| Taxable | ₹2,94,000 |
+
+## B2: Rental with Home Loan (Let-Out — No Cap)
+
+**Narrative:**
+```
+Same as B1 but home loan interest ₹4 lakhs/year.
+```
+
+| Check | Expected |
+|-------|----------|
+| Interest deduction | ₹4,00,000 (NO CAP for let-out) |
+| Taxable | ₹4,20,000 - ₹1,26,000 - ₹4,00,000 = -₹1,06,000 (LOSS) |
+| Loss set-off | Up to ₹2L against other income |
+
+## B3: Self-Occupied Property (No Rent)
+
+| Check | Expected |
+|-------|----------|
+| Gross rent | ₹0 (self-occupied) |
+| Interest cap | ₹2,00,000 maximum |
+| NAV | ₹0, but interest creates loss |
+
+## B4: Deemed Let-Out (Multiple Properties)
+
+**Narrative:**
+```
+NRI owns 3 flats. One in Mumbai (self-occupied when visiting), one in Pune (rented ₹25K/month), one in Goa (vacant).
+```
+
+| Check | Expected |
+|-------|----------|
+| Mumbai | Self-occupied (₹2L interest cap) |
+| Pune | Let-out (actual rent, no interest cap) |
+| Goa | Deemed let-out (notional rent must be computed) |
+| AI should flag | "Vacant property deemed let-out — compute expected rent" |
+
+## B5: Rental with Municipal Tax
+
+| Check | Expected |
+|-------|----------|
+| NAV | Gross rent MINUS municipal tax paid |
+| 30% SD | Applied on NAV (not gross rent) |
+
+## B6: Unrealized Rent / Arrears
+
+| Check | Expected |
+|-------|----------|
+| AI should flag | "Section 25A — unrealized rent can be excluded from HP income" |
 
 ---
 
-## Test Scenario 3: US NRI — ESOP/RSU + Property Sale (Red Case)
+# PART C — INVESTMENT INCOME SCENARIOS (12 Tests)
 
-**Client Profile:** Priya Sharma, VP Engineering, San Francisco, USA
+## C1: NRO Savings + FD Interest
 
-### Intake
+**Narrative:**
 ```
-I work in San Francisco since 2017. Visited India for 15 days this year. I sold a plot in Bangalore for ₹1.5 crore, purchased in 2015 for ₹40 lakhs. I have ESOPs from my Indian company vested in 2022 — FMV at vesting was ₹800 per share, exercise price ₹200, sold 500 shares at ₹1200 each. NRO interest ₹3 lakhs. US salary about USD 280,000, US tax paid. Indian assets above ₹1 crore.
+UAE NRI. NRO savings interest ₹2 lakhs. FD interest ₹1.5 lakhs.
 ```
 
-**Expected:**
-| Item | Expected |
-|------|----------|
-| Classification | **Red** (property + ESOP + foreign tax + assets >1Cr) |
-| Property CG Option B | ₹1,10,00,000 LTCG |
-| TDS on property | ~20% of ₹1.5Cr = significant amount |
-| ESOP perquisite | 500 × (800-200) = ₹3,00,000 (salary head) |
-| ESOP CG | 500 × (1200-800) = ₹2,00,000 LTCG (Section 112A) |
-| Schedule AL | REQUIRED (income > ₹50L) |
-| DTAA | US treaty — 15% on interest |
-| Pre-filing should flag | Section 54/54F planning, advance tax, Form 15CA/15CB |
+| Check | Expected |
+|-------|----------|
+| Total taxable | ₹3,50,000 |
+| TDS at 30% | ₹1,05,000 |
+| DTAA (UAE) | Limited application (no personal tax in UAE) |
+
+## C2: NRE Interest (Tax-Free)
+
+| Check | Expected |
+|-------|----------|
+| Tax | ₹0 (exempt under Section 10(4)) |
+| Should NOT appear | In taxable income computation |
+
+## C3: Both NRO + NRE Interest
+
+| Check | Expected |
+|-------|----------|
+| Only NRO taxed | NRE excluded |
+| Interest type dropdown | Correctly distinguishes the two |
+
+## C4: Listed Shares — LTCG (Above ₹1.25L Threshold)
+
+**Narrative:**
+```
+US NRI. Sold listed shares — LTCG ₹5 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Exemption | ₹1,25,000 (Section 112A threshold) |
+| Taxable | ₹3,75,000 |
+| Tax rate | 12.5% |
+| Tax | ₹46,875 + cess |
+
+## C5: Listed Shares — LTCG (Below Threshold)
+
+**Narrative:**
+```
+LTCG on shares only ₹1 lakh.
+```
+
+| Check | Expected |
+|-------|----------|
+| Tax | ₹0 (below ₹1.25L exemption) |
+
+## C6: Listed Shares — STCG
+
+**Narrative:**
+```
+Sold listed shares held 3 months — STCG ₹2 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Tax rate | 20% (Section 111A) |
+| Tax | ₹40,000 + cess |
+
+## C7: Mutual Funds — Equity (LTCG)
+
+| Check | Expected |
+|-------|----------|
+| Holding period for LTCG | >12 months |
+| Rate | 12.5% above ₹1.25L (Section 112A) |
+| Same as listed shares | Yes |
+
+## C8: Mutual Funds — Debt (LTCG)
+
+| Check | Expected |
+|-------|----------|
+| Holding period for LTCG | >24 months (debt MF) |
+| Rate | 12.5% (Section 112, no ₹1.25L exemption) |
+| AI should note | "Debt MF: different holding period from equity MF" |
+
+## C9: Unlisted Shares — LTCG
+
+**Narrative:**
+```
+Sold unlisted startup shares — held 30 months, gain ₹7 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Rate | 12.5% (Section 112) |
+| NO ₹1.25L exemption | That's only for listed (Section 112A) |
+| Tax | ₹87,500 + cess |
+
+## C10: Dividends from Indian Companies
+
+**Narrative:**
+```
+Received dividends of ₹2 lakhs from TCS and Infosys.
+```
+
+| Check | Expected |
+|-------|----------|
+| Tax | Slab rates (added to Other Sources) |
+| TDS | 20% for NRI under Section 195 |
+| DTAA | May reduce TDS to 10-15% |
+
+## C11: ESOP/RSU — Full Lifecycle
+
+**Narrative:**
+```
+US NRI. ESOP from Indian company — 500 shares, exercise price ₹200, FMV at exercise ₹800. Sold at ₹1200 after 14 months.
+```
+
+| Check | Expected |
+|-------|----------|
+| Perquisite (salary head) | 500 × (₹800-₹200) = ₹3,00,000 |
+| CG (from FMV to sale) | 500 × (₹1200-₹800) = ₹2,00,000 |
+| CG type | LTCG (14 months > 12) |
+| CG rate | 12.5% above ₹1.25L (Section 112A) |
+| Two Form 16 entries | Perquisite from employer + CG separately |
+
+## C12: Crypto / Virtual Digital Assets
+
+**Narrative:**
+```
+Germany NRI. Traded crypto — total sales ₹8 lakhs, total cost ₹5 lakhs.
+```
+
+| Check | Expected |
+|-------|----------|
+| Gain | ₹3,00,000 |
+| Tax | 30% = ₹90,000 + cess ₹3,600 = ₹93,600 |
+| TDS (Section 194S) | 1% of sales = ₹8,000 |
+| NO loss set-off | Even if loss, cannot set off against anything |
+| NO deductions | Only cost of acquisition allowed |
 
 ---
 
-## Test Scenario 4: Singapore NRI — Rental Income Only (Amber Case)
+# PART D — SALARY & FOREIGN INCOME SCENARIOS (6 Tests)
 
-**Client Profile:** Vikram Iyer, Banker, Singapore
+## D1: Foreign Salary Only (Standard NRI)
 
-### Intake
+| Check | Expected |
+|-------|----------|
+| Indian tax | ₹0 (NR — foreign salary not taxable) |
+| FTC | NOT applicable (income not taxed in India) |
+
+## D2: Indian Salary (Partial Year)
+
+**Narrative:**
 ```
-I work in Singapore since 2020. Came to India for about 45 days. I have a flat in Chennai rented at ₹35,000/month. Home loan EMI with ₹4 lakh interest component per year. NRO FD interest about ₹1.8 lakhs. Singapore salary SGD 180,000. No property sale this year.
+Worked in India Jan-Mar 2026, then moved to UK. Indian salary ₹6 lakhs for 3 months.
 ```
 
-**Expected:**
-| Item | Expected |
-|------|----------|
-| Classification | **Amber** (multiple income heads + foreign tax) |
-| HP gross rent | ₹4,20,000/year |
-| HP 30% SD | ₹1,26,000 |
-| HP loan interest | ₹4,00,000 (NO CAP for let-out property) |
-| HP taxable | ₹4,20,000 - ₹1,26,000 - ₹4,00,000 = negative (loss) |
-| HP loss set-off | Up to ₹2,00,000 against other income |
-| NRO interest TDS | 30% of ₹1.8L = ₹54,000 |
-| Singapore DTAA | 15% on interest |
+| Check | Expected |
+|-------|----------|
+| Taxable | ₹6L (accrued in India) |
+| Standard deduction | ₹75,000 (new regime) |
+| Form 16 | Should be available from Indian employer |
+
+## D3: Both Indian + Foreign Salary
+
+| Check | Expected |
+|-------|----------|
+| Indian salary | Taxable |
+| Foreign salary | NOT taxable (NR) |
+| AI should clarify | "Only Indian-sourced salary is taxable for Non-Residents" |
+
+## D4: Foreign Pension (NR)
+
+| Check | Expected |
+|-------|----------|
+| Tax | NOT taxable if accrued outside India and NR status |
+
+## D5: Indian Pension
+
+| Check | Expected |
+|-------|----------|
+| Tax | Slab rates, TDS under 194A |
+
+## D6: Royalty / Fees for Technical Services
+
+| Check | Expected |
+|-------|----------|
+| Rate | 10% under Section 115A for NRI |
+| AI should note | "DTAA may provide lower rate" |
 
 ---
 
-## Test Scenario 5: Returning NRI (RNOR)
+# PART E — DTAA / FTC SCENARIOS (8 Tests)
 
-**Client Profile:** Suresh Nair, returning to India after 12 years in UK
+## E1: UK NRI — FTC Not Applicable
 
-### Intake
-```
-I returned to India permanently in June 2025 after living in UK for 12 years. I was in India for about 200 days this FY. I still have a UK bank account with interest of GBP 5,000. I sold my UK property (not Indian property). UK pension income of GBP 15,000. Indian FD interest ₹2 lakhs. I had been filing ITR as NRI in prior years.
-```
+| Check | Expected |
+|-------|----------|
+| Foreign salary | Not taxable in India → No FTC needed |
+| AI must clarify | "FTC applies only when same income taxed in BOTH countries" |
 
-**Expected:**
-| Item | Expected |
-|------|----------|
-| Residency | RESIDENT but likely RNOR (NRI in 9 of 10 preceding years) |
-| RNOR significance | Foreign income (UK interest, UK pension) NOT taxable in India |
-| Indian FD interest | Taxable at slab rate |
-| UK property sale | NOT taxable if RNOR (foreign asset, income accrued outside India) |
+## E2: US NRI — DTAA Interest Rate
+
+| Check | Expected |
+|-------|----------|
+| NRO interest TDS | Can be reduced to 15% under India-US DTAA |
+| Requirement | TRC from US + Form 10F |
+
+## E3: UAE NRI — No Personal Tax
+
+| Check | Expected |
+|-------|----------|
+| DTAA credit | Limited (UAE has no personal income tax) |
+| Primary use | TRC for confirming NR status |
+
+## E4: Singapore NRI
+
+| Check | Expected |
+|-------|----------|
+| Interest rate under DTAA | 15% |
+| Form 67 | MANDATORY if claiming FTC |
+
+## E5: Canada NRI
+
+| Check | Expected |
+|-------|----------|
+| Capital gains | India has first right to tax |
+| Canada credits Indian tax | Under DTAA |
+
+## E6: Australia NRI
+
+| Check | Expected |
+|-------|----------|
+| Interest DTAA rate | 15% |
+| Property CG | India taxes, Australia provides credit |
+
+## E7: Non-DTAA Country (Section 91)
+
+| Check | Expected |
+|-------|----------|
+| Unilateral relief | Section 91 — deduction of foreign tax paid |
+| More restrictive | Than DTAA relief under Section 90 |
+
+## E8: Form 67 Not Filed
+
+| Check | Expected |
+|-------|----------|
+| Pre-filing should flag | "Form 67 MANDATORY for FTC claim — non-filing = FTC denied" |
+
+---
+
+# PART F — RESIDENCY SCENARIOS (6 Tests)
+
+## F1: Clear NR (< 60 Days)
+
+**Narrative:** UK NRI, 38 days in India
+
+| Check | Expected |
+|-------|----------|
+| Status | Non-Resident (High Confidence) |
+
+## F2: Borderline NR (60-182 Days)
+
+**Narrative:** NRI with 120 days in India, Indian income ₹20L
+
+| Check | Expected |
+|-------|----------|
+| Modified 60-day rule | 120 days + income > ₹15L → Could be Resident |
+| AI should flag | "Borderline — verify exact stay days with passport stamps" |
+
+## F3: Clearly Resident (> 182 Days)
+
+**Narrative:** Was abroad, returned to India, stayed 200 days
+
+| Check | Expected |
+|-------|----------|
+| Status | Resident |
+| Check RNOR | Was NRI in prior years? |
+
+## F4: Returning NRI — RNOR
+
+**Narrative:** Returned after 12 years abroad, 200 days this FY
+
+| Check | Expected |
+|-------|----------|
+| Status | Resident but RNOR |
+| RNOR test | NRI in ≥9 of preceding 10 years → RNOR |
+| Tax impact | Foreign income NOT taxable |
 | Schedule FA | MANDATORY (resident with foreign assets) |
-| Residency module should flag | 200 days → Resident. Check RNOR: was NRI in ≥9 of preceding 10 FYs? |
+
+## F5: Deemed Resident
+
+**Narrative:** Indian citizen, not resident anywhere, Indian income ₹20L
+
+| Check | Expected |
+|-------|----------|
+| Section 6(1A) | Indian income > ₹15L + not tax resident elsewhere → Deemed Resident |
+| Tax impact | GLOBAL income taxable (treated as Ordinary Resident) |
+| AI should flag | "Deemed resident — significantly higher tax exposure" |
+
+## F6: OCI / PIO Cardholder
+
+| Check | Expected |
+|-------|----------|
+| Tax treatment | Same as NRI for income tax |
+| FEMA | Different rules for property purchase |
 
 ---
 
-## Test Scenario 6: Inherited Property Sale
+# PART G — COMPLIANCE & SPECIAL SCENARIOS (10 Tests)
 
-**Client Profile:** Kavita Desai, Canada, inherited flat from father
+## G1: Schedule AL (Assets > ₹50L Income)
 
-### Intake
-```
-I work in Toronto since 2015. My father passed away in 2023 and I inherited his flat in Pune. He bought it in 2005 for ₹12 lakhs. I sold it this year for ₹85 lakhs. I have NRO interest of ₹1 lakh. Canadian salary CAD 120,000.
-```
+| Check | Expected |
+|-------|----------|
+| Trigger | Total income > ₹50L |
+| Pre-filing flag | "Schedule AL mandatory" |
 
-**Expected:**
-| Item | Expected |
+## G2: Advance Tax — Property Sale in Q1
+
+| Check | Expected |
+|-------|----------|
+| 15 June installment | 15% of balance payable |
+| Interest 234C | Applies if not paid on time |
+
+## G3: Belated Return (After Due Date)
+
+| Check | Expected |
+|-------|----------|
+| Consequence | No loss carry-forward |
+| Interest | 234A (late filing) + 234B (non-payment) |
+| AI should flag | Clearly state consequences |
+
+## G4: Old Regime vs New Regime Comparison
+
+**Narrative:** NRI with ₹8L NRO interest + ₹1.5L Section 80C investments
+
+| Check | Expected |
+|-------|----------|
+| New regime tax | Slab on ₹8L (no deductions except ₹75K SD if salaried) |
+| Old regime tax | Slab on (₹8L - ₹1.5L) with 80C |
+| AI should recommend | Whichever is lower |
+
+## G5: Loss Set-Off — HP Loss Against Interest
+
+| Check | Expected |
+|-------|----------|
+| HP loss | Up to ₹2L set off against other income |
+| Excess | Carry forward 8 years |
+| CG loss | Cannot set off against other heads |
+
+## G6: Notice Under 148A (Reassessment)
+
+| Check | Expected |
+|-------|----------|
+| Pre-filing flag | "ESCALATION REQUIRED — reassessment proceedings" |
+| Action | Partner review before filing current year |
+
+## G7: Black Money Act — Undisclosed Foreign Assets
+
+| Check | Expected |
+|-------|----------|
+| Pre-filing flag | "ESCALATION REQUIRED — undisclosed foreign assets" |
+| Penalty | 30% tax + 90% penalty on undisclosed income |
+
+## G8: Transfer Pricing (Related Party Transactions)
+
+| Check | Expected |
+|-------|----------|
+| Pre-filing flag | "ESCALATION REQUIRED — TP provisions may apply" |
+
+## G9: Multiple Year Non-Filing
+
+**Narrative:** NRI hasn't filed for 3 years
+
+| Check | Expected |
+|-------|----------|
+| Pre-filing flag | "ESCALATION — assess exposure before filing current year" |
+| Risk | Potential notices, penalties, interest accumulation |
+
+## G10: Revised Return
+
+| Check | Expected |
+|-------|----------|
+| Timeline | Within 31 December of the AY |
+| AI should note | Original return must have been filed first |
+
+---
+
+# PART H — PLATFORM FUNCTIONALITY TESTS (16 Tests)
+
+## H1: AI Auto-Fill Accuracy
+
+| Input | Check |
+|-------|-------|
+| "Sold flat in Mumbai for 80 lakhs bought 2018 for 30 lakhs" | salePrice=8000000, purchaseCost=3000000 |
+| "I work in London" | country=UK or United Kingdom |
+| "NRO interest 1.4 lakhs" | nroInterest=140000 |
+| "UK salary GBP 72,000" | foreignSalary=true |
+| Empty narrative | Button disabled / no action |
+| Very long narrative (500+ words) | Should still parse within 10 seconds |
+
+## H2: Classification Scoring
+
+| Inputs | Expected Score | Classification |
+|--------|---------------|----------------|
+| Interest only | ≤2 | Green |
+| Property sale + foreign tax | 5-6 | Amber/Red |
+| Property + ESOP + notices + business | 10+ | Red |
+| No stay days + property + foreign tax | 6+ | Red |
+
+## H3: DOCX Deliverable Verification
+
+| Deliverable | Available After | Check |
+|-------------|----------------|-------|
+| CG Computation Sheet | CG module done | Numbers match compute.js |
+| Advisory Memo | Memo module done | References verified computation numbers |
+| Tax Position Report | Income + Pricing done | Income heads correct |
+| Computation of Total Income | Income + CG done | All heads, tax, TDS, refund correct |
+| Scope & Fee Note | Pricing done | Tier matches classification |
+
+## H4: Theme Toggle
+
+| Page | Toggle Works | Persists |
+|------|-------------|---------|
+| `/` Landing | ✓/✗ | ✓/✗ |
+| `/client` | ✓/✗ | ✓/✗ |
+| `/login` | ✓/✗ | ✓/✗ |
+| `/signup` | ✓/✗ | ✓/✗ |
+| `/dashboard` | ✓/✗ | ✓/✗ |
+| `/portal` | ✓/✗ | ✓/✗ |
+
+## H5: Portal Flow
+
+| Step | Check |
+|------|-------|
+| Submit intake | Tracking code shown (24-char hex) |
+| Open portal link | Case found, timeline shows |
+| Stage 1 (intake) | Shown correctly |
+| Team changes to "Review" | Portal updates to Stage 3 |
+| Team changes to "Filed" | Portal shows Stage 6 |
+| Invalid token | "Case not found" message |
+
+## H6: Authentication
+
+| Test | Expected |
 |------|----------|
-| Classification | **Red** (property sale + high value) |
-| Acquisition type | Inherited — use father's cost (₹12L) and acquisition FY (2005-06) |
-| CII for 2005-06 | 117 |
-| Indexed cost (Option A) | ₹12L × 376/117 = ₹38,56,410 |
-| Option A LTCG | ₹85L - ₹38.56L = ₹46,43,590 |
-| Option B LTCG | ₹85L - ₹12L = ₹73,00,000 |
-| Better option | **Option A** (lower LTCG) |
-| CG module should note | "Inherited property: Cost of acquisition = cost to previous owner" |
+| Access `/dashboard` without login | Redirects to `/login` |
+| Signup with weak password (<6 chars) | Error message |
+| Login with wrong password | Error message |
+| Login with correct credentials | Redirects to `/dashboard` |
 
----
+## H7: API Security
 
-## Test Scenario 7: Crypto/VDA + Simple Income
-
-**Client Profile:** Arjun Reddy, Germany, crypto trader
-
-### Intake
-```
-I work in Berlin since 2022. Visited India for 10 days. I traded crypto on Indian exchanges — total sales ₹8 lakhs, total cost ₹5 lakhs. I also have NRO interest of ₹80,000. German salary EUR 75,000.
-```
-
-**Expected:**
-| Item | Expected |
+| Test | Expected |
 |------|----------|
-| Crypto gain | ₹3,00,000 |
-| Crypto tax (30% flat) | ₹90,000 + ₹3,600 cess = ₹93,600 |
-| Crypto TDS (1%) | ₹8,000 (1% of sales) |
-| AI should flag | "Section 115BBH: 30% flat rate, no deductions except cost, no loss set-off" |
-| No loss set-off | Even if crypto loss, cannot set off against NRO interest or any other income |
+| Call `/api/auto-run` without secret | 401 Unauthorized |
+| Call `/api/ai` from different origin (production) | 401 Unauthorized |
+| Submit >5 cases in 1 minute | 429 Too Many Requests |
+| Submit >20 AI calls in 1 minute | 429 Too Many Requests |
 
----
+## H8: Health Check
 
-## Test Scenario 8: Multiple Income Types (Comprehensive Red Case)
+| Check | Expected |
+|-------|----------|
+| `/api/health` | `{"status":"ok","supabase":true,"anthropic":true,"internalSecret":true}` |
 
-**Client Profile:** Meera Joshi, Australia, everything at once
+## H9: Error Handling
 
-### Intake
-```
-I work in Sydney since 2018. Visited India for 35 days. Sold a commercial plot in Hyderabad for ₹1.2 crore, purchased in 2016 for ₹35 lakhs. Flat in Mumbai rented at ₹40,000/month with home loan interest ₹3 lakhs/year. Sold listed shares — LTCG ₹4 lakhs, STCG ₹2 lakhs. NRO interest ₹2.5 lakhs. FD interest ₹1.5 lakhs (NRO). Dividends from Indian companies ₹1 lakh. Australian salary AUD 200,000, Australian tax paid. Indian assets above ₹1 crore. I had a notice under 148A last year.
-```
-
-**Expected:**
-| Item | Expected |
+| Test | Expected |
 |------|----------|
-| Classification | **Red** (property + shares + foreign tax + assets + NOTICE) |
-| Property CG | Commercial plot → Section 54F applicable (not Section 54) |
-| HP taxable | ₹4.8L rent - 30% SD - ₹3L interest = negative (loss) |
-| Loss set-off | HP loss up to ₹2L against other income |
-| Listed LTCG | 12.5% above ₹1.25L → tax on ₹2.75L |
-| Listed STCG | 20% on ₹2L = ₹40,000 |
-| Dividends | ₹1L at slab rate, TDS 20% |
-| Pre-filing MUST flag | 148A notice → ESCALATION REQUIRED → Partner review |
-| Advance tax | Required (large CG) — 4 installment schedule |
-| Schedule AL | Mandatory (income > ₹50L) |
-| Form 15CA/15CB | Required for repatriation |
+| AI parse with gibberish | "Could not parse" message, form stays usable |
+| DOCX with missing formData | DOCX generates with "—" placeholders |
+| Module run with invalid API key | Error shown in module output area |
+| Portal with 5-char token | "Invalid case reference" (min 10 chars) |
 
----
+## H10: Mobile Responsiveness
 
-## Test Scenario 9: NRI Filing for FY 2024-25
+| Page | Check on Mobile |
+|------|----------------|
+| Landing | Sections stack, readable |
+| Client wizard | Form fields usable, buttons tappable |
+| Portal | Timeline readable, contact bar accessible |
+| Login/Signup | Form centered, input fields full width |
 
-**Client Profile:** Late filer for previous year
+## H11: WhatsApp & Email Links
 
-### Intake
-1. Change FY selector to **2024-25** (if available in UI)
-2. Use a simple case: UK NRI, NRO interest ₹2L only
+| Page | WhatsApp opens | Email opens | Number correct |
+|------|---------------|-------------|----------------|
+| `/client` (post-submit) | ✓/✗ | ✓/✗ | +91-96677 44073 |
+| `/portal` contact bar | ✓/✗ | ✓/✗ | +91-96677 44073 |
 
-**Expected:**
-| Item | Expected |
+## H12: Legal Pages
+
+| Page | Loads | Has nav | Has footer | Content complete |
+|------|-------|---------|-----------|-----------------|
+| `/terms` | ✓/✗ | ✓/✗ | ✓/✗ | ✓/✗ |
+| `/privacy` | ✓/✗ | ✓/✗ | ✓/✗ | ✓/✗ |
+
+## H13: FY Selector
+
+| Test | Expected |
 |------|----------|
-| AY | 2025-26 |
-| CII | 363 |
-| Due date | 31 July 2025 (already past → belated return) |
-| AI should flag | "Belated return under Section 139(4) — no loss carry-forward, interest under 234A/234B applies" |
+| Select FY 2025-26 | AY 2026-27, CII 376 |
+| Select FY 2024-25 | AY 2025-26, CII 363 |
+| CG computed with correct CII | Numbers change per FY |
+
+## H14: Dashboard Module Execution
+
+| Module | Runs | Output Structured | References Verified Numbers |
+|--------|------|-------------------|---------------------------|
+| Residency | ✓/✗ | ✓/✗ | N/A (qualitative) |
+| Income Map | ✓/✗ | ✓/✗ | N/A (qualitative) |
+| Scope & Fee | ✓/✗ | ✓/✗ | N/A (internal) |
+| AIS Recon | ✓/✗ | ✓/✗ | N/A (qualitative) |
+| Form Select | ✓/✗ | ✓/✗ | N/A (qualitative) |
+| Capital Gains | ✓/✗ | ✓/✗ | ✓/✗ (must match compute.js) |
+| DTAA/FTC | ✓/✗ | ✓/✗ | N/A (qualitative) |
+| Pre-Filing | ✓/✗ | ✓/✗ | N/A (quality gate) |
+| Advisory Memo | ✓/✗ | ✓/✗ | ✓/✗ (must match compute.js) |
+
+## H15: Status Workflow
+
+| Status Change | Portal Stage | Dashboard Shows |
+|--------------|-------------|----------------|
+| intake | 1 | "Intake Received" |
+| in_progress | 2 | "Analysis Running" |
+| review | 3 | "Under Review" |
+| findings_ready | 4 | "Findings Ready" |
+| filing | 5 | "Filing in Progress" |
+| filed | 6 | "Filed" |
+
+## H16: Print Function
+
+| Test | Expected |
+|------|----------|
+| Click Print on CG preview | Print window opens with formatted content |
+| Click Print on Memo preview | Print window opens with formatted content |
 
 ---
 
-## Test Scenario 10: Edge Cases & Error Handling
+# PART I — COMPUTATION VERIFICATION CHEAT SHEET
 
-### 10a: Empty narrative
-- Go to `/client`, click "Auto-Fill" with empty text box
-- **Expected:** Button disabled or nothing happens
-
-### 10b: Invalid portal reference
-- Go to `/portal?ref=INVALID123456`
-- **Expected:** "Case not found" message
-
-### 10c: Health check
-- Open `/api/health`
-- **Expected:** JSON with status "ok", supabase: true, anthropic: true
-
-### 10d: Rate limiting
-- Run 25 rapid requests to `/api/ai/parse`
-- **Expected:** After 20, get 429 "Too many requests"
-
-### 10e: DOCX with missing data
-- Call `/api/deliverables` with empty formData
-- **Expected:** DOCX generates but with "?" or "—" for missing values (no crash)
-
-### 10f: Theme toggle persistence
-- Toggle theme on `/client` → navigate to `/login`
-- **Expected:** Theme should persist (both pages in same theme)
-
----
-
-## Computation Verification Cheat Sheet
-
-Use these to verify DOCX outputs match expected numbers:
-
-### Property CG (₹80L sale, ₹30L purchase, FY 2018-19)
+## Property CG (₹80L sale, ₹30L purchase, FY 2018-19)
 ```
 CII 2018-19 = 280, CII 2025-26 = 376
-Option A: Indexed cost = 30L × 376/280 = ₹40,28,571
-          LTCG = 80L - 40.29L = ₹39,71,429
-          Tax = 39,71,429 × 20% = ₹7,94,286 + cess = ₹8,26,057
-Option B: LTCG = 80L - 30L = ₹50,00,000
-          Tax = 50L × 12.5% = ₹6,25,000 + cess = ₹6,50,000
-Better: Option B (saves ₹1,76,057)
-TDS u/s 195: 80L × 20% × 1.10 × 1.04 = ₹18,30,400
-Refund: 18,30,400 - 6,50,000 = ₹11,80,400
+Option A: Indexed = 30L × 376/280 = ₹40,28,571 → LTCG = ₹39,71,429 → Tax = ₹8,26,057
+Option B: LTCG = ₹50,00,000 → Tax = ₹6,50,000
+Better: B (saves ₹1,76,057)
+TDS: 80L × 20% × 1.10 × 1.04 = ₹18,30,400
+Refund: ₹11,80,400
 ```
 
-### House Property (₹25K/month rent)
+## House Property (₹25K/month)
 ```
-Gross rent: ₹3,00,000
-30% SD: ₹90,000
-Taxable: ₹2,10,000
+Gross = ₹3,00,000 | SD = ₹90,000 | Taxable = ₹2,10,000
 ```
 
-### NRO Interest TDS
+## Equity CG
 ```
-Interest: ₹1,40,000 + ₹85,000 = ₹2,25,000
-TDS at 30%: ₹67,500
+STCG (Section 111A): 20% flat + cess
+LTCG (Section 112A): 12.5% above ₹1.25L + cess
+Unlisted LTCG (Section 112): 12.5% full (no ₹1.25L exemption) + cess
 ```
 
-### Section 54 (₹40L new house, ₹50L LTCG)
+## Crypto
 ```
-Exempt: min(50L, 40L, 10Cr) = ₹40,00,000
-Taxable after: ₹10,00,000
-Tax at 12.5% + cess: ₹1,30,000
-Savings: ₹6,50,000 - ₹1,30,000 = ₹5,20,000
+30% flat + 4% cess. No deductions. 1% TDS on sales (Section 194S).
+```
+
+## New Regime Slabs
+```
+₹0-4L: 0% | ₹4-8L: 5% | ₹8-12L: 10% | ₹12-16L: 15% | ₹16-20L: 20% | ₹20-24L: 25% | >₹24L: 30%
+```
+
+## TDS Rates (NRI)
+```
+Property sale (Section 195): 20% of sale consideration + surcharge + cess
+NRO interest (Section 195): 30% + surcharge + cess
+Dividends (Section 195): 20% + surcharge + cess
 ```
 
 ---
 
-## Bug Report Template
-
-When reporting bugs, use this format:
+# Bug Report Template
 
 ```
-SCENARIO: [which test scenario]
-STEP: [which step number]
+SCENARIO: [A1/B2/C5/etc.]
+STEP: [which step]
 EXPECTED: [what should happen]
 ACTUAL: [what actually happened]
-SCREENSHOT: [attach if possible]
+SCREENSHOT: [attach]
 SEVERITY: Critical / High / Medium / Low
+ENVIRONMENT: Local / Production
+BROWSER: Chrome / Safari / Firefox
 ```
 
 ---
 
-## Sign-Off Checklist
+# Sign-Off
 
-Before marking a release as production-ready:
+- [ ] Part A (22 property tests) — all critical/high severity bugs fixed
+- [ ] Part B (6 rental tests) — verified
+- [ ] Part C (12 investment tests) — verified
+- [ ] Part D (6 salary/foreign tests) — verified
+- [ ] Part E (8 DTAA tests) — verified
+- [ ] Part F (6 residency tests) — verified
+- [ ] Part G (10 compliance tests) — verified
+- [ ] Part H (16 platform tests) — verified
+- [ ] Part I (computations verified against cheat sheet)
 
-- [ ] All 10 test scenarios executed without Critical/High bugs
-- [ ] At least 3 DOCX deliverables verified with correct numbers
-- [ ] Portal link works in incognito browser
-- [ ] Theme toggle works on all pages
-- [ ] WhatsApp link opens correctly (+91-96677 44073)
-- [ ] Login/signup flow works end-to-end
-- [ ] Health endpoint returns 200
+**Total: 92 test scenarios**
 
 **Tested by:** _______________
 **Date:** _______________
 **Version:** _______________
-**Result:** PASS / FAIL (with bug list if FAIL)
+**Result:** PASS / FAIL
