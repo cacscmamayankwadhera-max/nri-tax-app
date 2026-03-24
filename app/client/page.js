@@ -181,7 +181,7 @@ export default function ClientIntake() {
       <div className="min-h-screen bg-theme">
         <NavBar />
 
-        <div className="max-w-2xl mx-auto py-10 px-4 animate-fade-in-up">
+        <div className="max-w-2xl mx-auto py-10 px-5 md:px-6 animate-fade-in-up">
           {/* Celebration animation */}
           <div className="text-center mb-6 animate-fade-in-up">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
@@ -403,7 +403,7 @@ export default function ClientIntake() {
 
       <NavBar />
 
-      <div className="max-w-2xl mx-auto py-8 px-4">
+      <div className="max-w-2xl mx-auto py-8 px-5 md:px-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6 animate-fade-in">
           <button onClick={() => step > 0 ? goStep(step - 1) : window.location.href = '/'} className="text-theme-muted hover:text-theme-secondary text-2xl transition-colors" aria-label="Go back">{'\u2039'}</button>

@@ -191,7 +191,7 @@ export default function Home() {
           />
         )}
 
-        <div className="max-w-5xl mx-auto px-6 pt-28 pb-20 md:pt-36 md:pb-24 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 pt-28 pb-20 md:pt-36 md:pb-24 relative z-10">
           <div
             className={`text-center transition-all duration-1000 ${
               vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -283,7 +283,7 @@ export default function Home() {
           style={{ background: 'var(--border)' }}
         />
 
-        <div className="max-w-5xl mx-auto px-6 py-12 md:py-14">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-12 md:py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {STATS.map((s, i) => (
               <div key={i} className="text-center">
@@ -315,7 +315,7 @@ export default function Home() {
           S3 — PAIN POINTS: Dark Section, 2x2 Card Grid
           ============================================================ */}
       <section style={{ background: '#0f0f0f' }}>
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-14">
             <div className="flex items-center justify-center gap-2 mb-5">
@@ -430,7 +430,7 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-14">
             <span
@@ -506,7 +506,7 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered with teal label */}
           <div className="text-center mb-14">
             <span
@@ -605,7 +605,7 @@ export default function Home() {
       >
         <div className="divider-gold" />
 
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-10">
             <span
@@ -703,7 +703,7 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-14">
             <span
@@ -728,7 +728,7 @@ export default function Home() {
           </div>
 
           {/* 3-column pricing */}
-          <div className="grid md:grid-cols-3 gap-6 items-start">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-start">
             {PRICING_TIERS.map((tier, i) => (
               <div
                 key={i}

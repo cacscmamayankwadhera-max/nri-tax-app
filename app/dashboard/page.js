@@ -439,7 +439,7 @@ export default function Dashboard() {
           <ThemeToggle />
         </div>
       </nav>
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-4xl mx-auto py-8 px-5 md:px-8">
         <div className="text-center mb-8 animate-fade-in-up">
           <h1 className="font-serif text-3xl font-bold text-theme">NRI Tax Suite</h1>
           <p className="text-theme-muted mt-1 text-sm">AI-Assisted Tax Advisory · Real Deliverables</p>
@@ -521,7 +521,7 @@ export default function Dashboard() {
           <span className="font-serif text-theme-accent font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
           <ThemeToggle />
         </nav>
-        <div className="max-w-2xl mx-auto py-6 px-4">
+        <div className="max-w-2xl mx-auto py-6 px-5 md:px-6">
           <div className="flex items-center gap-3 mb-4">
             <button onClick={()=>step>0?setStep(step-1):setView('home')} className="text-theme-muted btn-secondary" style={{ padding:'0.25rem 0.5rem', borderRadius:'0.5rem' }}>‹</button>
             <div className="flex-1 font-serif text-lg font-bold text-theme">{titles[step]}</div>
