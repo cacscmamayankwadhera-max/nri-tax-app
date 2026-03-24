@@ -8,6 +8,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const supabase = createClient();
 
@@ -33,6 +35,19 @@ export default function Login() {
         window.location.href = '/dashboard';
       }
     }
+  }
+
+  async function handleResetPassword(e) {
+    e.preventDefault();
+    setError('');
+    if (!email) { setError('Enter your email address first'); return; }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login`,
+    });
+    setLoading(false);
+    if (error) { setError(error.message); return; }
+    setResetSent(true);
   }
 
   const isDark = theme === 'dark';
@@ -79,61 +94,129 @@ export default function Login() {
             className="card-theme p-8 shadow-sm animate-fade-in-up"
             style={{ animationDelay: '120ms' }}
           >
-            <form onSubmit={handleLogin}>
-              <div className="mb-5">
-                <label className="block text-xs font-semibold text-theme-secondary mb-1.5 uppercase tracking-wide">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  className="input-theme"
-                  placeholder="you@email.com"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-xs font-semibold text-theme-secondary mb-1.5 uppercase tracking-wide">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  className="input-theme"
-                  placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-                />
-              </div>
-
-              {error && (
-                <div className="mb-4 rounded-lg px-4 py-2.5 text-xs font-medium" style={{
-                  background: 'rgba(160,72,72,0.08)',
-                  border: '1px solid rgba(160,72,72,0.2)',
-                  color: 'var(--red)',
-                }}>
-                  {error}
+            {resetMode ? (
+              resetSent ? (
+                <div className="text-center">
+                  <div className="mb-4 rounded-lg px-4 py-3 text-sm font-medium" style={{
+                    background: 'rgba(72,160,72,0.08)',
+                    border: '1px solid rgba(72,160,72,0.2)',
+                    color: 'var(--accent)',
+                  }}>
+                    Password reset email sent. Check your inbox.
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setResetMode(false); setResetSent(false); setError(''); }}
+                    className="text-xs text-theme-accent font-semibold hover:underline"
+                  >
+                    Back to login
+                  </button>
                 </div>
-              )}
+              ) : (
+                <form onSubmit={handleResetPassword}>
+                  <div className="mb-5">
+                    <label className="block text-xs font-semibold text-theme-secondary mb-1.5 uppercase tracking-wide">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                      className="input-theme"
+                      placeholder="you@email.com"
+                    />
+                  </div>
 
-              <button type="submit" disabled={loading} className="btn-dark w-full py-3">
-                {loading ? 'Signing in...' : 'Sign In'}
-              </button>
-            </form>
+                  {error && (
+                    <div className="mb-4 rounded-lg px-4 py-2.5 text-xs font-medium" style={{
+                      background: 'rgba(160,72,72,0.08)',
+                      border: '1px solid rgba(160,72,72,0.2)',
+                      color: 'var(--red)',
+                    }}>
+                      {error}
+                    </div>
+                  )}
 
-            <div className="mt-5 text-center text-xs text-theme-muted">
-              New here?{' '}
-              <a href="/signup" className="text-theme-accent font-semibold hover:underline">
-                Create an account
-              </a>
-            </div>
-            <div className="mt-2 text-center text-xs text-theme-muted">
-              NRI client?{' '}
-              <a href="/client" className="text-theme-accent font-semibold hover:underline">
-                Start filing directly &rarr;
-              </a>
-            </div>
+                  <button type="submit" disabled={loading} className="btn-dark w-full py-3">
+                    {loading ? 'Sending...' : 'Send Reset Link'}
+                  </button>
+
+                  <div className="mt-4 text-center">
+                    <button
+                      type="button"
+                      onClick={() => { setResetMode(false); setError(''); }}
+                      className="text-xs text-theme-accent font-semibold hover:underline"
+                    >
+                      Back to login
+                    </button>
+                  </div>
+                </form>
+              )
+            ) : (
+              <>
+                <form onSubmit={handleLogin}>
+                  <div className="mb-5">
+                    <label className="block text-xs font-semibold text-theme-secondary mb-1.5 uppercase tracking-wide">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                      className="input-theme"
+                      placeholder="you@email.com"
+                    />
+                  </div>
+                  <div className="mb-1">
+                    <label className="block text-xs font-semibold text-theme-secondary mb-1.5 uppercase tracking-wide">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      required
+                      className="input-theme"
+                      placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                    />
+                  </div>
+                  <div className="mb-6 text-right">
+                    <button type="button" onClick={() => setResetMode(true)} className="text-xs text-theme-accent hover:underline mt-1">
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div className="mb-4 rounded-lg px-4 py-2.5 text-xs font-medium" style={{
+                      background: 'rgba(160,72,72,0.08)',
+                      border: '1px solid rgba(160,72,72,0.2)',
+                      color: 'var(--red)',
+                    }}>
+                      {error}
+                    </div>
+                  )}
+
+                  <button type="submit" disabled={loading} className="btn-dark w-full py-3">
+                    {loading ? 'Signing in...' : 'Sign In'}
+                  </button>
+                </form>
+
+                <div className="mt-5 text-center text-xs text-theme-muted">
+                  New here?{' '}
+                  <a href="/signup" className="text-theme-accent font-semibold hover:underline">
+                    Create an account
+                  </a>
+                </div>
+                <div className="mt-2 text-center text-xs text-theme-muted">
+                  NRI client?{' '}
+                  <a href="/client" className="text-theme-accent font-semibold hover:underline">
+                    Start filing directly &rarr;
+                  </a>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Footer trust text */}

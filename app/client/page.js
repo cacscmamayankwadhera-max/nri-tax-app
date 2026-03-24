@@ -686,7 +686,9 @@ export default function ClientIntake() {
 
           <div className="flex gap-3 mt-5">
             <button onClick={() => goStep(3)} className="btn-secondary flex-1 py-3 rounded-xl">{'\u2190'} Back</button>
-            <button onClick={handleSubmit} className="btn-primary flex-[2] py-3.5 rounded-xl text-base hover:shadow-md">Get My Tax Diagnostic {'\u2192'}</button>
+            <button onClick={handleSubmit} disabled={submitting} className="btn-primary flex-[2] py-3.5 rounded-xl text-base hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+              {submitting ? 'Submitting...' : 'Get My Tax Diagnostic \u2192'}
+            </button>
           </div>
           <p className="text-xs text-theme-muted text-center mt-4">Free &middot; No obligation &middot; Your data is confidential</p>
         </div>}

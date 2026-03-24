@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
 import { computeCapitalGains, computeHouseProperty, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
@@ -70,25 +72,36 @@ async function downloadDocx(type, caseData, fy, moduleOutputs) {
 }
 
 /* ═══ MARKDOWN RENDERER ═══ */
-function renderMd(text) {
-  if (!text || text === 'auto') return '<em style="color:var(--text-muted)">Generated from intake form. Proceed to next module.</em>';
-  return text
-    .replace(/### (.*)/g, '<h3 class="font-serif text-sm font-bold mt-5 mb-2 pb-1" style="color:var(--text-primary);border-bottom:1px solid var(--border)">$1</h3>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^- (.*)/gm, '<div class="pl-4 py-0.5 relative"><span class="absolute left-0 font-bold" style="color:var(--accent)">›</span>$1</div>')
-    .replace(/\n{2,}/g, '<div class="h-2"></div>')
-    .replace(/\n/g, '<br/>');
+function ModuleOutput({ text }) {
+  if (!text || text === 'auto') return <em className="text-theme-muted text-sm">Generated from intake form. Proceed to next module.</em>;
+  return (
+    <div className="prose prose-sm max-w-none text-theme">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+        h3: ({children}) => <h3 className="font-serif text-sm font-bold mt-5 mb-2 pb-1 text-theme" style={{borderBottom:'1px solid var(--border)'}}>{children}</h3>,
+        strong: ({children}) => <strong className="text-theme">{children}</strong>,
+        li: ({children}) => <div className="pl-4 py-0.5 relative"><span className="absolute left-0 font-bold" style={{color:'var(--accent)'}}>›</span>{children}</div>,
+        p: ({children}) => <p className="my-1 text-sm text-theme">{children}</p>,
+        table: ({children}) => <table className="w-full border-collapse my-2 text-xs">{children}</table>,
+        th: ({children}) => <th className="p-1.5 font-bold text-left" style={{background:'var(--bg-secondary)', border:'1px solid var(--border)'}}>{children}</th>,
+        td: ({children}) => <td className="p-1.5" style={{border:'1px solid var(--border)'}}>{children}</td>,
+      }}>{text}</ReactMarkdown>
+    </div>
+  );
 }
 
-/* ═══ CG SHEET PREVIEW COMPONENT ═══ */
-function CGPreview({ f, fy, cg }) {
-  const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
-  const T = ({ h, r }) => (
+/* ═══ SHARED TABLE COMPONENT ═══ */
+function DataTable({ h, r }) {
+  return (
     <table className="w-full border-collapse my-2 text-xs">
       <thead><tr>{h.map((x,i) => <th key={i} className="p-1.5 font-bold text-left" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>{x}</th>)}</tr></thead>
       <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 ${ci>0?'text-right':''} ${String(c).includes('Total')?'font-bold':''}`} style={{ border:'1px solid var(--border)', background: String(c).includes('Total') ? 'var(--bg-secondary)' : 'var(--bg-card)' }}>{c}</td>)}</tr>)}</tbody>
     </table>
   );
+}
+
+/* ═══ CG SHEET PREVIEW COMPONENT ═══ */
+function CGPreview({ f, fy, cg }) {
+  const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
   if (!cg) return <p className="text-theme-muted text-sm">Property sale data required for computation.</p>;
   return (
     <div>
@@ -100,16 +113,16 @@ function CGPreview({ f, fy, cg }) {
       <div className="mb-4" style={{ borderBottom:'2px solid var(--accent)' }} />
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">1. Transaction Details</h3>
-      <T h={["Particulars","Details"]} r={[["Asset",f.propertyType||"Residential Plot"],["Location",f.propertyLocation||"—"],["Acquired","FY "+(f.propertyAcqFY||"2017-18")],["Sold","FY "+fy],["Pre July 2024?","Yes — Dual computation"]]} />
+      <DataTable h={["Particulars","Details"]} r={[["Asset",f.propertyType||"Residential Plot"],["Location",f.propertyLocation||"—"],["Acquired","FY "+(f.propertyAcqFY||"2017-18")],["Sold","FY "+fy],["Pre July 2024?","Yes — Dual computation"]]} />
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">2. Key Amounts</h3>
-      <T h={["Particulars","Amount"]} r={[["Sale Consideration",formatINR(f.salePrice||0)],["Cost of Acquisition",formatINR(f.purchaseCost||0)],["Improvement",formatINR(0)]]} />
+      <DataTable h={["Particulars","Amount"]} r={[["Sale Consideration",formatINR(f.salePrice||0)],["Cost of Acquisition",formatINR(f.purchaseCost||0)],["Improvement",formatINR(0)]]} />
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">3. Dual Tax Computation</h3>
       <p className="text-xs font-semibold mb-2 text-theme-secondary">Taxpayer may choose the lower-tax option:</p>
 
       <h4 className="text-xs font-bold mt-3" style={{ color:'#3b82f6' }}>Option A — 20% with Indexation</h4>
-      <T h={["Particulars","Working","Amount"]} r={[
+      <DataTable h={["Particulars","Working","Amount"]} r={[
         ["CII Acquisition ("+(f.propertyAcqFY||"2017-18")+")","",cg.ciiAcq],
         ["CII Sale ("+fy+")","",cg.ciiSale],
         ["Cost","",formatINR(f.purchaseCost||0)],
@@ -122,7 +135,7 @@ function CGPreview({ f, fy, cg }) {
       ]} />
 
       <h4 className="text-xs font-bold mt-3" style={{ color:'var(--red)' }}>Option B — 12.5% without Indexation</h4>
-      <T h={["Particulars","Working","Amount"]} r={[
+      <DataTable h={["Particulars","Working","Amount"]} r={[
         ["Cost","",formatINR(f.purchaseCost||0)],
         ["Sale","",formatINR(f.salePrice||0)],
         ["LTCG",formatINR(f.salePrice||0)+"−"+formatINR(f.purchaseCost||0),formatINR(cg.optionB.ltcg)],
@@ -135,7 +148,7 @@ function CGPreview({ f, fy, cg }) {
       <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--green) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--green) 30%, transparent)', color:'var(--green)' }}>
         RECOMMENDED: Option {cg.better} ({cg.better==="B"?"12.5% flat":"20% indexed"}) — saves {formatINR(cg.savings)}
       </div>
-      <T h={["","Option A","Option B"]} r={[["Capital Gain",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)],["","",cg.better==="B"?"Saves "+formatINR(cg.savings):""]]} />
+      <DataTable h={["","Option A","Option B"]} r={[["Capital Gain",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)],["","",cg.better==="B"?"Saves "+formatINR(cg.savings):""]]} />
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">5. Section 54/54EC</h3>
       <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--red) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)', color:'var(--red)' }}>
@@ -146,13 +159,13 @@ function CGPreview({ f, fy, cg }) {
       <p className="text-xs text-theme-secondary"><strong>Status:</strong> {f.section54 || "NOT YET DISCUSSED"}</p>
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">6. TDS (Section 195 — NRI)</h3>
-      <T h={["","Details"]} r={[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]]} />
+      <DataTable h={["","Details"]} r={[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]]} />
       <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, #3b82f6 10%, transparent)', border:'1px solid color-mix(in srgb, #3b82f6 30%, transparent)', color:'#3b82f6' }}>
         KEY INSIGHT: TDS of {formatINR(cg.tds195)} is deducted but actual tax is only {formatINR(cg.netTax)}. Estimated refund: {formatINR(cg.tdsRefund)}
       </div>
 
       <h3 className="font-serif text-sm font-bold mt-4 mb-1 text-theme">7. Net Tax Summary</h3>
-      <T h={["Scenario","Tax","TDS Paid","Refund / Payable"]} r={[
+      <DataTable h={["Scenario","Tax","TDS Paid","Refund / Payable"]} r={[
         ["Option "+cg.better+", no exemption",formatINR(cg.netTax),formatINR(cg.tds195),"Refund "+formatINR(cg.tdsRefund)],
         ["Full Section 54","₹0",formatINR(cg.tds195),"Refund "+formatINR(cg.tds195)]
       ]} />
@@ -168,12 +181,6 @@ function CGPreview({ f, fy, cg }) {
 function MemoPreview({ f, fy, cg }) {
   const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
   const hp = f.rentalMonthly ? computeHouseProperty(f.rentalMonthly * 12) : null;
-  const T = ({ h, r }) => (
-    <table className="w-full border-collapse my-2 text-xs">
-      <thead><tr>{h.map((x,i) => <th key={i} className="p-1.5 font-bold text-left" style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)' }}>{x}</th>)}</tr></thead>
-      <tbody>{r.map((row,ri) => <tr key={ri}>{row.map((c,ci) => <td key={ci} className={`p-1.5 ${ci>0?'text-right':''}`} style={{ border:'1px solid var(--border)', background:'var(--bg-card)' }}>{c}</td>)}</tr>)}</tbody>
-    </table>
-  );
   return (
     <div>
       <div className="text-sm font-bold text-theme-accent tracking-wide">MKW ADVISORS</div>
@@ -204,7 +211,7 @@ function MemoPreview({ f, fy, cg }) {
       {cg && <>
         <h3 className="font-serif text-sm font-bold mt-4 text-theme">Key Issue — Capital Gains</h3>
         <p className="text-xs text-theme-secondary">Dual computation: <strong>Option {cg.better}</strong> saves <strong>{formatINR(cg.savings)}</strong></p>
-        <T h={["","A (indexed)","B (flat)"]} r={[["LTCG",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)]]} />
+        <DataTable h={["","A (indexed)","B (flat)"]} r={[["LTCG",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],["Tax+Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)]]} />
         <div className="rounded p-2 my-2 text-xs font-bold" style={{ background:'color-mix(in srgb, var(--red) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)', color:'var(--red)' }}>
           Section 54 planning: {f.section54||"NOT DISCUSSED"} — could eliminate tax entirely
         </div>
@@ -217,7 +224,7 @@ function MemoPreview({ f, fy, cg }) {
 
       {hp && <>
         <h3 className="font-serif text-sm font-bold mt-4 text-theme">Rental Income</h3>
-        <T h={["","Amount"]} r={[["Gross Rent",formatINR(hp.grossRent)],["Std Deduction (30%)","("+formatINR(hp.standardDeduction)+")"],["Taxable",formatINR(hp.taxableIncome)]]} />
+        <DataTable h={["","Amount"]} r={[["Gross Rent",formatINR(hp.grossRent)],["Std Deduction (30%)","("+formatINR(hp.standardDeduction)+")"],["Taxable",formatINR(hp.taxableIncome)]]} />
       </>}
 
       <h3 className="font-serif text-sm font-bold mt-4 text-theme">Recommended Actions</h3>
@@ -267,6 +274,30 @@ function Chk({ l, c, ch }) {
   );
 }
 
+/* ═══ THEME TOGGLE ═══ */
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <button
+      onClick={toggleTheme}
+      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+      style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+    >
+      {theme === 'dark' ? (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+}
+
 /* ═══ MAIN APP ═══ */
 export default function Dashboard() {
   const [view, setView] = useState('home');
@@ -282,6 +313,7 @@ export default function Dashboard() {
   const [prs, setPrs] = useState(false);     // parsing narrative
   const [dv, setDv] = useState(null);        // active deliverable view
   const [dlLd, setDlLd] = useState(false);   // downloading docx
+  const [toast, setToast] = useState(null);
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
@@ -300,6 +332,14 @@ export default function Dashboard() {
     }
     loadCases();
   }, []);
+
+  // ── Toast auto-dismiss ──
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [toast]);
 
   // ── Save case to Supabase ──
   async function saveCase(caseObj) {
@@ -375,7 +415,7 @@ export default function Dashboard() {
     try {
       await downloadDocx(type, { name: f.name, country: f.country, classification: classifyCase(f), formData: f }, fy, outs);
     } catch (e) {
-      alert('Download failed: ' + e.message);
+      setToast({ type: 'error', message: 'Download failed. Please try again.' });
     }
     setDlLd(false);
   }
@@ -388,27 +428,6 @@ export default function Dashboard() {
     w.document.close();
     setTimeout(() => w.print(), 300);
   }
-
-  /* ═══ Theme toggle button (shared across views) ═══ */
-  const ThemeToggle = () => (
-    <button
-      onClick={toggleTheme}
-      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
-      style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-    >
-      {theme === 'dark' ? (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      ) : (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      )}
-    </button>
-  );
 
   /* ═══ RENDER: HOME ═══ */
   if (view === 'home') return (
@@ -471,7 +490,7 @@ export default function Dashboard() {
                     const ref = (c.dbId || c.id?.toString() || '').slice(0, 8).toUpperCase();
                     const url = `${window.location.origin}/portal?ref=${ref}`;
                     navigator.clipboard.writeText(url);
-                    alert('Portal link copied!\n' + url);
+                    setToast({ type: 'success', message: 'Portal link copied to clipboard!' });
                   }} className="text-[9px] text-theme-accent px-1" title="Copy portal link">
                     🔗
                   </button>
@@ -483,6 +502,13 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      {toast && (
+        <div className="fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate-fade-in-up"
+          style={{ background: toast.type === 'error' ? 'var(--red)' : 'var(--accent)', color: '#fff', maxWidth: 360 }}>
+          {toast.message}
+          <button onClick={() => setToast(null)} className="ml-3 opacity-70 hover:opacity-100">✕</button>
+        </div>
+      )}
     </div>
   );
 
@@ -845,7 +871,7 @@ export default function Dashboard() {
               {/* Output */}
               {modOut && !ld && (
                 <div className="card-theme p-5">
-                  <div className="text-xs leading-relaxed text-theme-secondary" dangerouslySetInnerHTML={{ __html: renderMd(modOut) }} />
+                  <ModuleOutput text={modOut} />
                 </div>
               )}
 
@@ -881,6 +907,13 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      {toast && (
+        <div className="fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate-fade-in-up"
+          style={{ background: toast.type === 'error' ? 'var(--red)' : 'var(--accent)', color: '#fff', maxWidth: 360 }}>
+          {toast.message}
+          <button onClick={() => setToast(null)} className="ml-3 opacity-70 hover:opacity-100">✕</button>
+        </div>
+      )}
     </div>
   );
 }

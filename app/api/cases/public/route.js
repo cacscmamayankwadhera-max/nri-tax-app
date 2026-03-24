@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rate-limit';
+import { FY_CONFIG } from '@/lib/compute';
 
 // Fire-and-forget: trigger auto-run of all AI modules for a new case.
 function triggerAutoRun(caseId, formData, fy) {
@@ -66,7 +67,7 @@ export async function POST(request) {
       client_phone: formData.phone || null,
       country: formData.country,
       fy: fy || '2025-26',
-      ay: fy === '2024-25' ? '2025-26' : '2026-27',
+      ay: FY_CONFIG[fy || '2025-26']?.ay || '2026-27',
       classification: classification || 'Amber',
       status: 'intake',
       intake_data: formData,
