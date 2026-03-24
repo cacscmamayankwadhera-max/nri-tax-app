@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { useSearchParams } from 'next/navigation';
 import { computeCapitalGains, formatINR, FY_CONFIG } from '@/lib/compute';
+import NavBar from '@/app/components/NavBar';
+import Footer from '@/app/components/Footer';
 
 // ═══ Constants ═══
 
@@ -16,16 +18,27 @@ const STAGES = [
 ];
 
 const MODULE_NAMES = [
-  { id: 'residency', label: 'Residency Verification' },
-  { id: 'income',    label: 'Income Classification' },
-  { id: 'pricing',   label: 'Service Scoping' },
-  { id: 'recon',     label: 'Document Reconciliation' },
-  { id: 'filing',    label: 'Filing Architecture' },
-  { id: 'cg',        label: 'Capital Gains Analysis' },
-  { id: 'dtaa',      label: 'Treaty & Credit Review' },
-  { id: 'prefiling', label: 'Pre-Filing Quality Check' },
-  { id: 'memo',      label: 'Advisory Preparation' },
+  { id: 'residency', label: 'Checking Your Tax Residency' },
+  { id: 'income',    label: 'Mapping Your Income Sources' },
+  { id: 'pricing',   label: null }, // internal — hidden from client
+  { id: 'recon',     label: 'Verifying Your Tax Records' },
+  { id: 'filing',    label: 'Choosing the Right Tax Form' },
+  { id: 'cg',        label: 'Computing Your Capital Gains' },
+  { id: 'dtaa',      label: 'Checking Double-Tax Protection' },
+  { id: 'prefiling', label: 'Final Quality Review' },
+  { id: 'memo',      label: 'Preparing Your Advisory Report' },
 ];
+
+const MODULE_DESCRIPTIONS = {
+  residency: 'We verified your Non-Resident status based on your stay days',
+  income: 'All your income sources have been classified under Indian tax heads',
+  recon: 'Your AIS/26AS records have been cross-checked',
+  filing: 'We identified the right ITR form and schedules for your case',
+  cg: 'Both computation options analyzed — we picked the one that saves you more',
+  dtaa: 'Treaty benefits between India and your country have been reviewed',
+  prefiling: 'All checks passed — your case is ready for filing',
+  memo: 'Your personalized advisory report is being prepared',
+};
 
 const CLS_COLORS = { Green: '#2A6B4A', Amber: '#B07D3A', Red: '#A04848' };
 const CLS_MEANINGS = {
@@ -94,9 +107,7 @@ export default function ClientPortalPage() {
     <Suspense fallback={
       <div className="min-h-screen bg-theme">
         <div className="gold-gradient-line" />
-        <nav className="bg-theme-nav px-6 md:px-12 h-14 flex items-center">
-          <span className="font-serif text-theme-accent font-bold tracking-wide">NRI TAX SUITE</span>
-        </nav>
+        <NavBar />
         <div className="max-w-lg mx-auto px-6 pt-32 text-center">
           <div className="inline-block w-10 h-10 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
           <p className="text-theme-muted mt-4 text-sm">Loading portal...</p>
@@ -198,8 +209,7 @@ function ClientPortal() {
     return (
       <div className="min-h-screen bg-theme">
         <div className="gold-gradient-line" />
-        <Nav isDark={isDark} toggleTheme={toggleTheme} />
-        <TrustBar />
+        <NavBar />
         <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="text-center mb-10">
             <div className="text-4xl mb-4">{'\uD83D\uDD0D'}</div>
@@ -255,6 +265,7 @@ function ClientPortal() {
           </div>
         </div>
         <ContactBar />
+        <Footer />
       </div>
     );
   }
@@ -264,8 +275,7 @@ function ClientPortal() {
     return (
       <div className="min-h-screen bg-theme">
         <div className="gold-gradient-line" />
-        <Nav isDark={isDark} toggleTheme={toggleTheme} />
-        <TrustBar />
+        <NavBar />
         <div className="max-w-lg mx-auto px-6 pt-32 text-center">
           <div className="inline-block w-10 h-10 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }} />
           <p className="text-theme-muted mt-4 text-sm">Looking up your case...</p>
@@ -278,8 +288,7 @@ function ClientPortal() {
   return (
     <div className="min-h-screen bg-theme pb-24">
       <div className="gold-gradient-line" />
-      <Nav isDark={isDark} toggleTheme={toggleTheme} />
-      <TrustBar />
+      <NavBar />
 
       <div className={`max-w-3xl mx-auto px-4 md:px-6 pt-8 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
 
@@ -454,72 +463,88 @@ function ClientPortal() {
         )}
 
         {/* -- Section 4: What We're Doing (modules) -- */}
-        <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '180ms' }}>
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-serif text-lg font-bold text-theme">What We Are Doing</h3>
-            <span className="text-xs text-theme-muted font-semibold">
-              {completedModuleIds.length} of {MODULE_NAMES.length} complete
-            </span>
-          </div>
+        {(() => {
+          const visibleModules = MODULE_NAMES.filter(m => m.label !== null);
+          const visibleCompleted = visibleModules.filter(m => completedModuleIds.includes(m.id));
+          return (
+            <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-serif text-lg font-bold text-theme">What We Are Doing</h3>
+                <span className="text-xs text-theme-muted font-semibold">
+                  {visibleCompleted.length} of {visibleModules.length} complete
+                </span>
+              </div>
 
-          {/* Progress bar */}
-          <div className="w-full h-2 rounded-full mb-6 overflow-hidden" style={{ background: 'var(--border)' }}>
-            <div
-              className="h-full rounded-full transition-all duration-1000 ease-out"
-              style={{
-                width: `${Math.round((completedModuleIds.length / MODULE_NAMES.length) * 100)}%`,
-                background: completedModuleIds.length === MODULE_NAMES.length ? 'var(--green)' : 'var(--accent)',
-              }}
-            />
-          </div>
-
-          <div className="space-y-3">
-            {MODULE_NAMES.map((mod, i) => {
-              const isComplete = completedModuleIds.includes(mod.id);
-              // Current module = first incomplete module after all completed ones
-              const isCurrent = !isComplete && completedModuleIds.length === i && stage <= 3;
-              const isFuture = !isComplete && !isCurrent;
-
-              return (
+              {/* Progress bar */}
+              <div className="w-full h-2 rounded-full mb-6 overflow-hidden" style={{ background: 'var(--border)' }}>
                 <div
-                  key={mod.id}
-                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors`}
+                  className="h-full rounded-full transition-all duration-1000 ease-out"
                   style={{
-                    background: isCurrent ? 'rgba(196,154,60,0.08)' : 'transparent',
+                    width: `${Math.round((visibleCompleted.length / visibleModules.length) * 100)}%`,
+                    background: visibleCompleted.length === visibleModules.length ? 'var(--green)' : 'var(--accent)',
                   }}
-                >
-                  {/* Status indicator */}
-                  {isComplete ? (
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--green)' }}>
-                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  ) : isCurrent ? (
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: '2px solid var(--accent)' }}>
-                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
-                    </div>
-                  ) : (
-                    <div className="w-6 h-6 rounded-full flex-shrink-0" style={{ background: 'var(--border)' }} />
-                  )}
+                />
+              </div>
 
-                  {/* Module name */}
-                  <span className={`text-sm ${
-                    isComplete ? 'text-theme font-medium' :
-                    isCurrent ? 'text-theme-accent font-semibold' :
-                    'text-theme-muted'
-                  }`}>
-                    {mod.label}
-                  </span>
+              <div className="space-y-3">
+                {visibleModules.map((mod, i) => {
+                  const isComplete = completedModuleIds.includes(mod.id);
+                  // Current module = first incomplete visible module
+                  const isCurrent = !isComplete && visibleCompleted.length === i && stage <= 3;
+                  const isFuture = !isComplete && !isCurrent;
 
-                  {isCurrent && (
-                    <span className="text-[10px] text-theme-accent font-semibold ml-auto">In progress...</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                  return (
+                    <div
+                      key={mod.id}
+                      className={`flex items-start gap-3 py-2 px-3 rounded-lg transition-colors`}
+                      style={{
+                        background: isCurrent ? 'rgba(196,154,60,0.08)' : 'transparent',
+                      }}
+                    >
+                      {/* Status indicator */}
+                      <div className="pt-0.5">
+                        {isComplete ? (
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--green)' }}>
+                            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        ) : isCurrent ? (
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: '2px solid var(--accent)' }}>
+                            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 rounded-full flex-shrink-0" style={{ background: 'var(--border)' }} />
+                        )}
+                      </div>
+
+                      {/* Module name + description */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm ${
+                            isComplete ? 'text-theme font-medium' :
+                            isCurrent ? 'text-theme-accent font-semibold' :
+                            'text-theme-muted'
+                          }`}>
+                            {mod.label}
+                          </span>
+                          {isCurrent && (
+                            <span className="text-[10px] text-theme-accent font-semibold ml-auto flex-shrink-0">In progress...</span>
+                          )}
+                        </div>
+                        {isComplete && MODULE_DESCRIPTIONS[mod.id] && (
+                          <p className="text-xs text-theme-secondary mt-0.5 leading-relaxed">
+                            {MODULE_DESCRIPTIONS[mod.id]}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* -- Section 5: Documents Shared (stage 4+) -- */}
         {stage >= 4 && (
@@ -551,8 +576,28 @@ function ClientPortal() {
           </div>
         )}
 
+        {/* While You Wait — Suggested Reading */}
+        <div className="card-theme p-5 mb-6 animate-fade-in-up" style={{ animationDelay: '280ms' }}>
+          <h3 className="font-serif text-base font-bold text-theme mb-3">While You Wait — Learn More</h3>
+          <div className="space-y-2">
+            {caseData?.intake_data?.propertySale && (
+              <a href="/blog/nri-property-sale-capital-gains" className="block text-sm text-theme-accent hover:underline">
+                {'\u2192'} How NRI Property Sale Capital Gains Are Computed
+              </a>
+            )}
+            {caseData?.country && (
+              <a href={`/blog/${caseData.country.toLowerCase().replace(/\s+/g,'-')}-nri-tax-guide`} className="block text-sm text-theme-accent hover:underline">
+                {'\u2192'} Tax Guide for NRIs in {caseData.country}
+              </a>
+            )}
+            <a href="/blog/nri-income-tax-filing-guide" className="block text-sm text-theme-accent hover:underline">
+              {'\u2192'} Complete Guide to NRI Tax Filing in India
+            </a>
+          </div>
+        </div>
+
         {/* -- Section 6: What Happens Next -- */}
-        <div className="card-theme-gold-left p-6 md:p-8 mb-6 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <div className="card-theme-gold-left p-6 md:p-8 mb-6 animate-fade-in-up" style={{ animationDelay: '340ms' }}>
           <h3 className="font-serif text-lg font-bold text-theme mb-3">What Happens Next</h3>
           <p className="text-sm text-theme-secondary leading-relaxed">
             {NEXT_STEPS[stage] || NEXT_STEPS[1]}
@@ -563,10 +608,26 @@ function ClientPortal() {
               This page updates automatically every 15 seconds
             </div>
           )}
+          <div className="flex items-center gap-2 mt-2">
+            <label className="text-xs text-theme-muted cursor-pointer flex items-center gap-1.5">
+              <input type="checkbox" className="accent-[#C49A3C] w-3.5 h-3.5"
+                defaultChecked={false}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    localStorage.setItem('nri-notify-' + (caseData?.id || ''), 'true');
+                  } else {
+                    localStorage.removeItem('nri-notify-' + (caseData?.id || ''));
+                  }
+                }}
+              />
+              Notify me by email when my case updates
+            </label>
+          </div>
         </div>
       </div>
 
       <ContactBar />
+      <Footer />
     </div>
   );
 }

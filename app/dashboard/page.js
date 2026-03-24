@@ -724,7 +724,7 @@ export default function Dashboard() {
                     background: active ? 'var(--bg-card)' : 'transparent',
                     color: active ? 'var(--text-primary)' : 'var(--text-muted)'
                   }}>
-                  <span className={done ? '' : 'opacity-30'}>{done ? '✓' : m.ic}</span>
+                  <span className={done ? 'animate-complete-pulse' : 'opacity-30'}>{done ? '✓' : m.ic}</span>
                   <span>{m.l}</span>
                   {m.cp && !done && <span className="text-theme-accent text-[8px]">⚠</span>}
                 </div>

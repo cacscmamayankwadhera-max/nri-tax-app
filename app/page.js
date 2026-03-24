@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/app/theme-provider';
+import { ClipboardList, Bot, FileText, CheckCircle, Home as HomeIcon, Globe, Shield, Building2, BarChart3, Search } from 'lucide-react';
+import NavBar from '@/app/components/NavBar';
+import Footer from '@/app/components/Footer';
 
 /* ─────────────────────────────────────────────────────────────
    SHARED DATA
@@ -13,20 +16,22 @@ const STATS = [
   { value: '99.7%', label: 'Filing Accuracy' },
 ];
 
+const STEP_ICONS = [ClipboardList, Bot, FileText, CheckCircle];
 const STEPS = [
-  { n: '1', t: 'Describe Your Situation', d: 'Type in plain English or fill a simple form. AI extracts and organizes everything.', ic: '📋' },
-  { n: '2', t: 'AI Analyzes', d: '10 specialist modules review residency, income, capital gains, DTAA, and more.', ic: '🤖' },
-  { n: '3', t: 'Get Deliverables', d: 'Download professional computation sheets, advisory memos, and engagement documents.', ic: '📄' },
-  { n: '4', t: 'File with Confidence', d: 'Expert-reviewed filing with pre-filing risk check and post-filing support.', ic: '✅' },
+  { n: '1', t: 'Describe Your Situation', d: 'Type in plain English or fill a simple form. AI extracts and organizes everything.' },
+  { n: '2', t: 'AI Analyzes', d: '10 specialist modules review residency, income, capital gains, DTAA, and more.' },
+  { n: '3', t: 'Get Deliverables', d: 'Download professional computation sheets, advisory memos, and engagement documents.' },
+  { n: '4', t: 'File with Confidence', d: 'Expert-reviewed filing with pre-filing risk check and post-filing support.' },
 ];
 
+const FEATURE_ICONS = [HomeIcon, Globe, Shield, Building2, BarChart3, Search];
 const FEATURES = [
-  { t: 'Property Sale Tax', d: 'Dual computation (20% indexed vs 12.5% flat), Section 54/54EC planning', ic: '🏠' },
-  { t: 'Residential Status', d: 'Stay-day analysis, RNOR review, deemed resident check', ic: '🌍' },
-  { t: 'DTAA / FTC', d: 'Treaty benefit analysis, foreign tax credit eligibility', ic: '🌐' },
-  { t: 'Rental Income', d: 'House property computation, standard deduction, loan interest', ic: '🏢' },
-  { t: 'Investments', d: 'NRO/FD interest, dividends, MF gains, ESOP/RSU', ic: '📈' },
-  { t: 'AIS Reconciliation', d: 'Mismatch detection, TDS credit verification', ic: '🔍' },
+  { t: 'Property Sale Tax', d: 'Dual computation (20% indexed vs 12.5% flat), Section 54/54EC planning' },
+  { t: 'Residential Status', d: 'Stay-day analysis, RNOR review, deemed resident check' },
+  { t: 'DTAA / FTC', d: 'Treaty benefit analysis, foreign tax credit eligibility' },
+  { t: 'Rental Income', d: 'House property computation, standard deduction, loan interest' },
+  { t: 'Investments', d: 'NRO/FD interest, dividends, MF gains, ESOP/RSU' },
+  { t: 'AIS Reconciliation', d: 'Mismatch detection, TDS credit verification' },
 ];
 
 const PRICING = [
@@ -43,7 +48,7 @@ const PRICING = [
 
 export default function Home() {
   const [vis, setVis] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     setVis(true);
@@ -57,61 +62,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════
          NAV
          ══════════════════════════════════════════════════════════ */}
-      <nav style={{ background: 'var(--bg-nav)', transition: 'background-color 0.3s ease' }}>
-        <div className="max-w-6xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ border: '1px solid var(--accent)' }}
-            >
-              <span className="text-xs font-bold" style={{ color: 'var(--accent)', fontFamily: 'system-ui' }}>NT</span>
-            </div>
-            <span className="font-serif text-lg tracking-wide" style={{ color: 'var(--text-nav)' }}>
-              NRI Tax Suite
-            </span>
-          </div>
-
-          <div className="flex gap-3 items-center">
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110"
-              style={{
-                background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(255,255,255,0.12)',
-                color: 'var(--accent)',
-                border: '1px solid rgba(196,154,60,0.3)',
-              }}
-              aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={isDark ? 'Switch to Luxury Consultancy theme' : 'Switch to Premium Financial theme'}
-            >
-              {isDark ? '\u2600' : '\u263D'}
-            </button>
-
-            <a href="/blog" className="text-sm transition hidden sm:inline-block" style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
-              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
-            >
-              Knowledge Hub
-            </a>
-            <a href="/login" className="text-sm transition hidden sm:inline-block" style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
-              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
-            >
-              Team Login
-            </a>
-            <a
-              href="/client"
-              className="px-5 py-2 rounded-lg text-sm font-bold transition-all duration-300 hover:scale-[1.03]"
-              style={{
-                background: 'var(--bg-cta)',
-                color: 'var(--text-on-cta)',
-              }}
-            >
-              Start Filing &rarr;
-            </a>
-          </div>
-        </div>
-      </nav>
+      <NavBar variant="transparent" />
 
 
       {/* ══════════════════════════════════════════════════════════
@@ -258,7 +209,7 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <div className="text-3xl mb-3">{s.ic}</div>
+                <div className="mb-3 flex justify-center">{(() => { const Icon = STEP_ICONS[i]; return <Icon size={28} style={{ color: 'var(--accent)' }} />; })()}</div>
                 <div className="text-[10px] font-bold mb-1" style={{ color: 'var(--accent)' }}>STEP {s.n}</div>
                 <h3 className="font-serif font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{s.t}</h3>
                 <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.d}</p>
@@ -295,7 +246,7 @@ export default function Home() {
                 onMouseEnter={e => e.currentTarget.style.borderColor = '#C49A3C'}
                 onMouseLeave={e => e.currentTarget.style.borderColor = '#3a3a3a'}
               >
-                <div className="text-2xl mb-3">{s.ic}</div>
+                <div className="mb-3">{(() => { const Icon = FEATURE_ICONS[i]; return <Icon size={24} style={{ color: '#C49A3C' }} />; })()}</div>
                 <h3 className="font-bold text-sm mb-1" style={{ color: '#ffffff' }}>{s.t}</h3>
                 <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>{s.d}</p>
               </div>
@@ -361,21 +312,12 @@ export default function Home() {
                 <div className="font-bold text-xl mb-2 font-serif" style={{ color: 'var(--text-primary)' }}>{s.p}</div>
                 <p className="text-xs flex-1 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{s.d}</p>
 
-                <button
-                  className="mt-4 w-full py-2.5 rounded-md text-xs font-semibold tracking-wide uppercase transition-all duration-300"
-                  style={s.pop ? {
-                    background: 'var(--bg-cta)',
-                    color: 'var(--text-on-cta)',
-                    fontFamily: 'system-ui',
-                  } : {
-                    border: '1px solid var(--accent)',
-                    color: 'var(--accent)',
-                    background: 'transparent',
-                    fontFamily: 'system-ui',
-                  }}
+                <a
+                  href="/client"
+                  className="btn-primary w-full text-center block py-2.5 rounded-lg text-sm font-bold mt-auto"
                 >
-                  Select Plan
-                </button>
+                  Start Filing &rarr;
+                </a>
               </div>
             ))}
           </div>
@@ -453,36 +395,9 @@ export default function Home() {
 
 
       {/* ══════════════════════════════════════════════════════════
-         FOOTER (always dark)
+         FOOTER
          ══════════════════════════════════════════════════════════ */}
-      <footer style={{ background: 'var(--bg-footer)', transition: 'background-color 0.3s ease' }}>
-        <div className="max-w-5xl mx-auto px-6 py-12">
-          <div className="flex flex-wrap justify-between items-start gap-8">
-            <div>
-              <div className="font-serif text-lg font-bold" style={{ color: 'var(--accent)' }}>MKW Advisors</div>
-              <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>NRI Tax Filing &middot; Advisory &middot; Compliance</div>
-              <div className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>CA | CS | CMA | IBBI Registered Valuer</div>
-            </div>
-            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              <div className="font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Services</div>
-              <div>NRI ITR Filing</div>
-              <div>Capital Gains Advisory</div>
-              <div>DTAA / FTC Review</div>
-            </div>
-            <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              <div className="font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Quick Links</div>
-              <a href="/client" className="block hover:text-white transition">Start Filing</a>
-              <a href="/login" className="block hover:text-white transition">Team Login</a>
-            </div>
-          </div>
-          <div
-            className="mt-8 pt-6 text-center text-xs"
-            style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}
-          >
-            &copy; {new Date().getFullYear()} MKW Advisors. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

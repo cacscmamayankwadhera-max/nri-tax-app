@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { CATEGORIES, ASSESSMENTS } from './data';
+import NavBar from '@/app/components/NavBar';
+import Footer from '@/app/components/Footer';
 
 /* ─── Helpers ─────────────────────────────────────────────── */
 function useSlider(items, autoMs = 5000) {
@@ -77,24 +79,7 @@ export default function BlogHubClient({ blogs }) {
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
 
       {/* ══ NAV ══ */}
-      <nav style={{ background: 'var(--bg-nav)' }}>
-        <div className="max-w-6xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ border: '1px solid var(--accent)' }}>
-              <span className="text-xs font-bold" style={{ color: 'var(--accent)' }}>NT</span>
-            </div>
-            <span className="font-serif text-lg tracking-wide" style={{ color: 'var(--text-nav)' }}>NRI Tax Suite</span>
-          </a>
-          <div className="flex gap-3 items-center">
-            <button onClick={toggleTheme} className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all hover:scale-110" style={{ background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(255,255,255,0.12)', color: 'var(--accent)', border: '1px solid rgba(196,154,60,0.3)' }}>
-              {isDark ? '\u2600' : '\u263D'}
-            </button>
-            <a href="/client" className="px-5 py-2 rounded-lg text-sm font-bold transition-all hover:scale-105" style={{ background: 'var(--bg-cta)', color: 'var(--text-on-cta)' }}>
-              Free Assessment &rarr;
-            </a>
-          </div>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* ══ HERO ══ */}
       <section className="relative overflow-hidden">
@@ -434,52 +419,7 @@ export default function BlogHubClient({ blogs }) {
       </div>
 
       {/* ══ FOOTER ══ */}
-      <footer style={{ background: 'var(--bg-footer)', borderTop: '1px solid var(--border)' }}>
-        <div className="max-w-6xl mx-auto px-6 md:px-12 py-8">
-          <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ border: '1px solid var(--accent)' }}>
-                  <span className="text-[10px] font-bold" style={{ color: 'var(--accent)' }}>NT</span>
-                </div>
-                <span className="font-serif text-sm" style={{ color: 'var(--accent)' }}>NRI Tax Suite</span>
-              </div>
-              <p className="text-xs max-w-xs" style={{ color: 'var(--text-muted)' }}>
-                AI-powered NRI tax filing, advisory, and compliance by MKW Advisors.
-              </p>
-            </div>
-            <div className="flex gap-8">
-              <div>
-                <p className="text-xs font-bold mb-2" style={{ color: 'var(--text-on-dark)' }}>Resources</p>
-                <div className="flex flex-col gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                  <a href="/blog" className="hover:underline" style={{ color: 'var(--accent)' }}>Knowledge Hub</a>
-                  <a href="/blog/nri-property-sale-capital-gains" className="hover:underline">Property Sale Guide</a>
-                  <a href="/blog/us-nri-tax-guide" className="hover:underline">US NRI Guide</a>
-                  <a href="/blog/uae-nri-tax-guide" className="hover:underline">UAE NRI Guide</a>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs font-bold mb-2" style={{ color: 'var(--text-on-dark)' }}>Company</p>
-                <div className="flex flex-col gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                  <a href="/client" className="hover:underline">Start Filing</a>
-                  <a href="/terms" className="hover:underline">Terms</a>
-                  <a href="/privacy" className="hover:underline">Privacy</a>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs font-bold mb-2" style={{ color: 'var(--text-on-dark)' }}>Contact</p>
-                <div className="flex flex-col gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                  <a href="https://wa.me/919667744073" className="hover:underline">WhatsApp</a>
-                  <a href="mailto:contact@mkwadvisors.com" className="hover:underline">Email</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 pt-4 text-center text-xs" style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}>
-            &copy; 2026 MKW Advisors &middot; Legal Suvidha &middot; DigiComply &middot; CA | CS | CMA | IBBI Registered Valuer
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

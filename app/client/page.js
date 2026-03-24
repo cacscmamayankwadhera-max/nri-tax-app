@@ -2,6 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { computeCapitalGains, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
+import { CheckCircle } from 'lucide-react';
+import NavBar from '@/app/components/NavBar';
+import Footer from '@/app/components/Footer';
 
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
 
@@ -17,6 +20,7 @@ export default function ClientIntake() {
   const [parseDone, setParseDone] = useState(false);
   const [fadeDir, setFadeDir] = useState('in');
   const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   // Parse Indian-format numbers safely: strip commas before parsing
@@ -158,22 +162,50 @@ export default function ClientIntake() {
     const mailBody = encodeURIComponent(`Hi,\n\nI just completed the intake on your platform.\n\nName: ${f.name || ''}\nCountry: ${f.country || ''}\nClassification: ${cls}\nFY: ${fy}\n\nPlease contact me to proceed.\n\nRegards,\n${f.name || ''}`);
     const waText = encodeURIComponent(`Hi, I completed the NRI Tax intake.\n\nName: ${f.name || ''}\nClassification: ${cls}\nFY: ${fy}\n\nPlease contact me to proceed.`);
 
+    // Classification factors
+    const factors = [];
+    if (f.cgProperty || f.propertySale) factors.push('Property sale detected');
+    if (f.cgShares || f.cgESOPRSU) factors.push('Equity/ESOP income');
+    if (f.crypto) factors.push('Crypto/VDA transactions');
+    if (f.foreignTaxPaid) factors.push('Foreign tax paid \u2014 DTAA review needed');
+    if (f.business) factors.push('Business/professional income');
+    if (f.priorNotices === 'Yes') factors.push('Prior tax notices');
+
+    const timelineText = {
+      Green: 'Estimated completion: 5-7 business days',
+      Amber: 'Estimated completion: 8-12 business days',
+      Red: 'Premium handling: 10-15 business days'
+    };
+
     return (
       <div className="min-h-screen bg-theme">
-        <nav className="bg-theme-nav px-6 h-14 flex items-center justify-between">
-          <a href="/" className="font-serif text-theme-accent font-bold tracking-wide">NRI TAX SUITE</a>
-          <ThemeToggle />
-        </nav>
-        <div className="bg-theme-nav text-center py-1.5">
-          <span className="text-[11px] text-theme-muted tracking-wide">Trusted by 500+ NRIs across 15+ countries &nbsp;|&nbsp; CA &middot; CS &middot; CMA Certified</span>
-        </div>
+        <NavBar />
 
         <div className="max-w-2xl mx-auto py-10 px-4 animate-fade-in-up">
+          {/* Celebration animation */}
+          <div className="text-center mb-6 animate-fade-in-up">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
+              style={{ background: 'color-mix(in srgb, var(--green) 15%, var(--bg-primary))', animation: 'pulse-gold 2s ease-in-out' }}>
+              <CheckCircle size={40} style={{ color: 'var(--green)' }} />
+            </div>
+            <h2 className="font-serif text-2xl font-bold text-theme mb-2">Assessment Complete!</h2>
+            <p className="text-theme-muted text-sm">Your case has been submitted to our tax desk</p>
+          </div>
+
           {/* Case reference link for portal tracking */}
           {portalToken && (
             <div className="card-theme p-6 mb-6 text-center" style={{ borderColor: 'var(--accent)', borderWidth: '1px' }}>
               <div className="text-sm font-semibold text-theme-accent mb-1">Your Tracking Code</div>
-              <div className="font-mono text-2xl font-bold text-theme tracking-wider mb-2">{portalToken}</div>
+              <div className="font-mono text-2xl font-bold text-theme tracking-wider mb-2 flex items-center justify-center">
+                {portalToken}
+                <button onClick={() => {
+                  navigator.clipboard.writeText(portalToken);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }} className="text-xs text-theme-accent hover:underline ml-2">
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
               <a href={`/portal?ref=${portalToken}`} className="text-theme-accent text-sm underline">Track your case status {'\u2192'}</a>
               <p className="text-xs text-theme-muted mt-2">Save this code to check your case progress anytime</p>
             </div>
@@ -198,6 +230,18 @@ export default function ClientIntake() {
             </div>
           )}
 
+          {/* Personalized insights for non-property cases */}
+          {!cgData && (
+            <div className="card-theme p-6 mb-6 text-center" style={{ borderColor: 'var(--green)', borderWidth: '1px' }}>
+              <div className="text-3xl font-serif font-bold mb-2" style={{ color: 'var(--green)' }}>
+                {[f.salary, f.rent, f.interest, f.dividend, f.cgShares, f.cgMF, f.cgESOPRSU, f.business, f.crypto].filter(Boolean).length} Income Sources Identified
+              </div>
+              <p className="text-theme-muted text-sm">Our AI will analyze each for optimization opportunities</p>
+              {f.foreignSalary && <p className="text-sm mt-2" style={{ color: 'var(--green)' }}>Your foreign salary is NOT taxable in India — confirmed</p>}
+              {f.section80C > 0 && <p className="text-sm mt-1" style={{ color: 'var(--green)' }}>&#8377;{(f.section80C || 0).toLocaleString('en-IN')} in deductions to review</p>}
+            </div>
+          )}
+
           {/* Classification card */}
           <div className="card-theme p-8 mb-5">
             <div className="flex justify-between items-center mb-4">
@@ -213,6 +257,22 @@ export default function ClientIntake() {
               {cls === 'Amber' && 'Your case has moderate complexity \u2014 advisory review recommended alongside filing.'}
               {cls === 'Red' && 'Your case involves significant complexity \u2014 premium compliance service recommended.'}
             </p>
+            {/* Classification factors */}
+            {factors.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {factors.map((factor, i) => (
+                  <span key={i} className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{
+                    background: `color-mix(in srgb, ${clsColor} 10%, var(--bg-card))`,
+                    color: clsColor,
+                    border: `1px solid color-mix(in srgb, ${clsColor} 20%, transparent)`
+                  }}>{factor}</span>
+                ))}
+              </div>
+            )}
+            {/* Timeline estimate */}
+            <div className="mt-4 text-xs font-medium" style={{ color: clsColor }}>
+              {timelineText[cls]}
+            </div>
           </div>
 
           {/* CG Analysis */}
@@ -321,6 +381,7 @@ export default function ClientIntake() {
             <p className="text-xs text-theme-muted">{'\uD83D\uDD12'} Your data is encrypted and confidential. We respond within 24 hours.</p>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -340,20 +401,7 @@ export default function ClientIntake() {
         .flash-success { animation: flash-success 1.2s ease-out forwards; }
       `}</style>
 
-      <nav className="bg-theme-nav px-6 h-14 flex items-center justify-between">
-        <a href="/" className="font-serif text-theme-accent font-bold tracking-wide">NRI TAX SUITE</a>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <a href="/login" className="text-theme-muted text-xs hover:text-theme-on-dark transition-colors">Team Login</a>
-        </div>
-      </nav>
-
-      {/* Trust bar */}
-      <div className="bg-theme-nav border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="text-center py-1.5">
-          <span className="text-[11px] text-theme-muted tracking-wide">Trusted by 500+ NRIs across 15+ countries &nbsp;|&nbsp; CA &middot; CS &middot; CMA Certified</span>
-        </div>
-      </div>
+      <NavBar />
 
       <div className="max-w-2xl mx-auto py-8 px-4">
         {/* Header */}
@@ -367,6 +415,10 @@ export default function ClientIntake() {
 
         {/* Step Indicator */}
         <StepIndicator />
+        {/* Time estimate per step */}
+        <p className="text-center text-xs text-theme-muted mb-4">
+          Step {step + 1} of 5 &middot; About {[3, 2, 3, 1, 1][step]} minutes
+        </p>
 
         {/* Step content with transitions */}
         <div className={fadeDir === 'in' ? 'step-fade-in' : 'step-fade-out'}>
@@ -430,16 +482,16 @@ export default function ClientIntake() {
           <div className="card-theme p-8">
             <div className="grid grid-cols-2 gap-5 stagger-children">
               <I l="Your Full Name *" v={f.name} ch={v => u('name', v)} ph="Rajesh Mehta" />
-              <I l="Country of Residence *"><S v={f.country} ch={v => u('country', v)} o={COUNTRIES} /></I>
+              <I l="Country of Residence *" tip="Your country of residence determines which DTAA (tax treaty) applies"><S v={f.country} ch={v => u('country', v)} o={COUNTRIES} /></I>
               <I l="Occupation" v={f.occupation} ch={v => u('occupation', v)} ph="e.g. IT Manager" />
-              <I l="Years Abroad"><S v={f.yearsAbroad} ch={v => u('yearsAbroad', v)} o={['Less than 1 year', '1-3 years', '3-5 years', '5+ years']} /></I>
+              <I l="Years Abroad" tip="Helps determine residential status history"><S v={f.yearsAbroad} ch={v => u('yearsAbroad', v)} o={['Less than 1 year', '1-3 years', '3-5 years', '5+ years']} /></I>
               <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />
               <I l="Phone" v={f.phone} ch={v => u('phone', v)} ph="+44 / +91..." />
-              <I l="PAN Number" v={f.pan} ch={v => u('pan', v)} ph="ABCDE1234F" />
+              <I l="PAN Number" v={f.pan} ch={v => u('pan', v)} ph="ABCDE1234F" tip="Required for ITR filing. Unlinked PAN attracts higher TDS rates" />
               <I l="Aadhaar Number (if available)" v={f.aadhaarNumber} ch={v => u('aadhaarNumber', v)} ph="1234 5678 9012" />
               <I l="PAN-Aadhaar Linked"><S v={f.panAadhaarLinked} ch={v => u('panAadhaarLinked', v)} o={['Yes', 'No', 'Not sure']} /></I>
-              <I l="Date of Birth" v={f.dob} ch={v => u('dob', v)} type="date" />
-              <I l="Citizenship"><S v={f.citizenship} ch={v => u('citizenship', v)} o={['Indian Citizen', 'OCI Holder', 'PIO']} /></I>
+              <I l="Date of Birth" v={f.dob} ch={v => u('dob', v)} type="date" tip="Determines eligibility for senior citizen tax benefits (60+)" />
+              <I l="Citizenship" tip="OCI/PIO holders have same tax treatment but different FEMA rules"><S v={f.citizenship} ch={v => u('citizenship', v)} o={['Indian Citizen', 'OCI Holder', 'PIO']} /></I>
             </div>
           </div>
           <button onClick={() => goStep(1)} disabled={!f.name || !f.country}
@@ -453,12 +505,16 @@ export default function ClientIntake() {
               <I l="Days in India this year" v={f.stayDays} ch={v => u('stayDays', v)} ph="38" tip="Approximate is fine \u2014 we verify later" />
               <I l="How do you know?"><S v={f.staySource} ch={v => u('staySource', v)} o={['Self-estimate', 'Passport records', 'Travel summary']} /></I>
               <I l="Family / home in India?"><S v={f.familyInIndia} ch={v => u('familyInIndia', v)} o={['Yes', 'No', 'Partly']} /></I>
-              <I l="Total India stay in preceding 4 years (days)" v={f.stayDays4yr} ch={v => u('stayDays4yr', parseNum(v))} ph="300" type="number" tip="Required for residency determination" />
-              <I l="Total India stay in preceding 7 years (days)" v={f.stayDays7yr} ch={v => u('stayDays7yr', parseNum(v))} ph="500" type="number" tip="Required for RNOR test" />
-              <I l="Number of properties owned in India"><S v={f.propertiesOwned} ch={v => u('propertiesOwned', v)} o={['0', '1', '2', '3+']} /></I>
+              <I l="Total India stay in preceding 4 years (days)" v={f.stayDays4yr} ch={v => u('stayDays4yr', parseNum(v))} ph="300" type="number" tip="Used with 60-day rule to determine residency. 60 days + 365 days in prior 4 years = Resident" />
+              <I l="Total India stay in preceding 7 years (days)" v={f.stayDays7yr} ch={v => u('stayDays7yr', parseNum(v))} ph="500" type="number" tip="RNOR test: if total stay ≤729 days in preceding 7 years, foreign income stays tax-free" />
+              <I l="Number of properties owned in India" tip="If you own 2+ properties, only 1 can be self-occupied. Others are deemed let-out at notional rent"><S v={f.propertiesOwned} ch={v => u('propertiesOwned', v)} o={['0', '1', '2', '3+']} /></I>
               <I l="Did you sell property this year?"><S v={f.propertySale ? 'Yes' : 'No'} ch={v => { u('propertySale', v === 'Yes'); u('cgProperty', v === 'Yes'); }} o={['No', 'Yes']} /></I>
               {f.propertySale && <>
-                <I l="When was it purchased?" tip="This determines which tax option applies"><S v={f.propertyAcqFY} ch={v => u('propertyAcqFY', v)} o={Object.keys(CII).filter(k => parseInt(k) >= 2005).map(k => ({ v: k, l: 'FY ' + k }))} /></I>
+                {/* Educational guide link */}
+                <div className="col-span-2">
+                  <a href="/blog/nri-property-sale-capital-gains" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} Read our property sale guide</a>
+                </div>
+                <I l="When was it purchased?" tip="Properties acquired before July 2024 get dual computation — could save you lakhs"><S v={f.propertyAcqFY} ch={v => u('propertyAcqFY', v)} o={Object.keys(CII).filter(k => parseInt(k) >= 2005).map(k => ({ v: k, l: 'FY ' + k }))} /></I>
                 <I l="Sale price (\u20B9)" v={f.salePrice} ch={v => u('salePrice', parseNum(v))} ph="6800000" type="number" />
                 <I l="Purchase cost (\u20B9)" v={f.purchaseCost} ch={v => u('purchaseCost', parseNum(v))} ph="2200000" type="number" />
                 <I l="City / Location" v={f.propertyLocation} ch={v => u('propertyLocation', v)} ph="Nashik" />
@@ -483,12 +539,12 @@ export default function ClientIntake() {
                   <I l="Co-owner Name" v={f.coOwnerName} ch={v => u('coOwnerName', v)} />
                   <I l="Co-owner PAN" v={f.coOwnerPAN} ch={v => u('coOwnerPAN', v)} ph="ABCDE1234F" />
                 </>}
-                <I l="Property type"><S v={f.propertyType} ch={v => u('propertyType', v)} o={['Residential Flat', 'Residential Plot', 'Commercial Property', 'Agricultural Land (Urban)', 'Agricultural Land (Rural)']} /></I>
-                <I l="Stamp duty value (\u20B9)" v={f.stampDutyValue} ch={v => u('stampDutyValue', parseNum(v))} ph="7000000" type="number" tip="Circle rate / government valuation at time of sale" />
-                <I l="Registration & stamp duty expenses (\u20B9)" v={f.registrationExpenses} ch={v => u('registrationExpenses', parseNum(v))} ph="350000" type="number" tip="Stamp duty, registration, brokerage paid on sale" />
-                <I l="TDS deducted by buyer (\u20B9)" v={f.tdsDeductedBuyer} ch={v => u('tdsDeductedBuyer', parseNum(v))} ph="1360000" type="number" tip="Actual TDS amount from Form 16B/27Q" />
-                <I l="Section 197 lower TDS certificate"><S v={f.section197} ch={v => u('section197', v)} o={['Not applied', 'Applied \u2014 pending', 'Obtained', 'Not applicable']} /></I>
-                <I l="Was property acquired before April 2001?"><S v={f.preApril2001} ch={v => u('preApril2001', v)} o={['No', 'Yes \u2014 will use FMV as of 01/04/2001']} /></I>
+                <I l="Property type" tip="Rural agricultural land is NOT a capital asset — no capital gains tax at all"><S v={f.propertyType} ch={v => u('propertyType', v)} o={['Residential Flat', 'Residential Plot', 'Commercial Property', 'Agricultural Land (Urban)', 'Agricultural Land (Rural)']} /></I>
+                <I l="Stamp duty value (\u20B9)" v={f.stampDutyValue} ch={v => u('stampDutyValue', parseNum(v))} ph="7000000" type="number" tip="If stamp duty exceeds sale price, the higher value is used for tax computation (Section 50C)" />
+                <I l="Registration & stamp duty expenses (\u20B9)" v={f.registrationExpenses} ch={v => u('registrationExpenses', parseNum(v))} ph="350000" type="number" tip="Stamp duty, registration, brokerage — all deductible as cost of transfer" />
+                <I l="TDS deducted by buyer (\u20B9)" v={f.tdsDeductedBuyer} ch={v => u('tdsDeductedBuyer', parseNum(v))} ph="1360000" type="number" tip="NRI sellers face 20% TDS under Section 195. Check if buyer deducted correctly — 1% means wrong section was used" />
+                <I l="Section 197 lower TDS certificate" tip="A lower TDS certificate avoids locking up excess cash. Apply BEFORE the sale"><S v={f.section197} ch={v => u('section197', v)} o={['Not applied', 'Applied \u2014 pending', 'Obtained', 'Not applicable']} /></I>
+                <I l="Was property acquired before April 2001?" tip="You can use Fair Market Value as of 01/04/2001 as cost — usually MUCH higher than original price"><S v={f.preApril2001} ch={v => u('preApril2001', v)} o={['No', 'Yes \u2014 will use FMV as of 01/04/2001']} /></I>
               </>}
             </div>
           </div>
@@ -534,6 +590,10 @@ export default function ClientIntake() {
                 </I>
                 <p className="text-[10px] text-theme-muted mt-1">NRE interest is completely tax-free under Section 10(4). NRO interest is taxable at 30%.</p>
               </div>
+              {/* Educational guide link */}
+              <div className="mt-3">
+                <a href="/blog/nre-nro-fcnr-banking" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} NRE vs NRO tax treatment</a>
+              </div>
             </div>}
           </div>}
           {(f.cgShares || f.cgMF || f.cgESOPRSU) && (
@@ -549,11 +609,15 @@ export default function ClientIntake() {
                   <I l="MF STCG (\u20B9)" v={f.mfSTCG} ch={v => u('mfSTCG', parseNum(v))} ph="0" type="number" tip="Short-term MF gains" />
                 </>}
                 {f.cgESOPRSU && <>
-                  <I l="Employer Company Name" v={f.esopEmployer} ch={v => u('esopEmployer', v)} />
-                  <I l="Stock Listing Status"><S v={f.stockListing} ch={v => u('stockListing', v)} o={['Listed in India', 'Listed abroad', 'Unlisted (startup/private)']} /></I>
+                  <I l="Employer Company Name" v={f.esopEmployer} ch={v => u('esopEmployer', v)} tip="Foreign employer ESOPs may have India-service apportionment — only India portion is taxable" />
+                  <I l="Stock Listing Status" tip="Listed shares: 12-month LTCG threshold. Unlisted: 24 months"><S v={f.stockListing} ch={v => u('stockListing', v)} o={['Listed in India', 'Listed abroad', 'Unlisted (startup/private)']} /></I>
                   <I l="ESOP/RSU Type"><S v={f.esopType} ch={v => u('esopType', v)} o={['RSU (Restricted Stock Units)', 'Stock Options (ESOP)', 'Both', 'Not sure']} /></I>
                   <I l="ESOP/RSU perquisite value (\u20B9)" v={f.esopPerquisite} ch={v => u('esopPerquisite', parseNum(v))} ph="0" type="number" tip="FMV at exercise minus exercise price" />
                   <I l="ESOP/RSU sale gain (\u20B9)" v={f.esopSaleGain} ch={v => u('esopSaleGain', parseNum(v))} ph="0" type="number" tip="Sale price minus FMV at exercise" />
+                  {/* Educational guide link */}
+                  <div className="col-span-2">
+                    <a href="/blog/nri-esop-rsu-taxation" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} Read our ESOP taxation guide</a>
+                  </div>
                 </>}
               </div>
             </div>
@@ -583,6 +647,10 @@ export default function ClientIntake() {
           )}
           <div className="card-theme p-8 mb-5">
             <div className="text-sm font-semibold text-theme mb-4">Deductions & Investments</div>
+            {/* Educational guide link */}
+            <div className="mb-4">
+              <a href="/blog/nri-tax-saving-investments" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} Which deductions can NRIs claim?</a>
+            </div>
             <div className="grid grid-cols-2 gap-5">
               <I l="Section 80C total (\u20B9)" v={f.section80C} ch={v => u('section80C', parseNum(v))} ph="150000" type="number" tip="PPF + ELSS + LIC + home loan principal + tuition fees" />
               <I l="Health insurance premium \u2014 self (\u20B9)" v={f.healthInsuranceSelf} ch={v => u('healthInsuranceSelf', parseNum(v))} ph="25000" type="number" />
@@ -601,7 +669,7 @@ export default function ClientIntake() {
         {step === 3 && <div>
           <div className="card-theme p-8">
             <div className="grid grid-cols-2 gap-5 stagger-children">
-              <I l="Do you have AIS?"><S v={f.ais} ch={v => u('ais', v)} o={['Yes', 'Downloaded but not reviewed', 'No', "Don't know what this is"]} /></I>
+              <I l="Do you have AIS?" tip="Download from incometax.gov.in → e-File → Income Tax Returns → AIS. Shows all your financial transactions"><S v={f.ais} ch={v => u('ais', v)} o={['Yes', 'Downloaded but not reviewed', 'No', "Don't know what this is"]} /></I>
               <I l="Total Indian assets?"><S v={f.indianAssets} ch={v => u('indianAssets', v)} o={['Below \u20B950 Lakhs', '\u20B950L \u2013 \u20B91 Crore', 'Above \u20B91 Crore', 'Not sure']} /></I>
               <I l="Any prior tax notices?"><S v={f.priorNotices} ch={v => u('priorNotices', v)} o={['None', 'Yes', 'Not sure']} /></I>
               <I l="What help do you need?"><S v={f.serviceNeed} ch={v => u('serviceNeed', v)} o={['Just file my return', 'Filing + advice on my situation', 'Tax planning + filing', 'Just want to understand what I owe']} /></I>
@@ -611,11 +679,12 @@ export default function ClientIntake() {
             </div>
             <div className="mt-5">
               <div className="grid grid-cols-2 gap-5">
-                <I l="Advance tax paid this year (\u20B9)" v={f.advanceTaxPaid} ch={v => u('advanceTaxPaid', parseNum(v))} ph="0" type="number" tip="Challan 280 amounts already paid" />
+                <I l="Advance tax paid this year (\u20B9)" v={f.advanceTaxPaid} ch={v => u('advanceTaxPaid', parseNum(v))} ph="0" type="number" tip="If you already paid advance tax via Challan 280, enter total here — reduces your balance payable" />
                 <I l="TCS paid on LRS remittances (\u20B9)" v={f.tcsPaidLRS} ch={v => u('tcsPaidLRS', parseNum(v))} ph="0" type="number" tip="20% TCS on foreign remittances above \u20B97L" />
               </div>
               <div className="mt-3">
                 <C l="15CA/15CB already filed for prior remittances" c={f.filed15CA15CB} ch={v => u('filed15CA15CB', v)} />
+                <p className="text-[10px] text-theme-muted mt-1 ml-6">Required before remitting money from India. If you've done this before, your CA has the records</p>
               </div>
             </div>
             <div className="mt-5"><I l="Anything else we should know?" wide>
@@ -695,6 +764,7 @@ export default function ClientIntake() {
 
         </div>{/* end fade wrapper */}
       </div>
+      <Footer />
     </div>
   );
 }

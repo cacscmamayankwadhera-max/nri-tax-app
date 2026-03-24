@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
+import NavBar from '@/app/components/NavBar';
 
 export default function Signup() {
   const [name, setName] = useState('');
@@ -33,23 +34,7 @@ export default function Signup() {
 
   if (success) return (
     <div className="min-h-screen bg-theme flex flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-6 md:px-12 py-4">
-        <a href="/" className="font-serif text-lg text-theme-accent tracking-wide font-bold">
-          NRI Tax Suite
-        </a>
-        <button
-          onClick={toggleTheme}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110"
-          style={{
-            background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(26,26,26,0.06)',
-            color: 'var(--accent)',
-          }}
-          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}
-        </button>
-      </div>
+      <NavBar />
 
       <div className="flex-1 flex items-center justify-center px-6 pb-12">
         <div className="card-theme p-8 max-w-md text-center shadow-sm animate-fade-in-up">
@@ -68,23 +53,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-theme flex flex-col">
-      {/* Minimal top bar with theme toggle */}
-      <div className="flex items-center justify-between px-6 md:px-12 py-4">
-        <a href="/" className="font-serif text-lg text-theme-accent tracking-wide font-bold">
-          NRI Tax Suite
-        </a>
-        <button
-          onClick={toggleTheme}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110"
-          style={{
-            background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(26,26,26,0.06)',
-            color: 'var(--accent)',
-          }}
-          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}
-        </button>
-      </div>
+      <NavBar />
 
       {/* Form area */}
       <div className="flex-1 flex items-center justify-center px-6 pb-12">

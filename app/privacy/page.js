@@ -1,20 +1,39 @@
+'use client';
+import { useTheme } from '@/app/theme-provider';
+
 export default function PrivacyPolicy() {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
-    <div className="min-h-screen bg-[#f5f2ec]">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
       {/* Nav */}
-      <nav className="bg-[#1a1a1a] px-6 h-14 flex items-center justify-between">
-        <a href="/" className="font-serif text-[#C49A3C] font-bold tracking-wide">NRI TAX SUITE</a>
-        <a href="/" className="text-gray-400 text-xs hover:text-white transition-colors">{'\u2190'} Back to Home</a>
+      <nav style={{ background: 'var(--bg-nav)' }} className="px-6 h-14 flex items-center justify-between">
+        <a href="/" className="font-serif font-bold tracking-wide" style={{ color: 'var(--accent)' }}>NRI TAX SUITE</a>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all hover:scale-110"
+            style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--accent)' }}
+            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+          >
+            {isDark ? '\u2600' : '\u263D'}
+          </button>
+          <a href="/" className="text-xs transition-colors" style={{ color: 'var(--text-muted)' }}
+            onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
+            onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
+          >{'\u2190'} Back to Home</a>
+        </div>
       </nav>
 
       <div className="max-w-3xl mx-auto py-12 px-6">
-        <h1 className="font-serif text-3xl font-bold text-[#1a1a1a] mb-2">Privacy Policy</h1>
-        <p className="text-sm text-gray-500 mb-10">Last updated: 23 March 2026</p>
+        <h1 className="font-serif text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Privacy Policy</h1>
+        <p className="text-sm mb-10" style={{ color: 'var(--text-muted)' }}>Last updated: 23 March 2026</p>
 
-        <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
+        <div className="space-y-8 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {/* 1 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">1. Data We Collect</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>1. Data We Collect</h2>
             <p>To provide our tax advisory and filing services, we collect the following information:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Personal identifiers:</strong> Full name, email address, phone number, country of residence.</li>
@@ -27,7 +46,7 @@ export default function PrivacyPolicy() {
 
           {/* 2 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">2. Purpose of Data Collection</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>2. Purpose of Data Collection</h2>
             <p>Your data is used exclusively for:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Tax computation:</strong> Calculating your tax liability, capital gains, income from house property, and other heads of income.</li>
@@ -39,7 +58,7 @@ export default function PrivacyPolicy() {
 
           {/* 3 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">3. Data Storage</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>3. Data Storage</h2>
             <p>
               Your data is stored securely on <strong>Supabase</strong>, a cloud database platform. Key security measures include:
             </p>
@@ -54,7 +73,7 @@ export default function PrivacyPolicy() {
 
           {/* 4 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">4. Data Retention</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>4. Data Retention</h2>
             <p>
               We retain your data for a minimum of <strong>7 years</strong> from the date of the relevant assessment year,
               in compliance with Indian tax law requirements. This is necessary because:
@@ -69,10 +88,10 @@ export default function PrivacyPolicy() {
 
           {/* 5 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">5. Third-Party Data Sharing</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>5. Third-Party Data Sharing</h2>
             <p>We share your data only with the following third parties, strictly for the purposes described:</p>
-            <div className="mt-3 bg-white rounded-xl border border-gray-200 p-5">
-              <p className="font-semibold text-[#1a1a1a] mb-2">Anthropic AI (Claude)</p>
+            <div className="mt-3 rounded-xl p-5" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Anthropic AI (Claude)</p>
               <p>
                 Your case data (income details, property information, residency status) is sent to Anthropic&apos;s
                 AI models for analysis, computation verification, and advisory content generation. Key safeguards:
@@ -91,7 +110,7 @@ export default function PrivacyPolicy() {
 
           {/* 6 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">6. Your Rights</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>6. Your Rights</h2>
             <p>As a client, you have the right to:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Access:</strong> Request a copy of all personal data we hold about you.</li>
@@ -101,14 +120,14 @@ export default function PrivacyPolicy() {
             </ul>
             <p className="mt-3">
               To exercise any of these rights, email us at{' '}
-              <a href="mailto:tax@mkwadvisors.com" className="text-[#C49A3C] underline hover:text-amber-600 transition-colors">tax@mkwadvisors.com</a>.
+              <a href="mailto:tax@mkwadvisors.com" style={{ color: 'var(--accent)' }} className="underline hover:opacity-80 transition-opacity">tax@mkwadvisors.com</a>.
               We will respond within 30 days.
             </p>
           </section>
 
           {/* 7 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">7. Cookies</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>7. Cookies</h2>
             <p>
               Our platform uses <strong>minimal cookies</strong>, limited to:
             </p>
@@ -123,7 +142,7 @@ export default function PrivacyPolicy() {
 
           {/* 8 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">8. Changes to This Policy</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>8. Changes to This Policy</h2>
             <p>
               We may update this Privacy Policy from time to time. Material changes will be communicated to
               active clients via email. The &quot;Last updated&quot; date at the top of this page reflects the most recent revision.
@@ -132,28 +151,31 @@ export default function PrivacyPolicy() {
 
           {/* 9 */}
           <section>
-            <h2 className="font-serif text-lg font-bold text-[#1a1a1a] mb-3 border-b border-[#C49A3C]/30 pb-2">9. Contact</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>9. Contact</h2>
             <p>
               For any questions or concerns about this Privacy Policy or your data, please contact us:
             </p>
-            <div className="mt-3 bg-white rounded-xl border border-gray-200 p-5">
-              <p className="font-semibold text-[#1a1a1a]">MKW Advisors — NRI Tax Desk</p>
-              <p className="mt-1">Email: <a href="mailto:tax@mkwadvisors.com" className="text-[#C49A3C] underline">tax@mkwadvisors.com</a></p>
-              <p className="mt-1">Phone: <a href="tel:+919667744073" className="text-[#C49A3C] underline">+91-96677 44073</a></p>
+            <div className="mt-3 rounded-xl p-5" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>MKW Advisors — NRI Tax Desk</p>
+              <p className="mt-1">Email: <a href="mailto:tax@mkwadvisors.com" style={{ color: 'var(--accent)' }} className="underline">tax@mkwadvisors.com</a></p>
+              <p className="mt-1">Phone: <a href="tel:+919667744073" style={{ color: 'var(--accent)' }} className="underline">+91-96677 44073</a></p>
             </div>
           </section>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#1a1a1a] text-gray-400 text-center py-8 mt-12">
-        <div className="font-serif text-[#C49A3C] font-bold tracking-wide mb-2">MKW Advisors</div>
+      <footer className="text-center py-8 mt-12" style={{ background: 'var(--bg-footer)', color: 'var(--text-muted)' }}>
+        <div className="font-serif font-bold tracking-wide mb-2" style={{ color: 'var(--accent)' }}>MKW Advisors</div>
         <p className="text-xs">NRI Tax Desk &middot; CA &middot; CS &middot; CMA Certified</p>
         <div className="flex justify-center gap-6 mt-4 text-xs">
-          <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-          <a href="/privacy" className="text-[#C49A3C] hover:text-amber-300 transition-colors">Privacy Policy</a>
+          <a href="/terms" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}
+            onMouseEnter={e => e.target.style.color = 'var(--text-on-dark)'}
+            onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
+          >Terms of Service</a>
+          <a href="/privacy" style={{ color: 'var(--accent)' }} className="hover:opacity-80 transition-opacity">Privacy Policy</a>
         </div>
-        <p className="text-xs mt-4 text-gray-600">&copy; {new Date().getFullYear()} MKW Advisors. All rights reserved.</p>
+        <p className="text-xs mt-4" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>&copy; {new Date().getFullYear()} MKW Advisors. All rights reserved.</p>
       </footer>
     </div>
   );
