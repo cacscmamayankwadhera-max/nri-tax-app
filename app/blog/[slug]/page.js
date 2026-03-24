@@ -10,9 +10,11 @@ export default function BlogPost() {
   const { slug } = useParams();
   const { theme, toggleTheme } = useTheme();
   const [progress, setProgress] = useState(0);
-  const [showToc, setShowToc] = useState(false);
   const [blogContent, setBlogContent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [shareMsg, setShareMsg] = useState('');
+  const [emailResult, setEmailResult] = useState('');
+  const [resultEmail, setResultEmail] = useState('');
   const contentRef = useRef(null);
   const blog = BLOGS.find(b => b.slug === slug);
 
@@ -61,10 +63,7 @@ export default function BlogPost() {
   const prevBlog = currentIdx > 0 ? BLOGS[currentIdx - 1] : null;
   const nextBlog = currentIdx < BLOGS.length - 1 ? BLOGS[currentIdx + 1] : null;
 
-  // Share + email state
-  const [shareMsg, setShareMsg] = useState('');
-  const [emailResult, setEmailResult] = useState('');
-  const [resultEmail, setResultEmail] = useState('');
+  // Share + email
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareText = blog ? `${blog.title} — ${blog.subtitle}` : '';
 
@@ -236,9 +235,12 @@ export default function BlogPost() {
                   th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--border)' }}>{children}</th>,
                   td: ({ children }) => <td className="px-4 py-3 text-sm" style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)' }}>{children}</td>,
                   tr: ({ children }) => <tr className="transition-colors" style={{ }}>{children}</tr>,
-                  code: ({ inline, children }) => inline
-                    ? <code className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--bg-card)', color: 'var(--accent)' }}>{children}</code>
-                    : <code className="block rounded-xl p-4 my-4 text-xs font-mono overflow-x-auto" style={{ background: isDark ? '#0f1625' : '#f8f6f2', color: 'var(--text-secondary)' }}>{children}</code>,
+                  code: ({ className, children }) => {
+                    const isBlock = /language-/.test(className || '');
+                    return isBlock
+                      ? <code className="block rounded-xl p-4 my-4 text-xs font-mono overflow-x-auto" style={{ background: isDark ? '#0f1625' : '#f8f6f2', color: 'var(--text-secondary)' }}>{children}</code>
+                      : <code className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--bg-card)', color: 'var(--accent)' }}>{children}</code>;
+                  },
                   pre: ({ children }) => <pre className="rounded-xl p-4 my-4 overflow-x-auto text-xs" style={{ background: isDark ? '#0f1625' : '#f8f6f2' }}>{children}</pre>,
                   hr: () => <hr className="my-8" style={{ borderColor: 'var(--border)' }} />,
                 }}

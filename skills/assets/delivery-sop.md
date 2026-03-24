@@ -73,6 +73,19 @@ Document findings and route back to the filing lane.
 
 **Turnaround target:** Within 1 business day of specialist review completion (or Stage 4 completion for Green cases).
 
+### Stage 6A — Advance Tax Computation & Challan
+**Owner:** Senior associate / reviewer
+**Trigger:** Estimated total tax liability minus TDS exceeds ₹10,000
+
+1. Compute estimated total tax liability from module outputs (income map, capital gains analyzer, reconciliation).
+2. Determine if advance tax is required (total tax liability − TDS already deducted > ₹10,000).
+3. If required: identify the next applicable installment date (15 Jun / 15 Sep / 15 Dec / 15 Mar).
+4. Prepare Challan 280 details — BSR code, assessment year, tax type (advance tax / self-assessment tax), and PAN.
+5. Share payment instruction with client via WhatsApp/email, including amount, due date, and online payment link (tin-nsdl.com or income tax portal).
+6. Track payment confirmation from client and update case tracker with challan serial number and date of payment.
+
+**Turnaround target:** Within 1 business day of pre-filing review completion. Payment must be made before the next installment deadline.
+
 ### Stage 7 — Return Preparation & Filing
 **Owner:** Preparer under reviewer oversight
 
@@ -179,6 +192,7 @@ Document findings and route back to the filing lane.
 | Scope note issued | Manager | Before work begins beyond intake |
 | Reconciliation resolved or flagged | Reviewer | Before filing blueprint |
 | Pre-filing gate passed | Reviewer/Partner | Before return preparation |
+| Advance tax challan verified | Reviewer | Before filing if liability − TDS > ₹10,000 |
 | Computation cross-check | Reviewer | Before filing |
 | ITR verified | Coordinator | Within 1 day of filing |
 | 15CA/15CB accuracy check | Reviewer | Before submission to bank |
@@ -247,6 +261,7 @@ Every completed case file should contain:
 | Reconciliation + filing blueprint | 2 business days |
 | Specialist review (if needed) | 2 business days |
 | Pre-filing gate | 1 business day |
+| Advance tax computation & challan (if needed) | 1 business day post pre-filing review |
 | Return preparation + filing | 2 business days |
 | 15CA/15CB preparation (if needed) | 2 business days post-filing |
 | Form 67 filing (if FTC claimed) | With ITR filing |

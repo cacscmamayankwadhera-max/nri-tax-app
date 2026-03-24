@@ -436,6 +436,8 @@ export default function ClientIntake() {
               <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />
               <I l="Phone" v={f.phone} ch={v => u('phone', v)} ph="+44 / +91..." />
               <I l="PAN Number" v={f.pan} ch={v => u('pan', v)} ph="ABCDE1234F" />
+              <I l="Aadhaar Number (if available)" v={f.aadhaarNumber} ch={v => u('aadhaarNumber', v)} ph="1234 5678 9012" />
+              <I l="PAN-Aadhaar Linked"><S v={f.panAadhaarLinked} ch={v => u('panAadhaarLinked', v)} o={['Yes', 'No', 'Not sure']} /></I>
               <I l="Date of Birth" v={f.dob} ch={v => u('dob', v)} type="date" />
               <I l="Citizenship"><S v={f.citizenship} ch={v => u('citizenship', v)} o={['Indian Citizen', 'OCI Holder', 'PIO']} /></I>
             </div>
@@ -477,6 +479,10 @@ export default function ClientIntake() {
                 {f.jointOwnership && f.jointOwnership !== 'No \u2014 sole owner' && (
                   <I l="Your ownership %" v={f.ownershipPercent || 100} ch={v => u('ownershipPercent', parseNum(v, 100))} ph="100" type="number" />
                 )}
+                {f.jointOwnership && f.jointOwnership !== 'No \u2014 sole owner' && <>
+                  <I l="Co-owner Name" v={f.coOwnerName} ch={v => u('coOwnerName', v)} />
+                  <I l="Co-owner PAN" v={f.coOwnerPAN} ch={v => u('coOwnerPAN', v)} ph="ABCDE1234F" />
+                </>}
                 <I l="Property type"><S v={f.propertyType} ch={v => u('propertyType', v)} o={['Residential Flat', 'Residential Plot', 'Commercial Property', 'Agricultural Land (Urban)', 'Agricultural Land (Rural)']} /></I>
                 <I l="Stamp duty value (\u20B9)" v={f.stampDutyValue} ch={v => u('stampDutyValue', parseNum(v))} ph="7000000" type="number" tip="Circle rate / government valuation at time of sale" />
                 <I l="Registration & stamp duty expenses (\u20B9)" v={f.registrationExpenses} ch={v => u('registrationExpenses', parseNum(v))} ph="350000" type="number" tip="Stamp duty, registration, brokerage paid on sale" />
@@ -502,6 +508,9 @@ export default function ClientIntake() {
               )}
             </div>
           </div>
+          {f.salary && <div className="card-theme p-8 mb-5">
+            <I l="Annual Indian salary (\u20B9)" v={f.salaryAmount} ch={v => u('salaryAmount', parseNum(v))} ph="1200000" type="number" tip="From Form 16 \u2014 gross salary from Indian employer" />
+          </div>}
           {(f.epf || f.gratuity || f.leaveEncash || f.npsWithdraw) && <div className="card-theme p-8 mb-5">
             <div className="text-sm font-semibold text-theme mb-4">Retirement & employment benefits <span className="text-theme-muted font-normal">(amounts received)</span></div>
             <div className="grid grid-cols-2 gap-5">
@@ -540,6 +549,9 @@ export default function ClientIntake() {
                   <I l="MF STCG (\u20B9)" v={f.mfSTCG} ch={v => u('mfSTCG', parseNum(v))} ph="0" type="number" tip="Short-term MF gains" />
                 </>}
                 {f.cgESOPRSU && <>
+                  <I l="Employer Company Name" v={f.esopEmployer} ch={v => u('esopEmployer', v)} />
+                  <I l="Stock Listing Status"><S v={f.stockListing} ch={v => u('stockListing', v)} o={['Listed in India', 'Listed abroad', 'Unlisted (startup/private)']} /></I>
+                  <I l="ESOP/RSU Type"><S v={f.esopType} ch={v => u('esopType', v)} o={['RSU (Restricted Stock Units)', 'Stock Options (ESOP)', 'Both', 'Not sure']} /></I>
                   <I l="ESOP/RSU perquisite value (\u20B9)" v={f.esopPerquisite} ch={v => u('esopPerquisite', parseNum(v))} ph="0" type="number" tip="FMV at exercise minus exercise price" />
                   <I l="ESOP/RSU sale gain (\u20B9)" v={f.esopSaleGain} ch={v => u('esopSaleGain', parseNum(v))} ph="0" type="number" tip="Sale price minus FMV at exercise" />
                 </>}
@@ -610,6 +622,13 @@ export default function ClientIntake() {
               <textarea value={f.notes || ''} onChange={e => u('notes', e.target.value)} rows={3}
                 className="input-theme p-4 resize-y text-sm" placeholder="Any specific questions, transaction details, or concerns..." />
             </I></div>
+            <div className="mt-5">
+              <div className="text-sm font-semibold text-theme mb-4">NRO/NRE Bank Details <span className="text-theme-muted font-normal">(for refund processing)</span></div>
+              <div className="grid grid-cols-2 gap-5">
+                <I l="NRO Account Number" v={f.nroAccountNumber} ch={v => u('nroAccountNumber', v)} ph="For refund credit" tip="NRI tax refunds are credited to NRO account only" />
+                <I l="Bank Name & IFSC" v={f.bankNameIFSC} ch={v => u('bankNameIFSC', v)} ph="SBI / SBIN0001234" />
+              </div>
+            </div>
           </div>
           <div className="flex gap-3 mt-5">
             <button onClick={() => goStep(2)} className="btn-secondary flex-1 py-3 rounded-xl">{'\u2190'} Back</button>

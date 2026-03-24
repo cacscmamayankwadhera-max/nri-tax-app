@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 
 export async function GET(req) {
@@ -13,13 +13,16 @@ export async function GET(req) {
   const filePath = path.join(process.cwd(), 'content', 'blogs', `${slug}.md`);
 
   try {
-    const content = fs.readFileSync(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, 'utf-8');
 
     // Strip frontmatter (between --- markers)
     const fmEnd = content.indexOf('---', 4);
     const body = fmEnd > 0 ? content.slice(fmEnd + 3).trim() : content;
 
-    return NextResponse.json({ content: body });
+    return NextResponse.json(
+      { content: body },
+      { headers: { 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' } }
+    );
   } catch {
     return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
   }

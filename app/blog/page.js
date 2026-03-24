@@ -393,13 +393,13 @@ export default function BlogHub() {
             <h2 className="font-serif text-2xl mb-6 text-center">Why NRIs Trust MKW Advisors</h2>
             <div className="grid md:grid-cols-4 gap-4">
               {[
-                { icon: '&#x1F393;', title: 'Qualified Expert', desc: 'CA Mayank Wadhera — CA, CS, CMA, IBBI Registered Valuer' },
-                { icon: '&#x1F30D;', title: '30+ Countries', desc: 'Serving NRIs across USA, UK, UAE, Canada, Singapore, Australia' },
-                { icon: '&#x1F916;', title: 'AI-Powered', desc: '10 specialist AI modules analyze your case in under 2 minutes' },
-                { icon: '&#x1F4C4;', title: 'Professional Deliverables', desc: 'Computation sheets, advisory memos, engagement documents' },
+                { icon: '🎓', title: 'Qualified Expert', desc: 'CA Mayank Wadhera — CA, CS, CMA, IBBI Registered Valuer' },
+                { icon: '🌍', title: '30+ Countries', desc: 'Serving NRIs across USA, UK, UAE, Canada, Singapore, Australia' },
+                { icon: '🤖', title: 'AI-Powered', desc: '10 specialist AI modules analyze your case in under 2 minutes' },
+                { icon: '📄', title: 'Professional Deliverables', desc: 'Computation sheets, advisory memos, engagement documents' },
               ].map((item, i) => (
                 <div key={i} className="rounded-xl p-5 text-center" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                  <div className="text-2xl mb-2" dangerouslySetInnerHTML={{ __html: item.icon }} />
+                  <div className="text-2xl mb-2">{item.icon}</div>
                   <h4 className="text-sm font-bold mb-1">{item.title}</h4>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{item.desc}</p>
                 </div>
