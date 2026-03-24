@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
 import { computeCapitalGains, computeHouseProperty, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
 
@@ -281,27 +282,13 @@ export default function Dashboard() {
   const [prs, setPrs] = useState(false);     // parsing narrative
   const [dv, setDv] = useState(null);        // active deliverable view
   const [dlLd, setDlLd] = useState(false);   // downloading docx
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
 
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   const cfg = FY_CONFIG[fy];
   const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
-
-  // ── Theme persistence ──
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
-  }, []);
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   // ── Load cases from Supabase on mount ──
   useEffect(() => {
@@ -686,10 +673,13 @@ export default function Dashboard() {
               </select>
             </div>
             <button onClick={() => {
-              const ref = (ac?.dbId || ac?.id?.toString() || '').slice(0, 8).toUpperCase();
-              const url = `${window.location.origin}/portal?ref=${ref}`;
-              navigator.clipboard.writeText(url);
-              alert('Portal link copied! Share with client:\n' + url);
+              const token = ac?.portal_token || ac?.portalToken || '';
+              if (!token) {
+                navigator.clipboard.writeText(`${window.location.origin}/portal`);
+              } else {
+                const url = `${window.location.origin}/portal?ref=${token}`;
+                navigator.clipboard.writeText(url);
+              }
             }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
               Copy Client Portal Link
             </button>

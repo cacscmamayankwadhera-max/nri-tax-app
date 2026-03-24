@@ -28,7 +28,7 @@ async function runModule(moduleId, formData, fy, moduleOutputs) {
   const caseContext = buildCaseContext(formData, fy, moduleOutputs);
 
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
     max_tokens: 4096,
     temperature: 0,
     system: systemPrompt,
@@ -80,9 +80,9 @@ async function updateCaseStatus(supabase, caseId, status, modulesCompleted) {
 export async function POST(request) {
   const startTime = Date.now();
 
-  // P0-4: Internal secret check — protect auto-run from external calls
+  // Internal secret check — protect auto-run from external calls
   const secret = request.headers.get('x-internal-secret');
-  if (secret !== process.env.INTERNAL_SECRET && process.env.INTERNAL_SECRET) {
+  if (!process.env.INTERNAL_SECRET || secret !== process.env.INTERNAL_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -162,7 +162,7 @@ export async function POST(request) {
     console.error(`[auto-run] Fatal error after ${totalElapsed}s:`, error);
 
     return NextResponse.json(
-      { error: error.message, elapsedSeconds: parseFloat(totalElapsed) },
+      { error: 'Auto-run pipeline failed', elapsedSeconds: parseFloat(totalElapsed) },
       { status: 500 }
     );
   }

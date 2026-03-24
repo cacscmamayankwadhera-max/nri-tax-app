@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { useParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,19 +8,13 @@ import { BLOGS } from '../data';
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
   const [progress, setProgress] = useState(0);
   const [showToc, setShowToc] = useState(false);
   const [blogContent, setBlogContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef(null);
   const blog = BLOGS.find(b => b.slug === slug);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
-  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -47,12 +42,6 @@ export default function BlogPost() {
   }, []);
 
   const isDark = theme === 'dark';
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   if (!blog) {
     return (

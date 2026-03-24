@@ -4,10 +4,8 @@ import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rate-limit';
 
 // Fire-and-forget: trigger auto-run of all AI modules for a new case.
-// This runs in the background — the client gets their response immediately.
 function triggerAutoRun(caseId, formData, fy) {
   try {
-    // Build absolute URL from the incoming request headers
     const headersList = headers();
     const host = headersList.get('host') || 'localhost:3000';
     const protocol = headersList.get('x-forwarded-proto') || 'http';
@@ -15,7 +13,6 @@ function triggerAutoRun(caseId, formData, fy) {
 
     console.log(`[public-intake] Triggering auto-run for case ${caseId}`);
 
-    // Fire and forget — do NOT await this
     fetch(`${baseUrl}/api/auto-run`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-internal-secret': process.env.INTERNAL_SECRET || '' },
@@ -32,7 +29,6 @@ function triggerAutoRun(caseId, formData, fy) {
         console.error(`[public-intake] Auto-run trigger error:`, err.message);
       });
   } catch (err) {
-    // Never let auto-run trigger failure affect the client response
     console.error('[public-intake] Failed to build auto-run request:', err.message);
   }
 }
@@ -51,10 +47,18 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Name and country required' }, { status: 400 });
     }
 
-    const supabase = createServerClient();
+    let supabase;
+    try {
+      supabase = createServerClient();
+    } catch (e) {
+      // Supabase not configured — return error honestly
+      console.error('[public-intake] Supabase not configured:', e.message);
+      return NextResponse.json({
+        success: false,
+        error: 'Service temporarily unavailable. Please contact us directly.',
+      }, { status: 503 });
+    }
 
-    // Create a public case (no user_id — will be claimed later)
-    // Using service role to bypass RLS for public submissions
     const { data, error } = await supabase.from('cases').insert({
       user_id: null, // Will be linked when team claims it
       client_name: formData.name,
@@ -69,14 +73,11 @@ export async function POST(request) {
     }).select().single();
 
     if (error) {
-      // If user_id not null constraint fails, try without it
-      // This means RLS requires a user — handle gracefully
-      console.log('Public submission note:', error.message);
+      console.error('[public-intake] Database insert failed:', error.message);
       return NextResponse.json({
-        success: true,
-        message: 'Intake received. Our team will contact you within 24 hours.',
-        caseRef: Date.now().toString(36).toUpperCase()
-      });
+        success: false,
+        error: 'Unable to save your submission. Please try again or contact us directly.',
+      }, { status: 500 });
     }
 
     // Case created successfully — fire auto-run in the background
@@ -87,17 +88,16 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       caseId: data?.id,
-      caseRef: (data?.id || Date.now().toString(36)).slice(0, 8).toUpperCase(),
+      caseRef: (data?.id || '').slice(0, 8).toUpperCase(),
       portalToken: data?.portal_token,
       message: 'Intake received successfully.'
     });
 
   } catch (error) {
-    console.error('Public case submission error:', error);
+    console.error('[public-intake] Unexpected error:', error);
     return NextResponse.json({
-      success: true,
-      message: 'Intake received. Our team will contact you shortly.',
-      caseRef: Date.now().toString(36).toUpperCase()
-    });
+      success: false,
+      error: 'Something went wrong. Please try again or contact us directly.',
+    }, { status: 500 });
   }
 }

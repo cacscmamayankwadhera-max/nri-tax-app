@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
 
 export default function Login() {
@@ -7,20 +8,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
   const supabase = createClient();
-
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-  }, []);
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   async function handleLogin(e) {
     e.preventDefault();

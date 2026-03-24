@@ -495,8 +495,31 @@ function generateTotalIncome(caseData, fy){
   return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
 }
 
+// ═══ Auth helper ═══
+async function verifyAuth() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+
+  const { cookies } = await import('next/headers');
+  const { createServerClient: createSSR } = await import('@supabase/ssr');
+  const cookieStore = cookies();
+  const supabase = createSSR(supabaseUrl, supabaseKey, {
+    cookies: { get(name) { return cookieStore.get(name)?.value; } },
+  });
+
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}
+
 // ═══ API HANDLER ═══
 export async function POST(request) {
+  // Auth check — deliverables contain confidential client data
+  const user = await verifyAuth();
+  if (!user && process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { type, caseData, fy, moduleOutputs } = await request.json();
 
@@ -509,18 +532,18 @@ export async function POST(request) {
       case 'total_income': doc = generateTotalIncome(caseData, fy); break;
       default: return NextResponse.json({ error: 'Unknown type' }, { status: 400 });
     }
-    
+
     const buffer = await Packer.toBuffer(doc);
-    
+
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'Content-Disposition': `attachment; filename="${(caseData.name||'client').toLowerCase().replace(/[^a-z0-9]/g,'-')}-${type}.docx"`,
       },
     });
-    
+
   } catch (error) {
     console.error('DOCX generation error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Document generation failed. Please try again.' }, { status: 500 });
   }
 }

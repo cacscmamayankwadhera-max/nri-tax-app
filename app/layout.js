@@ -1,23 +1,36 @@
-'use client';
 import './globals.css';
-import { useEffect, useState } from 'react';
+import { ThemeProvider } from './theme-provider';
+
+export const metadata = {
+  title: 'NRI Tax Suite — MKW Advisors',
+  description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance for Non-Resident Indians. Expert CA team powered by AI for FY 2025-26.',
+  openGraph: {
+    title: 'NRI Tax Suite — MKW Advisors',
+    description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance',
+    type: 'website',
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export default function RootLayout({ children }) {
-  const [theme, setTheme] = useState('light');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
-  }, []);
-
   return (
-    <html lang="en" data-theme={theme === 'dark' ? 'dark' : undefined}>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <title>NRI Tax Suite — MKW Advisors</title>
-        <meta name="description" content="AI-Assisted NRI Tax Filing, Advisory & Compliance" />
+        {/* Inline script to set theme before first paint — prevents flash */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var t = localStorage.getItem('nri-theme');
+            if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+          } catch(e) {}
+        `}} />
       </head>
-      <body>{children}</body>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

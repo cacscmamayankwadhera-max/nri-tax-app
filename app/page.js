@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTheme } from '@/app/theme-provider';
 
 /* ─────────────────────────────────────────────────────────────
    SHARED DATA
@@ -42,20 +43,11 @@ const PRICING = [
 
 export default function Home() {
   const [vis, setVis] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setVis(true);
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
   }, []);
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   const isDark = theme === 'dark';
 

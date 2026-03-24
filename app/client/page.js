@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { computeCapitalGains, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
 
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
@@ -15,23 +16,17 @@ export default function ClientIntake() {
   const [portalToken, setPortalToken] = useState(null);
   const [parseDone, setParseDone] = useState(false);
   const [fadeDir, setFadeDir] = useState('in');
-  const [theme, setTheme] = useState('light');
+  const [submitting, setSubmitting] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
+  // Parse Indian-format numbers safely: strip commas before parsing
+  const parseNum = (v, fallback = 0) => {
+    const cleaned = String(v).replace(/,/g, '');
+    const n = parseInt(cleaned);
+    return isNaN(n) ? fallback : n;
+  };
   const cfg = FY_CONFIG[fy];
   const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
-
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
-  }, []);
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   const isDark = theme === 'dark';
 
@@ -60,7 +55,8 @@ export default function ClientIntake() {
   }
 
   async function handleSubmit() {
-    // Save case via API (no auth required for initial submission)
+    if (submitting) return; // prevent double-submit
+    setSubmitting(true);
     let ref = null;
     try {
       const res = await fetch('/api/cases/public', {
@@ -69,11 +65,16 @@ export default function ClientIntake() {
         body: JSON.stringify({ formData: f, fy, classification: classifyCase(f) })
       });
       const data = await res.json();
-      ref = data.caseRef || null;
-      if (data.portalToken) setPortalToken(data.portalToken);
-    } catch (e) { /* continue even if save fails */ }
+      if (data.success) {
+        ref = data.caseRef || null;
+        if (data.portalToken) setPortalToken(data.portalToken);
+      }
+    } catch (e) {
+      console.error('Submission error:', e);
+    }
     setCaseRef(ref);
     setSubmitted(true);
+    setSubmitting(false);
   }
 
   const I = ({ l, v, ch, ph, type, tip, wide, children }) => (
@@ -450,11 +451,11 @@ export default function ClientIntake() {
               <I l="Did you sell property this year?"><S v={f.propertySale ? 'Yes' : 'No'} ch={v => { u('propertySale', v === 'Yes'); u('cgProperty', v === 'Yes'); }} o={['No', 'Yes']} /></I>
               {f.propertySale && <>
                 <I l="When was it purchased?" tip="This determines which tax option applies"><S v={f.propertyAcqFY} ch={v => u('propertyAcqFY', v)} o={Object.keys(CII).filter(k => parseInt(k) >= 2005).map(k => ({ v: k, l: 'FY ' + k }))} /></I>
-                <I l="Sale price (\u20B9)" v={f.salePrice} ch={v => u('salePrice', parseInt(v) || 0)} ph="6800000" type="number" />
-                <I l="Purchase cost (\u20B9)" v={f.purchaseCost} ch={v => u('purchaseCost', parseInt(v) || 0)} ph="2200000" type="number" />
+                <I l="Sale price (\u20B9)" v={f.salePrice} ch={v => u('salePrice', parseNum(v))} ph="6800000" type="number" />
+                <I l="Purchase cost (\u20B9)" v={f.purchaseCost} ch={v => u('purchaseCost', parseNum(v))} ph="2200000" type="number" />
                 <I l="City / Location" v={f.propertyLocation} ch={v => u('propertyLocation', v)} ph="Nashik" />
                 <I l="Date of sale" v={f.saleDate} ch={v => u('saleDate', v)} type="date" tip="Needed for Section 54 timelines and advance tax" />
-                <I l="Improvement cost (\u20B9)" v={f.improvementCost} ch={v => u('improvementCost', parseInt(v) || 0)} ph="0" type="number" tip="Renovations, additions \u2014 if any" />
+                <I l="Improvement cost (\u20B9)" v={f.improvementCost} ch={v => u('improvementCost', parseNum(v))} ph="0" type="number" tip="Renovations, additions \u2014 if any" />
                 <I l="Bought or planning to buy new house?" wide tip="Important \u2014 this can eliminate your capital gains tax entirely">
                   <S v={f.section54} ch={v => u('section54', v)} o={['Not sure', 'Yes \u2014 bought new house', 'Planning to buy', 'Considering government bonds', 'No']} />
                 </I>
@@ -468,7 +469,7 @@ export default function ClientIntake() {
                   <S v={f.jointOwnership} ch={v => u('jointOwnership', v)} o={['No \u2014 sole owner', 'Yes \u2014 joint with spouse', 'Yes \u2014 joint with others']} />
                 </I>
                 {f.jointOwnership && f.jointOwnership !== 'No \u2014 sole owner' && (
-                  <I l="Your ownership %" v={f.ownershipPercent || 100} ch={v => u('ownershipPercent', parseInt(v) || 100)} ph="100" type="number" />
+                  <I l="Your ownership %" v={f.ownershipPercent || 100} ch={v => u('ownershipPercent', parseNum(v, 100))} ph="100" type="number" />
                 )}
               </>}
             </div>
@@ -491,11 +492,11 @@ export default function ClientIntake() {
           </div>
           {(f.rent || f.interest) && <div className="card-theme p-8 mb-5">
             <div className="text-sm font-semibold text-theme mb-4">Quick amounts <span className="text-theme-muted font-normal">(approximate is fine)</span></div>
-            {f.rent && <I l="Monthly rent amount (\u20B9)" v={f.rentalMonthly} ch={v => u('rentalMonthly', parseInt(v) || 0)} ph="25000" type="number" />}
+            {f.rent && <I l="Monthly rent amount (\u20B9)" v={f.rentalMonthly} ch={v => u('rentalMonthly', parseNum(v))} ph="25000" type="number" />}
             {f.interest && <div className="mt-4">
               <div className="grid grid-cols-2 gap-4">
-                <I l="NRO interest (\u20B9/year)" v={f.nroInterest} ch={v => u('nroInterest', parseInt(v) || 0)} ph="140000" type="number" />
-                <I l="FD interest (\u20B9/year)" v={f.fdInterest} ch={v => u('fdInterest', parseInt(v) || 0)} ph="85000" type="number" />
+                <I l="NRO interest (\u20B9/year)" v={f.nroInterest} ch={v => u('nroInterest', parseNum(v))} ph="140000" type="number" />
+                <I l="FD interest (\u20B9/year)" v={f.fdInterest} ch={v => u('fdInterest', parseNum(v))} ph="85000" type="number" />
               </div>
               <div className="mt-4">
                 <I l="Interest account type">
@@ -510,16 +511,16 @@ export default function ClientIntake() {
               <div className="text-sm font-semibold text-theme mb-3">Capital gains amounts <span className="text-theme-muted font-normal">(from broker/demat statement)</span></div>
               <div className="grid grid-cols-2 gap-5">
                 {f.cgShares && <>
-                  <I l="Listed shares LTCG (\u20B9)" v={f.sharesLTCG} ch={v => u('sharesLTCG', parseInt(v) || 0)} ph="0" type="number" tip="Gains on shares held >12 months" />
-                  <I l="Listed shares STCG (\u20B9)" v={f.sharesSTCG} ch={v => u('sharesSTCG', parseInt(v) || 0)} ph="0" type="number" tip="Gains on shares held \u226412 months" />
+                  <I l="Listed shares LTCG (\u20B9)" v={f.sharesLTCG} ch={v => u('sharesLTCG', parseNum(v))} ph="0" type="number" tip="Gains on shares held >12 months" />
+                  <I l="Listed shares STCG (\u20B9)" v={f.sharesSTCG} ch={v => u('sharesSTCG', parseNum(v))} ph="0" type="number" tip="Gains on shares held \u226412 months" />
                 </>}
                 {f.cgMF && <>
-                  <I l="MF LTCG (\u20B9)" v={f.mfLTCG} ch={v => u('mfLTCG', parseInt(v) || 0)} ph="0" type="number" tip="Equity MF held >12 months, Debt MF >24 months" />
-                  <I l="MF STCG (\u20B9)" v={f.mfSTCG} ch={v => u('mfSTCG', parseInt(v) || 0)} ph="0" type="number" tip="Short-term MF gains" />
+                  <I l="MF LTCG (\u20B9)" v={f.mfLTCG} ch={v => u('mfLTCG', parseNum(v))} ph="0" type="number" tip="Equity MF held >12 months, Debt MF >24 months" />
+                  <I l="MF STCG (\u20B9)" v={f.mfSTCG} ch={v => u('mfSTCG', parseNum(v))} ph="0" type="number" tip="Short-term MF gains" />
                 </>}
                 {f.cgESOPRSU && <>
-                  <I l="ESOP/RSU perquisite value (\u20B9)" v={f.esopPerquisite} ch={v => u('esopPerquisite', parseInt(v) || 0)} ph="0" type="number" tip="FMV at exercise minus exercise price" />
-                  <I l="ESOP/RSU sale gain (\u20B9)" v={f.esopSaleGain} ch={v => u('esopSaleGain', parseInt(v) || 0)} ph="0" type="number" tip="Sale price minus FMV at exercise" />
+                  <I l="ESOP/RSU perquisite value (\u20B9)" v={f.esopPerquisite} ch={v => u('esopPerquisite', parseNum(v))} ph="0" type="number" tip="FMV at exercise minus exercise price" />
+                  <I l="ESOP/RSU sale gain (\u20B9)" v={f.esopSaleGain} ch={v => u('esopSaleGain', parseNum(v))} ph="0" type="number" tip="Sale price minus FMV at exercise" />
                 </>}
               </div>
             </div>
@@ -534,15 +535,15 @@ export default function ClientIntake() {
           </div>
           {f.dividend && (
             <div className="card-theme p-8 mb-6">
-              <I l="Total Indian dividends received (\u20B9)" v={f.dividendAmount} ch={v => u('dividendAmount', parseInt(v) || 0)} ph="50000" type="number" tip="Dividends from Indian companies \u2014 taxable at slab rate" />
+              <I l="Total Indian dividends received (\u20B9)" v={f.dividendAmount} ch={v => u('dividendAmount', parseNum(v))} ph="50000" type="number" tip="Dividends from Indian companies \u2014 taxable at slab rate" />
             </div>
           )}
           {f.crypto && (
             <div className="card-theme p-8 mb-6">
               <div className="text-sm font-semibold text-theme mb-3">Crypto / VDA</div>
               <div className="grid grid-cols-2 gap-5">
-                <I l="Sale/transfer value (\u20B9)" v={f.cryptoSale} ch={v => u('cryptoSale', parseInt(v) || 0)} ph="0" type="number" />
-                <I l="Cost of acquisition (\u20B9)" v={f.cryptoCost} ch={v => u('cryptoCost', parseInt(v) || 0)} ph="0" type="number" />
+                <I l="Sale/transfer value (\u20B9)" v={f.cryptoSale} ch={v => u('cryptoSale', parseNum(v))} ph="0" type="number" />
+                <I l="Cost of acquisition (\u20B9)" v={f.cryptoCost} ch={v => u('cryptoCost', parseNum(v))} ph="0" type="number" />
               </div>
               <p className="text-xs text-theme-muted mt-2">Taxed at 30% flat rate. No deductions except cost. 1% TDS under Section 194S.</p>
             </div>
@@ -563,7 +564,7 @@ export default function ClientIntake() {
               <I l="What help do you need?"><S v={f.serviceNeed} ch={v => u('serviceNeed', v)} o={['Just file my return', 'Filing + advice on my situation', 'Tax planning + filing', 'Just want to understand what I owe']} /></I>
             </div>
             <div className="mt-5">
-              <I l="Home loan interest on rented property (\u20B9/year)" v={f.homeLoanInterest} ch={v => u('homeLoanInterest', parseInt(v) || 0)} ph="0" type="number" tip="Deductible against rental income \u2014 no cap for let-out property" />
+              <I l="Home loan interest on rented property (\u20B9/year)" v={f.homeLoanInterest} ch={v => u('homeLoanInterest', parseNum(v))} ph="0" type="number" tip="Deductible against rental income \u2014 no cap for let-out property" />
             </div>
             <div className="mt-5"><I l="Anything else we should know?" wide>
               <textarea value={f.notes || ''} onChange={e => u('notes', e.target.value)} rows={3}

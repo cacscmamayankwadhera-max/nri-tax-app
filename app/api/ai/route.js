@@ -2,18 +2,32 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
 import { rateLimit } from '@/lib/rate-limit';
+import { createServerClient as createSupabaseSSR } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+async function verifyAuth(request) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseKey) return null; // Supabase not configured — allow in dev
+
+  const cookieStore = cookies();
+  const supabase = createSupabaseSSR(supabaseUrl, supabaseKey, {
+    cookies: {
+      get(name) { return cookieStore.get(name)?.value; },
+    },
+  });
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+  return error ? null : user;
+}
+
 export async function POST(request) {
-  // Basic protection: require either auth cookie or same-origin
-  const origin = request.headers.get('origin') || request.headers.get('referer') || '';
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  if (!origin.startsWith(appUrl) && !request.headers.get('cookie')?.includes('auth-token')) {
-    // Allow in dev mode but log
-    if (process.env.NODE_ENV === 'production') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Auth check — require authenticated user in production
+  const user = await verifyAuth(request);
+  if (!user && process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -24,21 +38,21 @@ export async function POST(request) {
 
   try {
     const { moduleId, formData, fy, moduleOutputs } = await request.json();
-    
+
     if (!moduleId || !formData || !fy) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
-    
+
     const promptFn = SKILL_PROMPTS[moduleId];
     if (!promptFn) {
       return NextResponse.json({ error: `Unknown module: ${moduleId}` }, { status: 400 });
     }
-    
+
     const systemPrompt = promptFn(fy);
     const caseContext = buildCaseContext(formData, fy, moduleOutputs || {});
-    
+
     const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       temperature: 0,
       system: systemPrompt,
@@ -47,15 +61,15 @@ export async function POST(request) {
         content: `Here is the complete case file:\n\n${caseContext}\n\nProduce your structured ${moduleId} analysis based on all available information.`
       }]
     });
-    
+
     const output = message.content
       .map(block => block.type === 'text' ? block.text : '')
       .join('\n');
-    
+
     return NextResponse.json({ output, moduleId });
-    
+
   } catch (error) {
     console.error('AI module error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'AI processing failed. Please try again.' }, { status: 500 });
   }
 }

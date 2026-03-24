@@ -35,7 +35,7 @@ create trigger on_auth_user_created
 -- ═══ Cases ═══
 create table public.cases (
   id uuid default uuid_generate_v4() primary key,
-  user_id uuid references public.profiles(id) on delete cascade not null,
+  user_id uuid references public.profiles(id) on delete cascade, -- nullable for public intake submissions
   
   -- Client info
   client_name text not null,

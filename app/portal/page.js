@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { useSearchParams } from 'next/navigation';
 import { computeCapitalGains, formatINR, FY_CONFIG } from '@/lib/compute';
 
@@ -119,20 +120,11 @@ function ClientPortal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [vis, setVis] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setVis(true);
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
   }, []);
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  }
 
   const fetchCase = useCallback(async (caseRef) => {
     if (!caseRef || caseRef.length < 6) {

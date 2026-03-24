@@ -1,6 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useTheme } from '@/app/theme-provider';
 
 /* ═══════════════════════════════════════════════════════════════
    TOOL DEFINITIONS
@@ -843,26 +844,14 @@ const TOOLS = {
 
 export default function AssessmentTool() {
   const { tool: toolSlug } = useParams();
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [result, setResult] = useState(null);
   const [email, setEmail] = useState('');
   const [saved, setSaved] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : '');
-  }, []);
-
   const isDark = theme === 'dark';
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  };
 
   const toolDef = TOOLS[toolSlug];
   if (!toolDef) {

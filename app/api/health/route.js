@@ -7,12 +7,13 @@ export async function GET() {
     status: 'ok',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
-    supabase: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-    anthropic: !!process.env.ANTHROPIC_API_KEY,
-    internalSecret: !!process.env.INTERNAL_SECRET,
+    services: {
+      database: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      ai: !!process.env.ANTHROPIC_API_KEY,
+    },
   };
 
-  const allGood = checks.supabase && checks.anthropic;
+  const allGood = checks.services.database && checks.services.ai;
 
   return NextResponse.json(checks, { status: allGood ? 200 : 503 });
 }

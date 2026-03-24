@@ -9,10 +9,14 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
-  // Dev mode escape — if Supabase not configured, allow access
+  // If Supabase not configured, deny access in production, allow in dev
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your_supabase_project_url') {
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    console.warn('[middleware] Supabase not configured — allowing dashboard access in dev mode');
     return NextResponse.next();
   }
 
@@ -28,9 +32,10 @@ export async function middleware(request) {
     },
   });
 
-  const { data: { session } } = await supabase.auth.getSession();
+  // Use getUser() instead of getSession() — getUser() validates the JWT server-side
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

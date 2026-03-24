@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/app/theme-provider';
 import { BLOGS, CATEGORIES, ASSESSMENTS } from './data';
 
 /* ─── Helpers ─────────────────────────────────────────────── */
@@ -38,25 +39,14 @@ const STATS_BAR = [
 
 /* ─── Main Page ───────────────────────────────────────────── */
 export default function BlogHub() {
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState('');
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [showAllGuides, setShowAllGuides] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('nri-theme') || 'light';
-    setTheme(saved);
-  }, []);
-
   const isDark = theme === 'dark';
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('nri-theme', next);
-    document.documentElement.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
-  };
 
   const featured = BLOGS.filter(b => b.featured);
   const [featIdx, featGo] = useSlider(featured, 6000);
