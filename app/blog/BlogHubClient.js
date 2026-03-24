@@ -46,9 +46,23 @@ export default function BlogHubClient({ blogs }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState('');
   const [leadSubmitted, setLeadSubmitted] = useState(false);
-  const [showAllGuides, setShowAllGuides] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({});
 
   const isDark = theme === 'dark';
+
+  /* Category accent colors for section top-borders */
+  const CATEGORY_COLORS = {
+    guide: '#2A6B4A',
+    tax: '#B07D3A',
+    compliance: '#6B4C9A',
+    investment: '#2D7D9A',
+    banking: '#A04848',
+    assessment: '#4A7C59',
+  };
+
+  const toggleSection = (catId) => {
+    setExpandedSections(prev => ({ ...prev, [catId]: !prev[catId] }));
+  };
 
   const featured = blogs.filter(b => b.featured);
   const [featIdx, featGo] = useSlider(featured, 6000);
@@ -61,8 +75,6 @@ export default function BlogHubClient({ blogs }) {
       b.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchCat && matchSearch;
   });
-
-  const displayBlogs = showAllGuides || searchQuery || activeCategory !== 'all' ? filtered : filtered.slice(0, 9);
 
   const handleLeadSubmit = e => {
     e.preventDefault();
@@ -314,27 +326,84 @@ export default function BlogHubClient({ blogs }) {
               <p className="text-lg mb-2" style={{ color: 'var(--text-muted)' }}>No guides found for &ldquo;{searchQuery}&rdquo;</p>
               <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Try a different search term or browse by category.</p>
             </div>
+          ) : activeCategory === 'all' && !searchQuery ? (
+            /* ── GROUPED BY CATEGORY VIEW ── */
+            <div className="space-y-12">
+              {CATEGORIES.filter(cat => cat.id !== 'all').map(cat => {
+                const catBlogs = filtered.filter(b => b.category === cat.id);
+                if (catBlogs.length === 0) return null;
+                const isExpanded = expandedSections[cat.id];
+                const visibleBlogs = isExpanded ? catBlogs : catBlogs.slice(0, 6);
+                const accentColor = CATEGORY_COLORS[cat.id] || 'var(--accent)';
+
+                return (
+                  <div key={cat.id}>
+                    {/* Section header with colored top border */}
+                    <div className="rounded-t-xl pt-0.5 mb-5" style={{ borderTop: `3px solid ${accentColor}` }}>
+                      <div className="flex items-center justify-between pt-3">
+                        <h3 className="font-serif text-xl flex items-center gap-2.5">
+                          <span className="text-2xl">{cat.icon}</span>
+                          <span>{cat.label}</span>
+                          <span className="text-sm font-normal px-2.5 py-0.5 rounded-full" style={{ background: `${accentColor}12`, color: accentColor }}>
+                            {catBlogs.length}
+                          </span>
+                        </h3>
+                        {catBlogs.length > 6 && (
+                          <button
+                            onClick={() => toggleSection(cat.id)}
+                            className="text-sm font-medium transition-all hover:underline underline-offset-2"
+                            style={{ color: accentColor }}
+                          >
+                            {isExpanded ? 'Show less' : `Show all ${catBlogs.length} ${cat.label.toLowerCase()}`} &rarr;
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Cards grid */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {visibleBlogs.map(blog => (
+                        <a key={blog.slug} href={`/blog/${blog.slug}`} className="group rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                          <div className="h-1" style={{ background: blog.color }} />
+                          <div className="p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide" style={{ background: `${blog.color}12`, color: blog.color }}>{blog.category.toUpperCase()}</span>
+                              <span className="text-[11px] ml-auto" style={{ color: 'var(--text-muted)' }}>{blog.readTime}</span>
+                            </div>
+                            <h4 className="font-serif font-bold text-[15px] leading-snug mb-1.5 group-hover:underline decoration-1 underline-offset-2 line-clamp-2">{blog.title}</h4>
+                            <p className="text-xs line-clamp-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{blog.excerpt}</p>
+                            <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
+                              {blog.keyNumbers.slice(0, 2).map((kn, i) => (
+                                <div key={i} className="flex items-center gap-1.5 text-xs">
+                                  <span className="font-bold" style={{ color: 'var(--accent)' }}>{kn.value}</span>
+                                  <span style={{ color: 'var(--text-muted)' }}>{kn.label}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           ) : (
+            /* ── FLAT FILTERED GRID (specific category or search) ── */
             <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {displayBlogs.map(blog => (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map(blog => (
                   <a key={blog.slug} href={`/blog/${blog.slug}`} className="group rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                    <div className="h-1.5" style={{ background: blog.color }} />
-                    <div className="p-5">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl">{blog.icon}</span>
-                        <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ background: `${blog.color}15`, color: blog.color }}>{blog.category.toUpperCase()}</span>
-                        <span className="text-xs ml-auto" style={{ color: 'var(--text-muted)' }}>{blog.readTime}</span>
+                    <div className="h-1" style={{ background: blog.color }} />
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide" style={{ background: `${blog.color}12`, color: blog.color }}>{blog.category.toUpperCase()}</span>
+                        <span className="text-[11px] ml-auto" style={{ color: 'var(--text-muted)' }}>{blog.readTime}</span>
                       </div>
-                      <h3 className="font-serif text-lg mb-1 group-hover:underline decoration-1 underline-offset-2">{blog.title}</h3>
-                      <p className="text-xs font-semibold mb-2" style={{ color: 'var(--accent)' }}>{blog.subtitle}</p>
-                      <p className="text-sm line-clamp-2 mb-4" style={{ color: 'var(--text-secondary)' }}>{blog.excerpt}</p>
-                      <div className="rounded-lg p-3 mb-3" style={{ background: 'var(--bg-primary)', borderLeft: `3px solid ${blog.color}` }}>
-                        <p className="text-xs font-medium mb-1" style={{ color: blog.color }}>Quick Answer</p>
-                        <p className="text-xs line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{blog.quickAnswer}</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        {blog.keyNumbers.slice(0, 4).map((kn, i) => (
+                      <h4 className="font-serif font-bold text-[15px] leading-snug mb-1.5 group-hover:underline decoration-1 underline-offset-2 line-clamp-2">{blog.title}</h4>
+                      <p className="text-xs line-clamp-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{blog.excerpt}</p>
+                      <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
+                        {blog.keyNumbers.slice(0, 2).map((kn, i) => (
                           <div key={i} className="flex items-center gap-1.5 text-xs">
                             <span className="font-bold" style={{ color: 'var(--accent)' }}>{kn.value}</span>
                             <span style={{ color: 'var(--text-muted)' }}>{kn.label}</span>
@@ -345,15 +414,6 @@ export default function BlogHubClient({ blogs }) {
                   </a>
                 ))}
               </div>
-
-              {/* Show more button */}
-              {!showAllGuides && !searchQuery && activeCategory === 'all' && filtered.length > 9 && (
-                <div className="text-center mt-8">
-                  <button onClick={() => setShowAllGuides(true)} className="px-8 py-3 rounded-lg text-sm font-bold transition-all hover:scale-105" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
-                    Show All {filtered.length} Guides &darr;
-                  </button>
-                </div>
-              )}
             </>
           )}
         </section>

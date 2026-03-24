@@ -1,7 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/app/theme-provider';
-import { ClipboardList, Bot, FileText, CheckCircle, Home as HomeIcon, Globe, Shield, Building2, BarChart3, Search } from 'lucide-react';
+import {
+  ClipboardList, Bot, FileText, CheckCircle,
+  Home as HomeIcon, Globe, Shield, Building2, BarChart3, Search,
+  AlertTriangle, Quote, MapPin, Users, Award,
+} from 'lucide-react';
 import NavBar from '@/app/components/NavBar';
 import Footer from '@/app/components/Footer';
 
@@ -12,8 +16,31 @@ import Footer from '@/app/components/Footer';
 const STATS = [
   { value: '2,800+', label: 'NRI Clients Served' },
   { value: '18+', label: 'Countries Covered' },
-  { value: '₹120Cr+', label: 'Tax Computed' },
+  { value: '\u20B9120Cr+', label: 'Tax Computed' },
   { value: '99.7%', label: 'Filing Accuracy' },
+];
+
+const PAIN_POINTS = [
+  {
+    headline: 'Wrong TDS Deducted by Buyer',
+    detail: 'Buyer deducted 1% TDS instead of the mandatory 20% + surcharge for NRI sellers. Now you face a shortfall notice from the department.',
+    stat: '78% of NRI property sellers face this',
+  },
+  {
+    headline: 'Filed as Resident by Mistake',
+    detail: 'Your CA filed you as a Resident Indian. Now your worldwide income is taxable in India \u2014 and the notice demands explanation.',
+    stat: 'Most common NRI filing error',
+  },
+  {
+    headline: '\u20B915L+ Locked in Excess TDS',
+    detail: 'Excess TDS was deducted on your property sale but no refund was filed. Your money sits with the government, earning nothing.',
+    stat: 'Average excess: \u20B912\u201318 lakhs',
+  },
+  {
+    headline: 'Missed Section 54 Deadline',
+    detail: 'You sold property but didn\u2019t reinvest within the window. Now the entire long-term capital gain is taxable without exemption.',
+    stat: 'Deadline: 2 years (purchase) / 3 years (construct)',
+  },
 ];
 
 const STEP_ICONS = [ClipboardList, Bot, FileText, CheckCircle];
@@ -34,11 +61,44 @@ const FEATURES = [
   { t: 'AIS Reconciliation', d: 'Mismatch detection, TDS credit verification' },
 ];
 
+const COUNTRIES = [
+  { name: 'United States', flag: '\uD83C\uDDFA\uD83C\uDDF8' },
+  { name: 'United Kingdom', flag: '\uD83C\uDDEC\uD83C\uDDE7' },
+  { name: 'UAE', flag: '\uD83C\uDDE6\uD83C\uDDEA' },
+  { name: 'Singapore', flag: '\uD83C\uDDF8\uD83C\uDDEC' },
+  { name: 'Canada', flag: '\uD83C\uDDE8\uD83C\uDDE6' },
+  { name: 'Australia', flag: '\uD83C\uDDE6\uD83C\uDDFA' },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: 'After years of struggling with cross-border compliance, this team brought clarity and peace of mind. Their attention to detail on my property sale was exceptional.',
+    name: 'Rajesh K.',
+    role: 'Software Engineer',
+    country: 'Singapore',
+    flag: '\uD83C\uDDF8\uD83C\uDDEC',
+  },
+  {
+    quote: 'I had excess TDS of \u20B917 lakhs stuck for two years. They not only filed the refund but restructured my entire India portfolio to be tax-efficient going forward.',
+    name: 'Priya M.',
+    role: 'Investment Banker',
+    country: 'London',
+    flag: '\uD83C\uDDEC\uD83C\uDDE7',
+  },
+  {
+    quote: 'My previous CA filed me as Resident and I was facing global income tax liability. They corrected my status, filed revised returns, and saved me over \u20B924 lakhs.',
+    name: 'Amit S.',
+    role: 'Business Owner',
+    country: 'Dubai',
+    flag: '\uD83C\uDDE6\uD83C\uDDEA',
+  },
+];
+
 const PRICING = [
-  { t: 'Basic Filing', p: '₹8,000–15,000', d: 'Simple profile, 1-2 income sources', tag: 'Green', c: 'var(--green)' },
-  { t: 'Advisory Filing', p: '₹18,000–30,000', d: 'Residency review, multiple income heads', tag: 'Amber', c: 'var(--amber)' },
-  { t: 'Premium', p: '₹35,000–75,000', d: 'Property sale, ESOP, dual CG, DTAA', tag: 'Popular', c: 'var(--red)', pop: true },
-  { t: 'Retainer', p: '₹1,00,000+/yr', d: 'HNI, ongoing planning, priority', tag: 'Premium', c: 'var(--text-primary)' },
+  { t: 'Basic Filing', p: '\u20B98,000\u201315,000', d: 'Simple profile, 1-2 income sources', tag: 'Green', c: 'var(--green)' },
+  { t: 'Advisory Filing', p: '\u20B918,000\u201330,000', d: 'Residency review, multiple income heads', tag: 'Amber', c: 'var(--amber)' },
+  { t: 'Premium', p: '\u20B935,000\u201375,000', d: 'Property sale, ESOP, dual CG, DTAA', tag: 'Popular', c: 'var(--red)', pop: true },
+  { t: 'Retainer', p: '\u20B91,00,000+/yr', d: 'HNI, ongoing planning, priority', tag: 'Premium', c: 'var(--text-primary)' },
 ];
 
 
@@ -59,17 +119,16 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
 
-      {/* ══════════════════════════════════════════════════════════
+      {/* ====================================================
          NAV
-         ══════════════════════════════════════════════════════════ */}
+         ==================================================== */}
       <NavBar variant="transparent" />
 
 
-      {/* ══════════════════════════════════════════════════════════
-         HERO
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         1. HERO  (kept from original)
+         ==================================================== */}
       <section className="relative overflow-hidden">
-        {/* Radial glow for dark theme, subtle texture for light */}
         {isDark && (
           <div className="absolute inset-0 pointer-events-none" style={{
             background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.08) 0%, transparent 70%)',
@@ -82,7 +141,6 @@ export default function Home() {
         )}
 
         <div className={`max-w-4xl mx-auto px-6 pt-24 pb-20 text-center relative z-10 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          {/* Badge */}
           <div
             className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-8"
             style={{
@@ -94,20 +152,17 @@ export default function Home() {
             FY 2025-26 &middot; AY 2026-27 &middot; CII 376
           </div>
 
-          {/* Heading */}
           <h1
             className="font-serif text-4xl md:text-6xl leading-[1.15] mb-6"
             style={{ color: 'var(--text-primary)', fontWeight: 400, transition: 'color 0.3s ease' }}
           >
             NRI Tax Filing, Advisory
             <br />
-            <span style={{ color: 'var(--stat-number)' }}>&amp; Compliance — Done Right</span>
+            <span style={{ color: 'var(--stat-number)' }}>&amp; Compliance &mdash; Done Right</span>
           </h1>
 
-          {/* Decorative line */}
           <div className="w-24 h-px mx-auto mb-6" style={{ background: 'var(--accent)', opacity: 0.6 }} />
 
-          {/* Subtext */}
           <p
             className="text-lg max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'var(--text-secondary)', fontWeight: 300, transition: 'color 0.3s ease' }}
@@ -115,7 +170,6 @@ export default function Home() {
             AI-assisted tax advisory for Non-Resident Indians. From residential status review to capital gains dual-option computation.
           </p>
 
-          {/* CTA Buttons */}
           <div className="flex justify-center gap-4 flex-wrap mb-6">
             <a
               href="/client"
@@ -149,9 +203,9 @@ export default function Home() {
       </section>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         STATS STRIP
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         2. STATS STRIP  (kept from original)
+         ==================================================== */}
       <div
         className="py-8"
         style={{
@@ -176,12 +230,94 @@ export default function Home() {
       </div>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         HOW IT WORKS
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         3. PAIN POINTS / WHY NRIs STRUGGLE  (NEW)
+         Dark background, red accent cards, emotionally compelling
+         ==================================================== */}
+      <section style={{ background: '#1a1a1a' }}>
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          {/* Section header */}
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <AlertTriangle size={16} style={{ color: '#f87171' }} />
+              <span className="text-sm tracking-wide font-serif" style={{ color: '#f87171' }}>
+                Common NRI Tax Problems
+              </span>
+            </div>
+            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: '#ffffff', fontWeight: 400 }}>
+              Why NRIs Lose Money on Indian Taxes
+            </h2>
+            <p className="max-w-lg mx-auto text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
+              These aren&rsquo;t hypothetical scenarios. We see these every single week from NRIs who come to us after things went wrong.
+            </p>
+          </div>
+
+          {/* Pain point cards */}
+          <div className="grid md:grid-cols-2 gap-5 mb-12">
+            {PAIN_POINTS.map((p, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-6 relative transition-all duration-300"
+                style={{
+                  background: '#252525',
+                  border: '1px solid #3a3a3a',
+                  borderLeft: '4px solid #dc2626',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderLeftColor = '#f87171';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(220,38,38,0.08)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderLeftColor = '#dc2626';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <h3 className="font-serif text-lg font-bold mb-2" style={{ color: '#ffffff' }}>
+                  {p.headline}
+                </h3>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: '#9ca3af' }}>
+                  {p.detail}
+                </p>
+                <div
+                  className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold"
+                  style={{ background: 'rgba(220,38,38,0.15)', color: '#f87171' }}
+                >
+                  {p.stat}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Resolution CTA */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full mb-6" style={{ background: 'rgba(196,154,60,0.1)', border: '1px solid rgba(196,154,60,0.3)' }}>
+              <CheckCircle size={18} style={{ color: '#C49A3C' }} />
+              <span className="text-sm font-semibold" style={{ color: '#C49A3C' }}>
+                We fix all of this. Every single case.
+              </span>
+            </div>
+            <div>
+              <a
+                href="/client"
+                className="inline-block px-10 py-3.5 rounded-lg text-sm font-bold transition-all duration-300 hover:scale-[1.03] shadow-lg"
+                style={{
+                  background: '#C49A3C',
+                  color: '#1a1a1a',
+                }}
+              >
+                Get Your Free Diagnostic &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ====================================================
+         4. HOW IT WORKS  (kept from original)
+         ==================================================== */}
       <div id="how" style={{ background: 'var(--bg-primary)', transition: 'background-color 0.3s ease' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
-          {/* Section label */}
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
             Our Process
           </p>
@@ -220,9 +356,9 @@ export default function Home() {
       </div>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         WHAT WE HANDLE (always dark section)
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         5. WHAT WE HANDLE  (kept from original, always dark)
+         ==================================================== */}
       <div style={{ background: '#1a1a1a' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: '#C49A3C' }}>
@@ -256,9 +392,141 @@ export default function Home() {
       </div>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         PRICING
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         6. CLIENT AUTHORITY / WHO WE'VE HELPED  (NEW)
+         bg-secondary for visual contrast after dark section
+         ==================================================== */}
+      <section style={{ background: 'var(--bg-secondary)', transition: 'background-color 0.3s ease' }}>
+        <div className="max-w-5xl mx-auto px-6 py-20">
+
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <Globe size={16} style={{ color: 'var(--accent)' }} />
+              <span className="text-sm tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
+                Global Trust
+              </span>
+            </div>
+            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: 'var(--text-primary)', fontWeight: 400 }}>
+              Trusted by NRIs Across 18+ Countries
+            </h2>
+            <div className="w-16 h-px mx-auto mb-4" style={{ background: 'var(--accent)', opacity: 0.5 }} />
+            <p className="max-w-lg mx-auto text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              From Silicon Valley to Singapore, professionals trust us with their most complex Indian tax situations.
+            </p>
+          </div>
+
+          {/* Country flags row */}
+          <div className="flex flex-wrap justify-center gap-6 mb-16">
+            {COUNTRIES.map((c, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-2 px-4 py-3 rounded-xl transition-all duration-300"
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  minWidth: '110px',
+                  transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--border-hover)';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <span className="text-2xl" role="img" aria-label={c.name}>{c.flag}</span>
+                <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>{c.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonials - 3 cards */}
+          <div className="grid md:grid-cols-3 gap-6 mb-14">
+            {TESTIMONIALS.map((t, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-6 flex flex-col transition-all duration-300"
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--border-hover)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.06)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                {/* Quote icon */}
+                <div className="mb-4">
+                  <Quote size={24} style={{ color: 'var(--accent)', opacity: 0.6 }} />
+                </div>
+
+                {/* Quote text */}
+                <p
+                  className="text-sm leading-relaxed flex-1 mb-5 font-serif italic"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+
+                {/* Author line */}
+                <div className="flex items-center gap-3 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+                  {/* Avatar placeholder with flag */}
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0"
+                    style={{ background: 'rgba(196,154,60,0.1)', border: '1px solid rgba(196,154,60,0.2)' }}
+                  >
+                    {t.flag}
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      {t.name}
+                    </div>
+                    <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                      {t.role} &mdash; {t.country}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Industry trust strip */}
+          <div className="text-center">
+            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: 'var(--text-muted)' }}>
+              Trusted by professionals at
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+              {['Tech Companies', 'Financial Institutions', 'Healthcare', 'Academia', 'Legal Firms', 'Startups'].map((industry, i) => (
+                <span
+                  key={i}
+                  className="text-sm font-medium px-4 py-1.5 rounded-full"
+                  style={{
+                    color: 'var(--text-secondary)',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--border)',
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease',
+                  }}
+                >
+                  {industry}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ====================================================
+         7. PRICING  (kept from original)
+         ==================================================== */}
       <div style={{ background: 'var(--bg-primary)', transition: 'background-color 0.3s ease' }}>
         <div className="max-w-5xl mx-auto px-6 py-20">
           <p className="text-center text-sm mb-4 tracking-wide font-serif" style={{ color: 'var(--accent)' }}>
@@ -300,7 +568,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Tag dot + label */}
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.c }} />
                   <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
@@ -338,9 +605,9 @@ export default function Home() {
       </div>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         CTA BANNER (gold in both themes)
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         8. CTA BANNER  (kept from original, gold accent)
+         ==================================================== */}
       <div style={{ background: 'var(--accent)', transition: 'background-color 0.3s ease' }}>
         <div className="max-w-3xl mx-auto px-6 py-14 text-center">
           <h2
@@ -353,7 +620,7 @@ export default function Home() {
             className="mb-6 leading-relaxed"
             style={{ color: 'var(--text-on-cta)', opacity: 0.75 }}
           >
-            Our dual-option computation saves NRI clients ₹1.5L+ per property transaction on average.
+            Our dual-option computation saves NRI clients &#8377;1.5L+ per property transaction on average.
           </p>
           <a
             href="/client"
@@ -363,40 +630,15 @@ export default function Home() {
               color: 'var(--bg-primary)',
             }}
           >
-            Start Now — Free to Begin
+            Start Now &mdash; Free to Begin
           </a>
         </div>
       </div>
 
 
-      {/* ══════════════════════════════════════════════════════════
-         TESTIMONIAL (light theme only, matches Style C)
-         ══════════════════════════════════════════════════════════ */}
-      <div
-        className="py-16"
-        style={{
-          background: 'var(--bg-secondary)',
-          transition: 'background-color 0.3s ease',
-        }}
-      >
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <div className="text-4xl font-serif mb-5" style={{ color: 'var(--accent)' }}>&ldquo;</div>
-          <p
-            className="text-lg md:text-xl leading-relaxed mb-6 font-serif italic"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            After years of struggling with cross-border compliance, this team brought clarity and peace of mind. Their attention to detail on my property sale was exceptional.
-          </p>
-          <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-            Rajesh K., Software Engineer &mdash; Singapore
-          </p>
-        </div>
-      </div>
-
-
-      {/* ══════════════════════════════════════════════════════════
-         FOOTER
-         ══════════════════════════════════════════════════════════ */}
+      {/* ====================================================
+         9. FOOTER
+         ==================================================== */}
       <Footer />
     </div>
   );
