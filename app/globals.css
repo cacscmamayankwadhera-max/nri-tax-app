@@ -34,6 +34,16 @@ html {
   --green: #2A6B4A;
   --amber: #B07D3A;
   --red: #A04848;
+
+  /* Premium palette extensions */
+  --accent-secondary: #1B4D5C;
+  --accent-tertiary: #8B6F47;
+  --bg-elevated: #faf8f4;
+  --bg-hero: linear-gradient(180deg, #f5f2ec 0%, #efe9dd 100%);
+  --text-display: #0f0f0f;
+  --shadow-premium: 0 20px 60px -12px rgba(26, 26, 26, 0.08), 0 0 0 1px rgba(0,0,0,0.03);
+  --shadow-hover: 0 30px 80px -12px rgba(26, 26, 26, 0.12), 0 0 0 1px rgba(196,154,60,0.15);
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 [data-theme="dark"] {
@@ -64,6 +74,15 @@ html {
   --green: #4ade80;
   --amber: #fbbf24;
   --red: #f87171;
+
+  /* Premium palette extensions */
+  --accent-secondary: #3D8A9C;
+  --accent-tertiary: #D4AF37;
+  --bg-elevated: #1f2a3d;
+  --bg-hero: linear-gradient(180deg, #0a0f1a 0%, #0d1420 100%);
+  --text-display: #f5f1ea;
+  --shadow-premium: 0 20px 60px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(196,154,60,0.08);
+  --shadow-hover: 0 30px 80px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(196,154,60,0.2);
 }
 
 /* ═══ TYPOGRAPHY ═══ */
@@ -262,9 +281,9 @@ h1, h2, h3, .font-serif {
 }
 
 /* ═══ SCROLLBAR ═══ */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; border: 2px solid var(--bg-primary); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* ═══ SELECTION ═══ */
@@ -275,3 +294,158 @@ h1, h2, h3, .font-serif {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PREMIUM FINANCIAL ADVISORY DESIGN SYSTEM
+   Added utilities for elevated, world-class financial aesthetic.
+   All existing classes above are preserved — these are additive only.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══ PREMIUM TYPOGRAPHY ═══ */
+
+/* Display type — for hero headlines */
+.text-display {
+  color: var(--text-display);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Editorial quote styling */
+.text-editorial {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: italic;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Stat number — large, impactful */
+.text-stat {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* ═══ PREMIUM CARD STYLES ═══ */
+
+/* Premium card — deeper shadow, refined hover */
+.card-premium {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-premium);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-premium:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+/* Featured card — gold accent glow */
+.card-featured {
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-premium), 0 0 0 4px rgba(196,154,60,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.card-featured::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-tertiary), var(--accent));
+}
+
+/* ═══ TEXTURE & DEPTH UTILITIES ═══ */
+
+/* Grain overlay — adds subtle texture */
+.bg-grain {
+  position: relative;
+}
+.bg-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+}
+
+/* Gradient mesh background */
+.bg-mesh-gold {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(196,154,60,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(27,77,92,0.04) 0%, transparent 50%);
+}
+
+/* Section divider — gold gradient line */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+/* ═══ PREMIUM THEME-AWARE BACKGROUNDS ═══ */
+.bg-theme-elevated { background: var(--bg-elevated); transition: background-color 0.3s; }
+.bg-theme-hero { background: var(--bg-hero); }
+.text-theme-accent-secondary { color: var(--accent-secondary); transition: color 0.3s; }
+.text-theme-accent-tertiary { color: var(--accent-tertiary); transition: color 0.3s; }
+
+/* ═══ ENHANCED ANIMATIONS ═══ */
+
+/* Smooth reveal — for scroll-triggered content */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-reveal {
+  animation: revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scale in — for cards appearing */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Premium button */
+.btn-premium {
+  background: var(--accent);
+  color: var(--text-on-cta);
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  border-radius: 0.875rem;
+  font-size: 0.9375rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(196,154,60,0.25);
+}
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(196,154,60,0.35);
+  filter: brightness(1.05);
+}
+.btn-premium:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(196,154,60,0.2);
+}
+
+/* Stagger with more steps */
+.stagger-premium > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-premium > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-premium > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-premium > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-premium > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-premium > *:nth-child(6) { animation-delay: 400ms; }
