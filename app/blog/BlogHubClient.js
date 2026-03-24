@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTheme } from '@/app/theme-provider';
-import { CATEGORIES, ASSESSMENTS } from './data';
+import { TOPICS, ASSESSMENTS } from './data';
 import NavBar from '@/app/components/NavBar';
 import Footer from '@/app/components/Footer';
 
@@ -19,17 +19,17 @@ function useSlider(items, autoMs = 5000) {
 
 /* ─── Country Quick-Access Data ───────────────────────────── */
 const COUNTRIES = [
-  { flag: '🇺🇸', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
-  { flag: '🇦🇪', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
-  { flag: '🇬🇧', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
-  { flag: '🇨🇦', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
-  { flag: '🇦🇺', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
-  { flag: '🇸🇬', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
-  { flag: '🇩🇪', name: 'Germany', slug: 'germany-nri-tax-guide', stat: 'DTAA 10%' },
-  { flag: '🇸🇦', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
-  { flag: '🇶🇦', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
-  { flag: '🇴🇲', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
-  { flag: '🇰🇼', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
+  { flag: '\u{1F1FA}\u{1F1F8}', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
+  { flag: '\u{1F1E6}\u{1F1EA}', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
+  { flag: '\u{1F1EC}\u{1F1E7}', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: '\u{1F1E8}\u{1F1E6}', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
+  { flag: '\u{1F1E6}\u{1F1FA}', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
+  { flag: '\u{1F1F8}\u{1F1EC}', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: '\u{1F1E9}\u{1F1EA}', name: 'Germany', slug: 'germany-nri-tax-guide', stat: 'DTAA 10%' },
+  { flag: '\u{1F1F8}\u{1F1E6}', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
+  { flag: '\u{1F1F6}\u{1F1E6}', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
+  { flag: '\u{1F1F4}\u{1F1F2}', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
+  { flag: '\u{1F1F0}\u{1F1FC}', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
 ];
 
 const STATS_BAR = [
@@ -39,53 +39,118 @@ const STATS_BAR = [
   { value: 'FY 2025-26', label: 'All Numbers Verified' },
 ];
 
+/* ─── Topic accent colors ─────────────────────────────────── */
+const TOPIC_COLORS = {
+  property: '#2A6B4A',
+  country: '#1D4ED8',
+  filing: '#B07D3A',
+  income: '#7C3AED',
+  banking: '#A04848',
+  planning: '#059669',
+  compliance: '#6B4C9A',
+};
+
+/* ─── Spotlight sections for the curated homepage ──────────── */
+const SPOTLIGHT_SECTIONS = [
+  { topicId: 'property', heading: 'Property & Capital Gains', icon: '\u{1F3E0}' },
+  { topicId: 'country', heading: 'Country Guides', icon: '\u{1F30D}' },
+  { topicId: 'filing', heading: 'Filing & TDS', icon: '\u{1F4CB}' },
+];
+
+/* ─── Blog Card Component ─────────────────────────────────── */
+function BlogCard({ blog }) {
+  return (
+    <a
+      href={`/blog/${blog.slug}`}
+      className="group rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+      style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
+    >
+      <div className="h-1" style={{ background: blog.color }} />
+      <div className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span
+            className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide"
+            style={{ background: `${blog.color}12`, color: blog.color }}
+          >
+            {blog.category.toUpperCase()}
+          </span>
+          <span className="text-[11px] ml-auto" style={{ color: 'var(--text-muted)' }}>
+            {blog.readTime}
+          </span>
+        </div>
+        <h4 className="font-serif font-bold text-[15px] leading-snug mb-1.5 group-hover:underline decoration-1 underline-offset-2 line-clamp-2">
+          {blog.title}
+        </h4>
+        <p className="text-xs line-clamp-1 mb-3" style={{ color: 'var(--text-secondary)' }}>
+          {blog.excerpt}
+        </p>
+        <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
+          {blog.keyNumbers.slice(0, 2).map((kn, i) => (
+            <div key={i} className="flex items-center gap-1.5 text-xs">
+              <span className="font-bold" style={{ color: 'var(--accent)' }}>{kn.value}</span>
+              <span style={{ color: 'var(--text-muted)' }}>{kn.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </a>
+  );
+}
+
 /* ─── Main Page ───────────────────────────────────────────── */
 export default function BlogHubClient({ blogs }) {
   const { theme, toggleTheme } = useTheme();
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeTopic, setActiveTopic] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState('');
   const [leadSubmitted, setLeadSubmitted] = useState(false);
-  const [expandedSections, setExpandedSections] = useState({});
 
   const isDark = theme === 'dark';
-
-  /* Category accent colors for section top-borders */
-  const CATEGORY_COLORS = {
-    guide: '#2A6B4A',
-    tax: '#B07D3A',
-    compliance: '#6B4C9A',
-    investment: '#2D7D9A',
-    banking: '#A04848',
-    assessment: '#4A7C59',
-  };
-
-  const toggleSection = (catId) => {
-    setExpandedSections(prev => ({ ...prev, [catId]: !prev[catId] }));
-  };
 
   const featured = blogs.filter(b => b.featured);
   const [featIdx, featGo] = useSlider(featured, 6000);
 
-  const filtered = blogs.filter(b => {
-    const matchCat = activeCategory === 'all' || b.category === activeCategory;
-    const matchSearch = !searchQuery ||
-      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchCat && matchSearch;
-  });
+  /* Filtered blogs for search or topic selection */
+  const filtered = useMemo(() => {
+    return blogs.filter(b => {
+      const matchTopic = activeTopic === 'all' || b.topic === activeTopic;
+      const matchSearch = !searchQuery ||
+        b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchTopic && matchSearch;
+    });
+  }, [blogs, activeTopic, searchQuery]);
+
+  /* Topic counts for the browse-all grid */
+  const topicCounts = useMemo(() => {
+    const counts = {};
+    blogs.forEach(b => { counts[b.topic] = (counts[b.topic] || 0) + 1; });
+    return counts;
+  }, [blogs]);
+
+  /* Blogs grouped by topic for spotlight sections */
+  const blogsByTopic = useMemo(() => {
+    const grouped = {};
+    blogs.forEach(b => {
+      if (!grouped[b.topic]) grouped[b.topic] = [];
+      grouped[b.topic].push(b);
+    });
+    return grouped;
+  }, [blogs]);
 
   const handleLeadSubmit = e => {
     e.preventDefault();
     if (!email) return;
-    // Store lead locally (would normally go to Supabase)
     const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
     leads.push({ email, source: 'blog-hub', ts: new Date().toISOString() });
     localStorage.setItem('nri-leads', JSON.stringify(leads));
     setLeadSubmitted(true);
     setEmail('');
   };
+
+  /* Which topic is currently selected (for header display) */
+  const currentTopic = TOPICS.find(t => t.id === activeTopic);
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
@@ -122,7 +187,7 @@ export default function BlogHubClient({ blogs }) {
       <div className="max-w-6xl mx-auto px-6 md:px-12 pb-20">
 
         {/* ══ FEATURED SLIDER ══ */}
-        {activeCategory === 'all' && !searchQuery && (
+        {activeTopic === 'all' && !searchQuery && (
           <section className="mb-14">
             <h2 className="font-serif text-2xl mb-6">Featured Guides</h2>
             <div className="relative">
@@ -178,7 +243,7 @@ export default function BlogHubClient({ blogs }) {
         )}
 
         {/* ══ COUNTRY QUICK-ACCESS WITH ARROWS ══ */}
-        {activeCategory === 'all' && !searchQuery && (
+        {activeTopic === 'all' && !searchQuery && (
           <section className="mb-14">
             <h2 className="font-serif text-2xl mb-2">Guides by Country</h2>
             <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Country-specific tax guides tailored to your jurisdiction.</p>
@@ -216,11 +281,11 @@ export default function BlogHubClient({ blogs }) {
         )}
 
         {/* ══ LEAD CAPTURE — Free Tax Checklist ══ */}
-        {activeCategory === 'all' && !searchQuery && (
+        {activeTopic === 'all' && !searchQuery && (
           <section className="mb-14 rounded-2xl p-6 md:p-8" style={{ background: isDark ? 'rgba(196,154,60,0.06)' : 'linear-gradient(135deg, #fef9ee 0%, #fdf2d8 100%)', border: '1px solid rgba(196,154,60,0.2)' }}>
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex-1">
-                <div className="text-3xl mb-3">📋</div>
+                <div className="text-3xl mb-3">{'\u{1F4CB}'}</div>
                 <h3 className="font-serif text-xl mb-2">Free NRI Tax Checklist 2026</h3>
                 <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
                   Get our comprehensive 47-point NRI tax compliance checklist covering ITR filing, TDS, FEMA, DTAA, and property transactions — used by 2,800+ NRI clients.
@@ -266,7 +331,7 @@ export default function BlogHubClient({ blogs }) {
         )}
 
         {/* ══ SELF-ASSESSMENT TOOLS ══ */}
-        {activeCategory === 'all' && !searchQuery && (
+        {activeTopic === 'all' && !searchQuery && (
           <section className="mb-14">
             <h2 className="font-serif text-2xl mb-2">Interactive Tools</h2>
             <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Answer your most pressing NRI tax questions in under 3 minutes — no signup required.</p>
@@ -291,7 +356,7 @@ export default function BlogHubClient({ blogs }) {
           </section>
         )}
 
-        {/* ══ SEARCH + CATEGORIES ══ */}
+        {/* ══ SEARCH + TOPIC FILTERS ══ */}
         <div className="mb-8">
           <div className="relative mb-5">
             <input
@@ -305,116 +370,130 @@ export default function BlogHubClient({ blogs }) {
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg opacity-40">&#x1F50D;</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map(cat => (
-              <button key={cat.id} onClick={() => setActiveCategory(cat.id)} className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105" style={{ background: activeCategory === cat.id ? 'var(--accent)' : 'var(--bg-card)', color: activeCategory === cat.id ? 'var(--text-on-cta)' : 'var(--text-secondary)', border: `1px solid ${activeCategory === cat.id ? 'var(--accent)' : 'var(--border)'}` }}>
-                {cat.icon} {cat.label}
+            {TOPICS.map(topic => (
+              <button
+                key={topic.id}
+                onClick={() => setActiveTopic(topic.id)}
+                title={topic.desc || ''}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105"
+                style={{
+                  background: activeTopic === topic.id ? 'var(--accent)' : 'var(--bg-card)',
+                  color: activeTopic === topic.id ? 'var(--text-on-cta)' : 'var(--text-secondary)',
+                  border: `1px solid ${activeTopic === topic.id ? 'var(--accent)' : 'var(--border)'}`,
+                }}
+              >
+                {topic.icon} {topic.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* ══ ALL GUIDES GRID ══ */}
+        {/* ══ CONTENT AREA ══ */}
         <section>
-          <h2 className="font-serif text-2xl mb-6">
-            {searchQuery ? `Results for "${searchQuery}"` : activeCategory === 'all' ? 'All Guides & Articles' : CATEGORIES.find(c => c.id === activeCategory)?.label}
-            <span className="text-sm font-normal ml-2" style={{ color: 'var(--text-muted)' }}>({filtered.length})</span>
-          </h2>
-
-          {filtered.length === 0 ? (
-            <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              <p className="text-3xl mb-3">&#x1F50D;</p>
-              <p className="text-lg mb-2" style={{ color: 'var(--text-muted)' }}>No guides found for &ldquo;{searchQuery}&rdquo;</p>
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Try a different search term or browse by category.</p>
-            </div>
-          ) : activeCategory === 'all' && !searchQuery ? (
-            /* ── GROUPED BY CATEGORY VIEW ── */
-            <div className="space-y-12">
-              {CATEGORIES.filter(cat => cat.id !== 'all').map(cat => {
-                const catBlogs = filtered.filter(b => b.category === cat.id);
-                if (catBlogs.length === 0) return null;
-                const isExpanded = expandedSections[cat.id];
-                const visibleBlogs = isExpanded ? catBlogs : catBlogs.slice(0, 6);
-                const accentColor = CATEGORY_COLORS[cat.id] || 'var(--accent)';
-
-                return (
-                  <div key={cat.id}>
-                    {/* Section header with colored top border */}
-                    <div className="rounded-t-xl pt-0.5 mb-5" style={{ borderTop: `3px solid ${accentColor}` }}>
-                      <div className="flex items-center justify-between pt-3">
-                        <h3 className="font-serif text-xl flex items-center gap-2.5">
-                          <span className="text-2xl">{cat.icon}</span>
-                          <span>{cat.label}</span>
-                          <span className="text-sm font-normal px-2.5 py-0.5 rounded-full" style={{ background: `${accentColor}12`, color: accentColor }}>
-                            {catBlogs.length}
-                          </span>
-                        </h3>
-                        {catBlogs.length > 6 && (
-                          <button
-                            onClick={() => toggleSection(cat.id)}
-                            className="text-sm font-medium transition-all hover:underline underline-offset-2"
-                            style={{ color: accentColor }}
-                          >
-                            {isExpanded ? 'Show less' : `Show all ${catBlogs.length} ${cat.label.toLowerCase()}`} &rarr;
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Cards grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {visibleBlogs.map(blog => (
-                        <a key={blog.slug} href={`/blog/${blog.slug}`} className="group rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                          <div className="h-1" style={{ background: blog.color }} />
-                          <div className="p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide" style={{ background: `${blog.color}12`, color: blog.color }}>{blog.category.toUpperCase()}</span>
-                              <span className="text-[11px] ml-auto" style={{ color: 'var(--text-muted)' }}>{blog.readTime}</span>
-                            </div>
-                            <h4 className="font-serif font-bold text-[15px] leading-snug mb-1.5 group-hover:underline decoration-1 underline-offset-2 line-clamp-2">{blog.title}</h4>
-                            <p className="text-xs line-clamp-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{blog.excerpt}</p>
-                            <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
-                              {blog.keyNumbers.slice(0, 2).map((kn, i) => (
-                                <div key={i} className="flex items-center gap-1.5 text-xs">
-                                  <span className="font-bold" style={{ color: 'var(--accent)' }}>{kn.value}</span>
-                                  <span style={{ color: 'var(--text-muted)' }}>{kn.label}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* ── FLAT FILTERED GRID (specific category or search) ── */
+          {searchQuery ? (
+            /* ── SEARCH RESULTS ── */
             <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map(blog => (
-                  <a key={blog.slug} href={`/blog/${blog.slug}`} className="group rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                    <div className="h-1" style={{ background: blog.color }} />
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide" style={{ background: `${blog.color}12`, color: blog.color }}>{blog.category.toUpperCase()}</span>
-                        <span className="text-[11px] ml-auto" style={{ color: 'var(--text-muted)' }}>{blog.readTime}</span>
+              <h2 className="font-serif text-2xl mb-6">
+                Results for &ldquo;{searchQuery}&rdquo;
+                <span className="text-sm font-normal ml-2" style={{ color: 'var(--text-muted)' }}>({filtered.length})</span>
+              </h2>
+              {filtered.length === 0 ? (
+                <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                  <p className="text-3xl mb-3">&#x1F50D;</p>
+                  <p className="text-lg mb-2" style={{ color: 'var(--text-muted)' }}>No guides found for &ldquo;{searchQuery}&rdquo;</p>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Try a different search term or browse by topic.</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filtered.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
+                </div>
+              )}
+            </>
+
+          ) : activeTopic !== 'all' ? (
+            /* ── SPECIFIC TOPIC SELECTED ── */
+            <>
+              {/* Topic header */}
+              <div className="mb-8 rounded-xl p-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderTop: `3px solid ${TOPIC_COLORS[activeTopic] || 'var(--accent)'}` }}>
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl">{currentTopic?.icon}</span>
+                  <div>
+                    <h2 className="font-serif text-2xl mb-1">{currentTopic?.label}</h2>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{currentTopic?.desc}</p>
+                  </div>
+                  <span className="ml-auto px-3 py-1 rounded-full text-sm font-bold" style={{ background: `${TOPIC_COLORS[activeTopic] || 'var(--accent)'}15`, color: TOPIC_COLORS[activeTopic] || 'var(--accent)' }}>
+                    {filtered.length} guides
+                  </span>
+                </div>
+              </div>
+              {filtered.length === 0 ? (
+                <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                  <p className="text-3xl mb-3">&#x1F50D;</p>
+                  <p className="text-lg mb-2" style={{ color: 'var(--text-muted)' }}>No guides found in this topic.</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filtered.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
+                </div>
+              )}
+            </>
+
+          ) : (
+            /* ── CURATED HOMEPAGE (All + no search) ── */
+            <div>
+              {/* Spotlight Sections — 3 topics x 3 cards each */}
+              <div className="space-y-10 mb-14">
+                {SPOTLIGHT_SECTIONS.map(section => {
+                  const topicBlogs = (blogsByTopic[section.topicId] || []).slice(0, 3);
+                  const accentColor = TOPIC_COLORS[section.topicId] || 'var(--accent)';
+                  if (topicBlogs.length === 0) return null;
+                  return (
+                    <div key={section.topicId}>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-serif text-xl flex items-center gap-2.5">
+                          <span className="text-2xl">{section.icon}</span>
+                          <span>{section.heading}</span>
+                        </h3>
+                        <button
+                          onClick={() => setActiveTopic(section.topicId)}
+                          className="text-sm font-medium transition-all hover:underline underline-offset-2"
+                          style={{ color: accentColor }}
+                        >
+                          View all {topicCounts[section.topicId] || 0} &rarr;
+                        </button>
                       </div>
-                      <h4 className="font-serif font-bold text-[15px] leading-snug mb-1.5 group-hover:underline decoration-1 underline-offset-2 line-clamp-2">{blog.title}</h4>
-                      <p className="text-xs line-clamp-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{blog.excerpt}</p>
-                      <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
-                        {blog.keyNumbers.slice(0, 2).map((kn, i) => (
-                          <div key={i} className="flex items-center gap-1.5 text-xs">
-                            <span className="font-bold" style={{ color: 'var(--accent)' }}>{kn.value}</span>
-                            <span style={{ color: 'var(--text-muted)' }}>{kn.label}</span>
-                          </div>
-                        ))}
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {topicBlogs.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
                       </div>
                     </div>
-                  </a>
-                ))}
+                  );
+                })}
               </div>
-            </>
+
+              {/* Browse All Topics — grid of topic navigation cards */}
+              <div>
+                <h3 className="font-serif text-2xl mb-6">Browse All Topics</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {TOPICS.filter(t => t.id !== 'all').map(topic => {
+                    const count = topicCounts[topic.id] || 0;
+                    const accentColor = TOPIC_COLORS[topic.id] || 'var(--accent)';
+                    return (
+                      <button
+                        key={topic.id}
+                        onClick={() => setActiveTopic(topic.id)}
+                        className="group rounded-xl p-5 text-left transition-all duration-200 hover:scale-[1.03] hover:shadow-lg"
+                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderTop: `3px solid ${accentColor}` }}
+                      >
+                        <div className="text-3xl mb-3">{topic.icon}</div>
+                        <div className="font-serif font-bold text-sm mb-1 group-hover:underline underline-offset-2">{topic.label}</div>
+                        <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{topic.desc}</p>
+                        <div className="text-xs font-bold" style={{ color: accentColor }}>{count} guides &rarr;</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           )}
         </section>
 
@@ -433,15 +512,15 @@ export default function BlogHubClient({ blogs }) {
         </section>
 
         {/* ══ TRUST SIGNALS ══ */}
-        {activeCategory === 'all' && !searchQuery && (
+        {activeTopic === 'all' && !searchQuery && (
           <section className="mb-14">
             <h2 className="font-serif text-2xl mb-6 text-center">Why NRIs Trust MKW Advisors</h2>
             <div className="grid md:grid-cols-4 gap-4">
               {[
-                { icon: '🎓', title: 'Qualified Expert', desc: 'CA Mayank Wadhera — CA, CS, CMA, IBBI Registered Valuer' },
-                { icon: '🌍', title: '30+ Countries', desc: 'Serving NRIs across USA, UK, UAE, Canada, Singapore, Australia' },
-                { icon: '🤖', title: 'AI-Powered', desc: '10 specialist AI modules analyze your case in under 2 minutes' },
-                { icon: '📄', title: 'Professional Deliverables', desc: 'Computation sheets, advisory memos, engagement documents' },
+                { icon: '\u{1F393}', title: 'Qualified Expert', desc: 'CA Mayank Wadhera — CA, CS, CMA, IBBI Registered Valuer' },
+                { icon: '\u{1F30D}', title: '30+ Countries', desc: 'Serving NRIs across USA, UK, UAE, Canada, Singapore, Australia' },
+                { icon: '\u{1F916}', title: 'AI-Powered', desc: '10 specialist AI modules analyze your case in under 2 minutes' },
+                { icon: '\u{1F4C4}', title: 'Professional Deliverables', desc: 'Computation sheets, advisory memos, engagement documents' },
               ].map((item, i) => (
                 <div key={i} className="rounded-xl p-5 text-center" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                   <div className="text-2xl mb-2">{item.icon}</div>
