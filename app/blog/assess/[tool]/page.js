@@ -653,6 +653,188 @@ const TOOLS = {
       };
     },
   },
+
+  'retirement-corpus-calculator': {
+    title: 'NRI Retirement Corpus Calculator',
+    subtitle: 'Do You Have Enough to Retire in India?',
+    icon: '🏖️',
+    description: 'Enter your age, corpus, and monthly expenses to find out if you can retire comfortably in India.',
+    steps: [
+      { q: 'Your current age', type: 'number', placeholder: 'e.g. 45' },
+      { q: 'Target retirement age', type: 'number', placeholder: 'e.g. 55' },
+      { q: 'Current total savings/investments (₹)', type: 'number', placeholder: 'e.g. 30000000 for ₹3 Cr' },
+      { q: 'Monthly savings you can add (₹)', type: 'number', placeholder: 'e.g. 100000 for ₹1L/month' },
+      { q: 'Expected monthly expenses in India after retirement (₹)', type: 'number', placeholder: 'e.g. 150000 for ₹1.5L/month' },
+    ],
+    getResult: (answers) => {
+      const age = parseInt(answers[0]) || 40;
+      const retireAge = parseInt(answers[1]) || 55;
+      const corpus = parseInt(answers[2]) || 0;
+      const monthlySaving = parseInt(answers[3]) || 0;
+      const monthlyExpense = parseInt(answers[4]) || 100000;
+      const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+      const yearsToRetire = Math.max(0, retireAge - age);
+      const yearsInRetirement = 85 - retireAge; // plan till 85
+      const growthRate = 0.10; // 10% pre-retirement
+      const postReturnRate = 0.07; // 7% post-retirement (conservative)
+      const inflation = 0.06; // 6% inflation
+
+      // Future value of current corpus
+      const fvCorpus = corpus * Math.pow(1 + growthRate, yearsToRetire);
+      // Future value of monthly savings (annuity)
+      const monthlyRate = growthRate / 12;
+      const months = yearsToRetire * 12;
+      const fvSavings = months > 0 ? monthlySaving * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) : 0;
+      const totalAtRetirement = fvCorpus + fvSavings;
+
+      // Required corpus (inflation-adjusted expenses, SWP model)
+      const inflatedMonthly = monthlyExpense * Math.pow(1 + inflation, yearsToRetire);
+      const annualExpense = inflatedMonthly * 12;
+      const realReturn = postReturnRate - inflation; // ~1% real
+      const requiredCorpus = realReturn > 0 ? annualExpense / Math.max(realReturn, 0.01) : annualExpense * yearsInRetirement;
+
+      const surplus = totalAtRetirement - requiredCorpus;
+      const isEnough = surplus >= 0;
+      const swpMonthly = Math.round(totalAtRetirement * postReturnRate / 12);
+
+      return {
+        status: isEnough ? 'On Track!' : 'Gap Found',
+        color: isEnough ? '#059669' : '#DC2626',
+        title: isEnough
+          ? `You're on track! Surplus of ${fmt(surplus)} at retirement`
+          : `Gap of ${fmt(Math.abs(surplus))} — you need to save more or retire later`,
+        summary: `At age ${retireAge}, your projected corpus is ${fmt(totalAtRetirement)}. To sustain ${fmt(inflatedMonthly)}/month (inflation-adjusted) for ${yearsInRetirement} years, you need approximately ${fmt(requiredCorpus)}.`,
+        taxImpact: `Monthly SWP income from corpus: ${fmt(swpMonthly)}/month at 7% return. ${isEnough ? 'Covers your expenses comfortably.' : 'Falls short of inflation-adjusted expenses.'}`,
+        table: [
+          ['Your current corpus', fmt(corpus)],
+          ['Years to retirement', `${yearsToRetire} years`],
+          ['Corpus at retirement (10% growth)', fmt(totalAtRetirement)],
+          ['', ''],
+          ['Monthly expense today', fmt(monthlyExpense)],
+          ['Monthly expense at retirement (6% inflation)', fmt(inflatedMonthly)],
+          ['Required corpus', fmt(requiredCorpus)],
+          ['', ''],
+          [isEnough ? 'SURPLUS' : 'GAP', fmt(Math.abs(surplus))],
+          ['SWP monthly income possible', fmt(swpMonthly)],
+        ],
+        actions: isEnough ? [
+          'Your retirement plan looks healthy!',
+          `RNOR status on return gives 2-3 years of tax-free foreign income`,
+          'Plan FCNR maturity during RNOR window for tax-free interest',
+          'Consider GIFT City funds for zero-tax growth on India allocation',
+          'Start health insurance for India before turning 55 (no loading)',
+          'Prepare separate Indian will for Indian assets',
+        ] : [
+          `Close the ${fmt(Math.abs(surplus))} gap by:`,
+          `Option 1: Increase monthly saving to ${fmt(monthlySaving + Math.round(Math.abs(surplus) / (yearsToRetire * 12 * 1.5)))}`,
+          `Option 2: Delay retirement by ${Math.ceil(Math.abs(surplus) / (totalAtRetirement * 0.1))} years`,
+          `Option 3: Reduce target expenses to ${fmt(Math.round(inflatedMonthly * totalAtRetirement / requiredCorpus))}`,
+          'Consider GIFT City zero-tax funds to boost returns',
+          'Consult MKW Advisors for a personalized retirement roadmap',
+        ],
+      };
+    },
+  },
+
+  'tax-savings-calculator': {
+    title: 'NRI Tax Savings Calculator',
+    subtitle: 'How Much Are You Leaving on the Table?',
+    icon: '💰',
+    description: 'Enter your Indian income to see exactly how much you could save with proper tax planning.',
+    steps: [
+      { q: 'NRO FD/savings interest per year (₹)', type: 'number', placeholder: 'e.g. 500000' },
+      { q: 'TDS currently deducted on NRO interest (₹)', type: 'number', placeholder: 'Check Form 26AS' },
+      { q: 'Do you have a DTAA TRC submitted to your bank?', type: 'select', options: [
+        { label: 'Yes — TRC submitted, getting DTAA rate', value: 'yes' },
+        { label: 'No — paying full 30% TDS', value: 'no' },
+      ]},
+      { q: 'Any property sale this year? Enter sale price (₹), or 0', type: 'number', placeholder: '0 if no sale' },
+      { q: 'Did you apply for Section 197 lower TDS certificate?', type: 'select', options: [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+        { label: 'No property sale', value: 'na' },
+      ]},
+    ],
+    getResult: (answers) => {
+      const nroInterest = parseInt(answers[0]) || 0;
+      const currentTDS = parseInt(answers[1]) || 0;
+      const hasTRC = answers[2] === 'yes';
+      const propertySale = parseInt(answers[3]) || 0;
+      const has197 = answers[4] === 'yes';
+      const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+      let savings = 0;
+      let actions = [];
+
+      // TRC savings
+      if (!hasTRC && nroInterest > 0) {
+        const tdsAt30 = Math.round(nroInterest * 0.312);
+        const tdsAtDTAA = Math.round(nroInterest * 0.156); // 15% + cess
+        const trcSaving = tdsAt30 - tdsAtDTAA;
+        savings += trcSaving;
+        actions.push(`Submit TRC + Form 10F to bank → save ${fmt(trcSaving)}/year on NRO interest TDS`);
+      }
+
+      // ITR refund
+      let tax = 0;
+      const slabs = [[400000,0],[400000,0.05],[400000,0.10],[400000,0.15],[400000,0.20],[400000,0.25],[Infinity,0.30]];
+      let rem = nroInterest;
+      for (const [slab, rate] of slabs) {
+        const amt = Math.min(rem, slab);
+        tax += amt * rate;
+        rem -= amt;
+        if (rem <= 0) break;
+      }
+      tax = Math.round(tax * 1.04);
+      const refund = Math.max(0, currentTDS - tax);
+      if (refund > 0) {
+        savings += refund;
+        actions.push(`File ITR to claim ${fmt(refund)} TDS refund (TDS ${fmt(currentTDS)} vs actual tax ${fmt(tax)})`);
+      }
+
+      // Section 197 savings
+      if (propertySale > 0 && !has197) {
+        const tdsWithout197 = Math.round(propertySale * 0.20 * 1.10 * 1.04);
+        const estimatedTax = Math.round(propertySale * 0.4 * 0.125 * 1.04); // rough: 40% is gain, 12.5% LTCG
+        const saving197 = Math.max(0, tdsWithout197 - estimatedTax);
+        savings += saving197;
+        actions.push(`Apply Section 197 before property sale → prevent ${fmt(saving197)} from being locked with government for 12-18 months`);
+      }
+
+      if (actions.length === 0) {
+        actions.push('Your tax planning looks good — you\'re not leaving money on the table!');
+        actions.push('Consider GIFT City funds for zero-tax investment returns');
+      }
+
+      actions.push('Get a comprehensive review from MKW Advisors for personalized optimization');
+
+      return {
+        status: savings > 0 ? `Save ${fmt(savings)}` : 'Optimized!',
+        color: savings > 50000 ? '#DC2626' : savings > 0 ? '#F59E0B' : '#059669',
+        title: savings > 50000
+          ? `You're leaving ${fmt(savings)} on the table!`
+          : savings > 0
+          ? `You could save ${fmt(savings)} with these steps`
+          : 'Your NRI tax planning is well-optimized',
+        summary: savings > 0
+          ? `Based on your inputs, we identified ${fmt(savings)} in potential savings through TRC submission, ITR filing, and Section 197 planning.`
+          : 'You\'re already using the key tax-saving strategies. Consider advanced planning with GIFT City and DTAA optimization.',
+        taxImpact: `Potential annual savings: ${fmt(savings)}. Over 5 years: ${fmt(savings * 5)}.`,
+        table: [
+          ['NRO Interest', fmt(nroInterest)],
+          ['Current TDS Deducted', fmt(currentTDS)],
+          ['Actual Tax Liability', fmt(tax)],
+          ['TDS Refund Available', fmt(refund)],
+          ...(propertySale > 0 ? [['Property Sale', fmt(propertySale)], ['Section 197 Saving', fmt(Math.max(0, Math.round(propertySale * 0.20 * 1.10 * 1.04) - Math.round(propertySale * 0.4 * 0.125 * 1.04)))]] : []),
+          ['', ''],
+          ['TOTAL POTENTIAL SAVINGS', fmt(savings)],
+          ['5-Year Impact', fmt(savings * 5)],
+        ],
+        actions,
+      };
+    },
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════════

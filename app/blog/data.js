@@ -968,6 +968,12 @@ export const BLOGS = [
   { slug: 'nri-when-to-exit-indian-market', title: 'When to Exit Indian Market', subtitle: 'Warning Signs & Exit Strategy', excerpt: 'PE >25, FPI outflows, rupee -5%. Partial exit, GIFT City 0% pivot.', category: 'investment', tags: ['Exit', 'PE Ratio', 'Contrarian'], readTime: '12 min', featured: false, views: '57K+', icon: '🚪', color: '#B45309', keyNumbers: [{ label: 'PE Warn', value: '>25' }, { label: 'FPI', value: '3mo out' }, { label: 'Tax-Free', value: '₹1.25L/yr' }, { label: 'GIFT', value: '0% Exit' }], quickAnswer: 'Warning: Nifty PE >25, FPI outflows >3 months. Exit: trim 20-30%, stagger 2 FYs, GIFT City pivot for 0% tax.' },
   { slug: 'nri-top-25-questions-answered', title: 'Top 25 NRI Tax Questions', subtitle: 'Expert Answers', excerpt: 'The 25 most-searched questions in 150-200 words each: residency, ITR, NRE, TDS, DTAA, FBAR, FEMA, GIFT City.', category: 'guide', tags: ['FAQ', 'Q&A', 'Top Questions'], readTime: '18 min', featured: true, views: '319K+', icon: '❓', color: '#6366F1', keyNumbers: [{ label: 'Questions', value: '25' }, { label: 'Each', value: '150-200w' }, { label: 'Topics', value: 'All NRI' }, { label: 'Format', value: 'AEO' }], quickAnswer: 'Top 25: Am I NRI? File ITR? Which form? NRE taxable? TDS rate? Property tax? Sec 197? 87A? DTAA? FBAR? And 15 more.' },
   { slug: 'nri-ppf-sukanya-samriddhi', title: 'PPF & Sukanya Samriddhi', subtitle: 'NRI Rules & Restrictions', excerpt: 'New PPF: NO. Existing: till maturity. Sukanya: close in 6 months. All small savings NRI rules.', category: 'investment', tags: ['PPF', 'Sukanya', 'Small Savings'], readTime: '10 min', featured: false, views: '11K+', icon: '🏛️', color: '#4F46E5', keyNumbers: [{ label: 'New PPF', value: 'NO' }, { label: 'Existing', value: 'Maturity' }, { label: 'SSY', value: 'Close 6mo' }, { label: 'SCSS', value: 'Return Only' }], quickAnswer: 'Cannot open new PPF. Existing till maturity. Sukanya must close within 6 months. NSC/KVP banned. SCSS on return.' },
+
+  // ── VALUE-ADD SPECIALS ──
+  { slug: 'nri-spouse-guide-resident-partner', title: 'My Partner is NRI', subtitle: 'Guide for Resident Spouses', excerpt: "Complete guide for the resident spouse managing NRI finances: bank accounts, property, tax filing, investments, insurance, repatriation — everything you need to handle while your partner is abroad.", category: 'guide', tags: ['Spouse', 'Resident Partner', 'Family', 'POA'], readTime: '15 min', featured: true, views: 'Unique', icon: '💑', color: '#E11D48', keyNumbers: [{ label: 'Banks', value: 'NRO Joint OK' }, { label: 'Gift', value: 'Tax-Free' }, { label: 'Rent', value: 'Deposit to NRO' }, { label: 'Filing', value: 'Separate ITR' }], quickAnswer: "Resident spouse can hold NRO jointly (not NRE). Money from NRI spouse = tax-free gift. Rental income goes to NRO. File separate ITRs. Use POA to manage investments. Key: keep records of everything." },
+  { slug: 'explain-nri-tax-to-parents', title: 'Explain NRI Tax to Parents', subtitle: 'Simple Guide They Will Understand', excerpt: "Written for NRIs to share with parents. Ultra-simple, no jargon: why accounts converted, why TDS is high, what to do with rent, how to handle tax notices, what papers to keep.", category: 'guide', tags: ['Parents', 'Simple', 'Family', 'WhatsApp'], readTime: '10 min', featured: true, views: 'Unique', icon: '👨‍👩‍👧', color: '#059669', keyNumbers: [{ label: 'Tone', value: 'Ultra-Simple' }, { label: 'Format', value: 'Conversations' }, { label: 'Bonus', value: 'WhatsApp Forward' }, { label: 'Checklist', value: 'Printable' }], quickAnswer: 'Share this with parents: NRO = Indian money account (30% TDS on FD). NRE = foreign salary account (tax-free). Gift from child = tax-free. Rent goes to NRO. File ITR = get TDS refund. Keep all papers.' },
+  { slug: 'nri-letter-templates-pack', title: 'NRI Letter Templates Pack', subtitle: '8 Ready-to-Use Templates', excerpt: "Copy-paste templates: Section 197 application, TRC bank submission, AIS correction, account conversion, FEMA compounding, repatriation request, CA instructions, notice response.", category: 'compliance', tags: ['Templates', 'Letters', 'Section 197', 'Forms'], readTime: '12 min', featured: true, views: 'Unique', icon: '📝', color: '#2563EB', keyNumbers: [{ label: 'Templates', value: '8' }, { label: 'Format', value: 'Copy-Paste' }, { label: 'Covers', value: 'All Key Needs' }, { label: 'Utility', value: 'Highest' }], quickAnswer: '8 ready-to-use templates: Section 197 cover letter, TRC submission to bank, AIS feedback guide, account conversion request, FEMA compounding application, 15CB CA request, repatriation bank letter, 143(1) response.' },
+  { slug: 'nri-country-tax-comparison', title: 'NRI Tax by Country', subtitle: 'US vs UK vs UAE vs Canada vs SG vs AU', excerpt: "Massive side-by-side comparison: personal tax rates, DTAA rates, FTC mechanism, foreign reporting, MF treatment, pension, property — all 6 countries on one page.", category: 'guide', tags: ['Country Comparison', 'US vs UK', 'UAE vs Canada', 'Side-by-Side'], readTime: '16 min', featured: true, views: 'Unique', icon: '🌍', color: '#7C3AED', keyNumbers: [{ label: 'Countries', value: '6' }, { label: 'Parameters', value: '15+' }, { label: 'Scenario', value: 'Same NRI, 6 taxes' }, { label: 'Format', value: 'Tables' }], quickAnswer: 'Same NRI in 6 countries: UAE pays least (no FTC needed, only India tax). US has heaviest compliance (FBAR+FATCA+PFIC). UK balanced. Canada moderate. Singapore favorable. Australia high marginal rates but CGT discount.' },
 ];
 
 // Self-assessment tools
@@ -1015,6 +1021,24 @@ export const ASSESSMENTS = [
     description: 'Enter your TDS deducted and actual income to estimate your refund. Most NRIs are owed ₹50K-₹5L in excess TDS.',
     icon: '💰',
     questions: 4,
+    time: '2 min',
+  },
+  {
+    slug: 'retirement-corpus-calculator',
+    title: 'Retirement Corpus Calculator',
+    subtitle: 'Can You Retire in India?',
+    description: 'Enter your age, savings, and target expenses to find out if your corpus is enough for a comfortable retirement in India.',
+    icon: '🏖️',
+    questions: 5,
+    time: '2 min',
+  },
+  {
+    slug: 'tax-savings-calculator',
+    title: 'Tax Savings Calculator',
+    subtitle: 'How Much Are You Leaving on the Table?',
+    description: 'Enter your NRO interest and TDS to see exactly how much you could save with TRC, ITR filing, and Section 197.',
+    icon: '💰',
+    questions: 5,
     time: '2 min',
   },
 ];
