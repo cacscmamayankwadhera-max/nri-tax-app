@@ -728,19 +728,19 @@ export default function Home() {
           </div>
 
           {/* 3-column pricing */}
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-start">
+          <div className="grid md:grid-cols-3 gap-5 md:gap-6 items-start">
             {PRICING_TIERS.map((tier, i) => (
               <div
                 key={i}
                 className={
                   tier.featured
-                    ? 'card-featured p-8 md:p-10 md:-my-4'
-                    : 'card-premium p-7 md:p-8'
+                    ? 'card-featured p-6 md:p-7'
+                    : 'card-premium p-6 md:p-7'
                 }
               >
                 {tier.featured && (
                   <div
-                    className="inline-block px-4 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase mb-5"
+                    className="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase mb-4"
                     style={{
                       background: 'var(--accent)',
                       color: 'var(--text-on-cta)',
@@ -751,7 +751,7 @@ export default function Home() {
                 )}
                 {!tier.featured && (
                   <div
-                    className="text-[10px] font-bold uppercase tracking-wider mb-4"
+                    className="text-[10px] font-bold uppercase tracking-wider mb-3"
                     style={{ color: 'var(--text-muted)' }}
                   >
                     {tier.tagline}
@@ -759,7 +759,7 @@ export default function Home() {
                 )}
 
                 <h3
-                  className="font-serif text-xl md:text-2xl mb-2"
+                  className="font-serif text-lg md:text-xl mb-1"
                   style={{
                     color: 'var(--text-primary)',
                     fontWeight: 400,
@@ -769,7 +769,7 @@ export default function Home() {
                 </h3>
 
                 <div
-                  className="text-stat text-3xl md:text-4xl mb-6"
+                  className="font-serif text-2xl md:text-3xl font-bold mb-5"
                   style={{
                     color: tier.featured
                       ? 'var(--stat-number)'
@@ -780,14 +780,14 @@ export default function Home() {
                 </div>
 
                 {/* Feature checklist */}
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-2.5 mb-6">
                   {tier.features.map((feat, fi) => (
                     <li
                       key={fi}
-                      className="flex items-start gap-3 text-sm"
+                      className="flex items-start gap-2.5 text-sm"
                     >
                       <CheckCircle
-                        size={16}
+                        size={15}
                         className="shrink-0 mt-0.5"
                         style={{
                           color: tier.featured
@@ -806,11 +806,10 @@ export default function Home() {
 
                 <a
                   href="/client"
-                  className={
-                    tier.featured
-                      ? 'btn-premium w-full justify-center text-center'
-                      : 'btn-primary w-full text-center block'
-                  }
+                  className="btn-primary w-full text-center block py-3 rounded-lg text-sm font-bold"
+                  style={tier.featured ? {
+                    boxShadow: '0 4px 16px rgba(196,154,60,0.25)',
+                  } : {}}
                 >
                   {tier.featured
                     ? 'Start Premium Filing \u2192'
