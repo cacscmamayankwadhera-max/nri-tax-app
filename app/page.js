@@ -169,108 +169,108 @@ export default function Home() {
 
 
       {/* ============================================================
-          S1 — HERO: Statement Typography
+          S1 — HERO: Centered with Premium Polish
           ============================================================ */}
-      <section className="relative overflow-hidden bg-grain bg-mesh-gold">
-        {/* Gradient background layer */}
+      <section className="relative overflow-hidden">
+        {/* Background layer */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'var(--bg-hero)' }}
+          style={{
+            background: isDark
+              ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(196,154,60,0.06) 0%, transparent 70%)'
+              : 'var(--bg-primary)',
+          }}
         />
+        {/* Subtle cross-hatch texture for light theme */}
+        {!isDark && (
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.018]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zM20 0h1v40h-1z'/%3E%3Cpath d='M0 0h40v1H0zM0 20h40v1H0z'/%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        )}
 
-        <div className="max-w-7xl mx-auto px-6 pt-28 pb-24 md:pt-36 md:pb-32 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-
-            {/* Left: Headline */}
+        <div className="max-w-5xl mx-auto px-6 pt-28 pb-20 md:pt-36 md:pb-24 relative z-10">
+          <div
+            className={`text-center transition-all duration-1000 ${
+              vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            {/* Badge */}
             <div
-              className={`lg:col-span-7 text-center lg:text-left transition-all duration-1000 ${
-                vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
+              className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-8"
+              style={{
+                background: 'var(--bg-badge)',
+                color: 'var(--text-badge)',
+              }}
             >
-              <div
-                className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-8"
-                style={{
-                  background: 'var(--bg-badge)',
-                  color: 'var(--text-badge)',
-                }}
-              >
-                FY 2025-26 &middot; AY 2026-27 &middot; CII 376
-              </div>
+              FY 2025-26 &middot; AY 2026-27 &middot; CII 376
+            </div>
 
-              <h1 className="text-display text-5xl md:text-7xl lg:text-8xl mb-8">
-                NRI Tax Advisory
-                <br />
-                <span className="text-editorial">Done Right.</span>
-              </h1>
+            {/* Heading */}
+            <h1 className="text-display font-serif text-4xl md:text-6xl mb-6 leading-tight">
+              NRI Tax Filing, Advisory
+              <br />
+              <span style={{ color: 'var(--accent)' }}>
+                &amp; Compliance &mdash; Done Right
+              </span>
+            </h1>
 
-              <p
-                className="text-lg md:text-xl max-w-xl mb-10 leading-relaxed mx-auto lg:mx-0"
-                style={{ color: 'var(--text-secondary)', fontWeight: 300 }}
-              >
-                Expert-led, AI-assisted tax filing for Non-Resident Indians
-                &mdash; because your cross-border finances deserve more than
-                a generalist CA.
-              </p>
+            {/* Gold decorative line */}
+            <div
+              className="w-16 h-0.5 mx-auto mb-6"
+              style={{
+                background: 'linear-gradient(90deg, transparent, var(--accent), transparent)',
+              }}
+            />
 
+            {/* Subtext */}
+            <p
+              className="text-lg max-w-xl mx-auto mb-10 leading-relaxed"
+              style={{ color: 'var(--text-secondary)', fontWeight: 300 }}
+            >
+              Expert-led, AI-assisted tax filing for Non-Resident Indians &mdash;
+              because your cross-border finances deserve more than a generalist CA.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
               <a href="/client" className="btn-premium">
                 Start Your Tax Filing &rarr;
               </a>
-
-              <p
-                className="mt-5 text-xs"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Free diagnostic &middot; No obligation &middot; Results in
-                minutes
-              </p>
-            </div>
-
-            {/* Right: Floating stat card */}
-            <div
-              className={`lg:col-span-5 flex justify-center lg:justify-end transition-all duration-1000 delay-300 ${
-                vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-              }`}
-            >
-              <div
-                className="animate-pulse-gold rounded-2xl p-8 md:p-10 text-center"
+              <a
+                href="#how"
+                className="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200"
                 style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-premium)',
-                  minWidth: '260px',
+                  border: '1px solid var(--accent)',
+                  color: 'var(--accent)',
+                  background: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(196,154,60,0.06)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
                 }}
               >
-                <div
-                  className="text-stat text-6xl md:text-7xl mb-3"
-                  style={{ color: 'var(--stat-number)' }}
-                >
-                  &#8377;120Cr+
-                </div>
-                <div
-                  className="text-sm font-semibold tracking-wide uppercase"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Tax Computed
-                </div>
-                <div
-                  className="w-12 h-px mx-auto my-4"
-                  style={{ background: 'var(--accent)', opacity: 0.4 }}
-                />
-                <div
-                  className="text-xs"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  99.7% filing accuracy
-                </div>
-              </div>
+                How It Works
+              </a>
             </div>
+
+            <p
+              className="text-xs"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Free diagnostic &middot; No obligation &middot; Results in minutes
+            </p>
           </div>
         </div>
       </section>
 
 
       {/* ============================================================
-          S2 — SOCIAL PROOF STRIP: Editorial, Not Generic
+          S2 — STATS STRIP: Clean 4-Stat Row
           ============================================================ */}
       <section
         style={{
@@ -278,97 +278,47 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="divider-gold" />
+        <div
+          className="h-px w-full"
+          style={{ background: 'var(--border)' }}
+        />
 
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
-          {/* Top row: stat + flags */}
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center mb-14">
-            {/* Left: Large stat */}
-            <div className="text-center md:text-left">
-              <div
-                className="text-stat text-6xl md:text-7xl mb-2"
-                style={{ color: 'var(--stat-number)' }}
-              >
-                2,800+
-              </div>
-              <p
-                className="text-lg font-light"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                NRI clients across
-              </p>
-            </div>
-
-            {/* Right: Country flags flowing */}
-            <div className="text-center md:text-right">
-              <div className="flex flex-wrap justify-center md:justify-end gap-3 mb-3">
-                {COUNTRIES.map((c, i) => (
-                  <span
-                    key={i}
-                    className="text-3xl md:text-4xl"
-                    role="img"
-                    aria-label={c.name}
-                    title={c.name}
-                  >
-                    {c.flag}
-                  </span>
-                ))}
-              </div>
-              <p
-                className="text-sm font-semibold tracking-wide"
-                style={{ color: 'var(--accent-secondary)' }}
-              >
-                18+ countries &middot; 5 continents
-              </p>
-            </div>
-          </div>
-
-          {/* Featured quote */}
-          <div className="max-w-3xl mx-auto text-center">
-            <Quote
-              size={28}
-              style={{ color: 'var(--accent)', opacity: 0.5 }}
-              className="mx-auto mb-4"
-            />
-            <p
-              className="text-editorial text-xl md:text-2xl leading-relaxed mb-6"
-              style={{ color: 'var(--text-primary)' }}
-            >
-              &ldquo;{TESTIMONIALS[1].quote}&rdquo;
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <span className="text-xl">{TESTIMONIALS[1].flag}</span>
-              <div>
-                <span
-                  className="font-semibold text-sm"
-                  style={{ color: 'var(--text-primary)' }}
+        <div className="max-w-5xl mx-auto px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            {STATS.map((s, i) => (
+              <div key={i} className="text-center">
+                <div
+                  className="text-stat text-3xl md:text-4xl mb-1"
+                  style={{ color: 'var(--stat-number)' }}
                 >
-                  {TESTIMONIALS[1].name}
-                </span>
-                <span
-                  className="text-sm"
-                  style={{ color: 'var(--text-muted)' }}
+                  {s.value}
+                </div>
+                <div
+                  className="text-xs font-medium uppercase tracking-wider"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
-                  {' '}
-                  &mdash; {TESTIMONIALS[1].role}, {TESTIMONIALS[1].country}
-                </span>
+                  {s.label}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        <div className="divider-gold" />
+        <div
+          className="h-px w-full"
+          style={{ background: 'var(--border)' }}
+        />
       </section>
 
 
       {/* ============================================================
-          S3 — PAIN POINTS: Editorial Stacked Layout
+          S3 — PAIN POINTS: Dark Section, 2x2 Card Grid
           ============================================================ */}
       <section style={{ background: '#0f0f0f' }}>
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
-          {/* Section heading — left-aligned */}
-          <div className="mb-16 max-w-2xl">
-            <div className="flex items-center gap-2 mb-5">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+          {/* Section heading — centered */}
+          <div className="text-center mb-14">
+            <div className="flex items-center justify-center gap-2 mb-5">
               <AlertTriangle size={14} style={{ color: '#f87171' }} />
               <span
                 className="text-xs font-bold uppercase tracking-widest"
@@ -378,13 +328,13 @@ export default function Home() {
               </span>
             </div>
             <h2
-              className="font-serif text-3xl md:text-5xl mb-5"
+              className="font-serif text-3xl md:text-4xl mb-4"
               style={{ color: '#ffffff', fontWeight: 400 }}
             >
               Why NRIs Lose Money on Indian Taxes
             </h2>
             <p
-              className="text-base leading-relaxed"
+              className="text-sm leading-relaxed max-w-lg mx-auto"
               style={{ color: '#9ca3af' }}
             >
               These aren&rsquo;t hypothetical scenarios. We see every single
@@ -392,72 +342,57 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Pain points — stacked editorial rows */}
-          <div className="space-y-0 mb-16">
+          {/* 2x2 Card Grid */}
+          <div className="grid md:grid-cols-2 gap-5 mb-14">
             {PAIN_POINTS.map((p, i) => (
               <div
                 key={i}
-                className="grid md:grid-cols-12 gap-6 md:gap-8 py-8 transition-all duration-300 group"
+                className="rounded-xl p-6 md:p-7 transition-all duration-300"
                 style={{
+                  background: '#1a1a1a',
                   borderLeft: '3px solid #dc2626',
-                  paddingLeft: '1.5rem',
-                  borderBottom:
-                    i < PAIN_POINTS.length - 1
-                      ? '1px solid rgba(255,255,255,0.06)'
-                      : 'none',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  borderLeftWidth: '3px',
+                  borderLeftColor: '#dc2626',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderLeftColor = '#f87171';
-                  e.currentTarget.style.background =
-                    'rgba(255,255,255,0.02)';
+                  e.currentTarget.style.background = '#1f1f1f';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderLeftColor = '#dc2626';
-                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.background = '#1a1a1a';
                 }}
               >
-                {/* Number */}
-                <div className="md:col-span-2">
-                  <span
-                    className="font-serif text-4xl md:text-5xl"
-                    style={{ color: 'rgba(255,255,255,0.08)' }}
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="md:col-span-10">
-                  <h3
-                    className="font-serif text-xl md:text-2xl mb-3"
-                    style={{ color: '#ffffff', fontWeight: 400 }}
-                  >
-                    {p.headline}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed mb-3 max-w-xl"
-                    style={{ color: '#9ca3af' }}
-                  >
-                    {p.detail}
-                  </p>
-                  <span
-                    className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold"
-                    style={{
-                      background: 'rgba(220,38,38,0.12)',
-                      color: '#f87171',
-                    }}
-                  >
-                    {p.stat}
-                  </span>
-                </div>
+                <h3
+                  className="font-serif text-lg md:text-xl mb-3"
+                  style={{ color: '#ffffff', fontWeight: 400 }}
+                >
+                  {p.headline}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed mb-4"
+                  style={{ color: '#9ca3af' }}
+                >
+                  {p.detail}
+                </p>
+                <span
+                  className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold"
+                  style={{
+                    background: 'rgba(220,38,38,0.12)',
+                    color: '#f87171',
+                  }}
+                >
+                  {p.stat}
+                </span>
               </div>
             ))}
           </div>
 
-          {/* Resolution CTA */}
-          <div className="text-center md:text-left">
+          {/* Resolution CTA — centered */}
+          <div className="text-center">
             <div
-              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-8"
+              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-6"
               style={{
                 background: 'rgba(196,154,60,0.08)',
                 border: '1px solid rgba(196,154,60,0.25)',
@@ -486,19 +421,18 @@ export default function Home() {
 
 
       {/* ============================================================
-          S4 — HOW IT WORKS: Vertical Timeline
+          S4 — HOW IT WORKS: Clean 4-Column Card Grid
           ============================================================ */}
       <section
         id="how"
-        className="bg-grain"
         style={{
           background: 'var(--bg-primary)',
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
-          {/* Section heading — left-aligned */}
-          <div className="mb-16 max-w-2xl">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+          {/* Section heading — centered */}
+          <div className="text-center mb-14">
             <span
               className="text-xs font-bold uppercase tracking-widest mb-4 block"
               style={{ color: 'var(--accent)' }}
@@ -506,67 +440,55 @@ export default function Home() {
               Our Process
             </span>
             <h2
-              className="font-serif text-3xl md:text-5xl"
+              className="font-serif text-3xl md:text-4xl"
               style={{ color: 'var(--text-primary)', fontWeight: 400 }}
             >
               How It Works
             </h2>
           </div>
 
-          {/* Timeline */}
-          <div className="relative stagger-premium">
-            {/* Vertical gold line */}
-            <div
-              className="absolute left-[2.25rem] md:left-[3rem] top-0 bottom-0 w-px hidden md:block"
-              style={{
-                background:
-                  'linear-gradient(180deg, var(--accent), rgba(196,154,60,0.1))',
-              }}
-            />
-
+          {/* 4-column card grid */}
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 stagger-premium">
             {STEPS.map((s, i) => {
               const Icon = STEP_ICONS[i];
               return (
                 <div
                   key={i}
-                  className="animate-reveal grid grid-cols-[4.5rem_1fr] md:grid-cols-[6rem_1fr] gap-4 md:gap-8 mb-12 last:mb-0 items-start"
+                  className="card-premium p-6 md:p-7 animate-reveal text-center"
                 >
-                  {/* Step number */}
-                  <div className="flex flex-col items-center">
-                    <span
-                      className="text-stat text-4xl md:text-5xl"
-                      style={{ color: 'var(--stat-number)' }}
-                    >
-                      {s.n}
-                    </span>
-                  </div>
-
-                  {/* Content */}
                   <div
-                    className="card-premium p-6 md:p-8"
+                    className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4"
+                    style={{
+                      background: 'rgba(196,154,60,0.08)',
+                      border: '1px solid rgba(196,154,60,0.15)',
+                    }}
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <Icon
-                        size={20}
-                        style={{ color: 'var(--accent)' }}
-                      />
-                      <h3
-                        className="font-serif text-lg md:text-xl"
-                        style={{
-                          color: 'var(--text-primary)',
-                          fontWeight: 400,
-                        }}
-                      >
-                        {s.t}
-                      </h3>
-                    </div>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {s.d}
-                    </p>
+                    <Icon
+                      size={20}
+                      style={{ color: 'var(--accent)' }}
+                    />
                   </div>
+                  <div
+                    className="text-stat text-2xl mb-2"
+                    style={{ color: 'var(--stat-number)' }}
+                  >
+                    {s.n}
+                  </div>
+                  <h3
+                    className="font-serif text-base md:text-lg mb-2"
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 400,
+                    }}
+                  >
+                    {s.t}
+                  </h3>
+                  <p
+                    className="text-xs leading-relaxed"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {s.d}
+                  </p>
                 </div>
               );
             })}
@@ -584,9 +506,9 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
-          {/* Section heading — left-aligned with teal label */}
-          <div className="mb-16 max-w-2xl">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+          {/* Section heading — centered with teal label */}
+          <div className="text-center mb-14">
             <span
               className="text-xs font-bold uppercase tracking-widest mb-4 block"
               style={{ color: 'var(--accent-secondary)' }}
@@ -594,7 +516,7 @@ export default function Home() {
               Our Services
             </span>
             <h2
-              className="font-serif text-3xl md:text-5xl"
+              className="font-serif text-3xl md:text-4xl"
               style={{ color: 'var(--text-primary)', fontWeight: 400 }}
             >
               What We Handle
@@ -639,7 +561,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="grid md:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
             {FEATURES.slice(2).map((f, i) => {
               const Icon = FEATURE_ICONS[i + 2];
               return (
@@ -673,7 +595,7 @@ export default function Home() {
 
 
       {/* ============================================================
-          S6 — TESTIMONIALS: Magazine-Style
+          S6 — TESTIMONIALS + AUTHORITY: Combined Clean Section
           ============================================================ */}
       <section
         style={{
@@ -683,9 +605,9 @@ export default function Home() {
       >
         <div className="divider-gold" />
 
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
           {/* Section heading — centered */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <span
               className="text-xs font-bold uppercase tracking-widest mb-4 block"
               style={{ color: 'var(--accent)' }}
@@ -693,75 +615,51 @@ export default function Home() {
               Client Stories
             </span>
             <h2
-              className="font-serif text-3xl md:text-5xl"
+              className="font-serif text-3xl md:text-4xl"
               style={{ color: 'var(--text-primary)', fontWeight: 400 }}
             >
-              What Our Clients Say
+              Trusted by NRIs Across 18+ Countries
             </h2>
           </div>
 
-          {/* Featured large testimonial */}
-          <div
-            className="card-premium p-10 md:p-14 mb-8 text-center"
-          >
-            <div
-              className="font-serif text-5xl md:text-6xl leading-none mb-6"
-              style={{ color: 'var(--accent)', opacity: 0.3 }}
-            >
-              &ldquo;
-            </div>
-            <p
-              className="text-editorial text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-3xl mx-auto mb-8"
-              style={{ color: 'var(--text-primary)' }}
-            >
-              {TESTIMONIALS[2].quote}
-            </p>
-            <div className="flex items-center justify-center gap-4">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-                style={{
-                  background: 'rgba(196,154,60,0.08)',
-                  border: '1px solid rgba(196,154,60,0.15)',
-                }}
+          {/* Country flags row */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+            {COUNTRIES.map((c, i) => (
+              <span
+                key={i}
+                className="text-2xl md:text-3xl"
+                role="img"
+                aria-label={c.name}
+                title={c.name}
               >
-                {TESTIMONIALS[2].flag}
-              </div>
-              <div className="text-left">
-                <div
-                  className="font-semibold"
-                  style={{ color: 'var(--text-primary)' }}
-                >
-                  {TESTIMONIALS[2].name}
-                </div>
-                <div
-                  className="text-sm"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  {TESTIMONIALS[2].role} &mdash;{' '}
-                  {TESTIMONIALS[2].country}
-                </div>
-              </div>
-            </div>
+                {c.flag}
+              </span>
+            ))}
+            <span
+              className="text-xs font-semibold tracking-wide ml-2"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              &amp; more
+            </span>
           </div>
 
-          {/* Two smaller testimonials */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {TESTIMONIALS.slice(0, 2).map((t, i) => (
-              <div key={i} className="card-premium p-8">
-                <div
-                  className="font-serif text-3xl leading-none mb-4"
-                  style={{ color: 'var(--accent)', opacity: 0.25 }}
-                >
-                  &ldquo;
-                </div>
+          {/* 3 testimonial cards in a clean grid */}
+          <div className="grid md:grid-cols-3 gap-5 mb-12">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="card-premium p-7">
+                <Quote
+                  size={20}
+                  style={{ color: 'var(--accent)', opacity: 0.4 }}
+                  className="mb-4"
+                />
                 <p
-                  className="text-editorial text-base leading-relaxed mb-6"
+                  className="text-editorial text-sm leading-relaxed mb-6"
                   style={{ color: 'var(--text-primary)' }}
                 >
-                  {t.quote}
+                  &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{t.flag}</span>
+                  <span className="text-lg">{t.flag}</span>
                   <div>
                     <div
                       className="text-sm font-semibold"
@@ -780,6 +678,16 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Industry trust strip */}
+          <div className="text-center">
+            <p
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Trusted by software engineers, investment bankers, business owners &amp; HNIs worldwide
+            </p>
+          </div>
         </div>
 
         <div className="divider-gold" />
@@ -795,9 +703,9 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
           {/* Section heading — centered */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-14">
             <span
               className="text-xs font-bold uppercase tracking-widest mb-4 block"
               style={{ color: 'var(--accent)' }}
@@ -805,17 +713,14 @@ export default function Home() {
               Engagement Options
             </span>
             <h2
-              className="font-serif text-3xl md:text-5xl mb-4"
+              className="font-serif text-3xl md:text-4xl mb-4"
               style={{ color: 'var(--text-primary)', fontWeight: 400 }}
             >
               Transparent Pricing
             </h2>
             <p
-              className="max-w-md mx-auto"
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: '0.95rem',
-              }}
+              className="max-w-md mx-auto text-sm leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
             >
               Our fees reflect the depth of expertise applied to your
               situation. No surprises.
@@ -937,13 +842,11 @@ export default function Home() {
 
 
       {/* ============================================================
-          S8 — FINAL CTA: Full-Bleed Gold
+          S8 — FINAL CTA: Full-Bleed Gold Banner
           ============================================================ */}
       <section
         className="relative overflow-hidden"
-        style={{
-          background: 'var(--accent)',
-        }}
+        style={{ background: 'var(--accent)' }}
       >
         {/* Pattern overlay */}
         <div
@@ -960,9 +863,9 @@ export default function Home() {
           }}
         />
 
-        <div className="max-w-4xl mx-auto px-6 py-20 md:py-28 text-center relative z-10">
+        <div className="max-w-4xl mx-auto px-6 py-20 md:py-24 text-center relative z-10">
           <h2
-            className="font-serif text-3xl md:text-5xl lg:text-6xl mb-5"
+            className="font-serif text-3xl md:text-4xl lg:text-5xl mb-5"
             style={{ color: 'var(--text-on-cta)', fontWeight: 400 }}
           >
             Sold Property in India?
@@ -970,7 +873,7 @@ export default function Home() {
             Don&rsquo;t Overpay Tax.
           </h2>
           <p
-            className="text-lg md:text-xl mb-10 max-w-xl mx-auto leading-relaxed"
+            className="text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed"
             style={{ color: 'var(--text-on-cta)', opacity: 0.75 }}
           >
             Our dual-option computation saves NRI clients &#8377;1.5L+ per
