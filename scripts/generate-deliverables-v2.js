@@ -145,7 +145,7 @@ function buildCGComputation(cd){
   const betterLabel = betterOption === "A" ? "20% with Indexation" : "12.5% without Indexation";
   
   // TDS
-  const tdsRate = 0.01; // Section 194-IA for residents; for NRI it could be higher under 195
+  const tdsRate = 0.20; // Section 195 (NRI) — 20% of sale consideration
   const tdsAmount = Math.round(salePriceRaw * tdsRate);
   
   // Section 54EC max
@@ -254,10 +254,10 @@ function buildCGComputation(cd){
     // ── TDS ──
     h2("6. TDS Position"),
     dataTable(["Particulars","Details"], [
-      ["TDS Section", "Section 194-IA (if buyer treats seller as resident) or Section 195 (NRI)"],
-      ["TDS Rate (194-IA)", "1% of consideration"],
-      ["Estimated TDS (194-IA basis)", fmt(tdsAmount)],
-      ["TDS Rate (Section 195 — NRI)", "20% on LTCG (or as per certificate u/s 197)"],
+      ["TDS Section", "Section 195 (NRI)"],
+      ["TDS Rate (Section 195 — NRI)", "20% of sale consideration"],
+      ["Estimated TDS (Section 195 basis)", fmt(tdsAmount)],
+      ["Lower TDS", "Apply for certificate u/s 197 to reduce TDS to actual tax liability"],
       ["Form 16B Required", "Yes — must obtain from buyer to claim TDS credit"],
       ["26AS Verification", "TDS amount must match 26AS entry before filing"],
     ], cw2),

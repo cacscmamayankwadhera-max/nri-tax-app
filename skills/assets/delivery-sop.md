@@ -85,6 +85,38 @@ Document findings and route back to the filing lane.
 
 **Turnaround target:** Within 2 business days of Ready status.
 
+### Stage 7A — 15CA/15CB Preparation
+**Owner:** Senior associate / reviewer
+**Trigger:** Property sale cases requiring repatriation of sale proceeds
+
+1. Prepare Form 15CB (Chartered Accountant certificate) with computation of tax liability, applicable DTAA relief, and net remittable amount.
+2. File Form 15CA on the income tax portal based on the signed 15CB.
+3. Submit Form 15CA and 15CB to the client's bank along with the remittance request.
+4. Verify bank processing and confirm remittance execution.
+
+**Turnaround target:** Within 2 business days of filing completion (or as aligned with client's remittance timeline).
+
+### Stage 7B — Form 67 Filing
+**Owner:** Senior associate / reviewer
+**Trigger:** Foreign Tax Credit (FTC) is claimed in the return
+
+1. Prepare Form 67 with foreign tax payment evidence, including tax deducted/paid certificates from the foreign jurisdiction.
+2. File Form 67 before or along with the ITR on the income tax portal.
+3. Attach Tax Residency Certificate (TRC) and tax computation from the foreign jurisdiction as supporting documents.
+
+**Turnaround target:** Must be filed before or simultaneously with the ITR.
+
+### Stage 7C — Section 197 Application
+**Owner:** Senior associate / reviewer
+**Trigger:** Upcoming property sale where lower/nil TDS deduction is sought
+
+1. Prepare Form 13 application for lower or nil TDS deduction certificate under Section 197.
+2. File Form 13 with the Assessing Officer (AO) having jurisdiction over the applicant.
+3. Track certificate issuance and follow up with the AO if delayed.
+4. Share the issued certificate with the buyer before the property transaction so buyer can deduct TDS at the lower/nil rate.
+
+**Turnaround target:** Must be initiated well before the anticipated transaction date. Allow 3–4 weeks for AO processing.
+
 ### Stage 8 — Advisory Memo & Delivery
 **Owner:** Senior associate / reviewer
 
@@ -104,6 +136,40 @@ Document findings and route back to the filing lane.
 3. Flag upsell opportunities: annual planning, notice support, family filing.
 4. Schedule annual touchpoint for next filing cycle.
 
+### Stage 9A — ITR Verification
+**Owner:** Preparer / coordinator
+
+1. E-verify the ITR within 30 days of filing using Aadhaar OTP, net banking, DSC, or bank account EVC.
+2. If e-verification is not possible, send the signed ITR-V to CPC Bangalore by speed post within 30 days.
+3. Confirm verification status on the income tax portal.
+
+**Critical note:** Failure to verify within 30 days renders the filing void. This step is non-negotiable.
+
+**Turnaround target:** Within 1 business day of filing (same day preferred).
+
+### Stage 9B — 143(1) Intimation Review
+**Owner:** Senior associate / reviewer
+
+1. Monitor for processing intimation under Section 143(1) — typically issued within 9 months of filing.
+2. Review the intimation to confirm whether it shows refund, demand, or nil adjustment.
+3. If a demand exists, assess validity and respond within 30 days — either accept, file rectification under Section 154, or file online response disagreeing with the adjustment.
+4. If a refund is due, verify bank account details and track credit.
+5. Update the case tracker with intimation status.
+
+**Turnaround target:** Within 2 business days of receiving intimation.
+
+### Stage 10 — Notice Response
+**Owner:** Senior reviewer / partner
+
+**Trigger:** Notice received under Section 143(2), 148, 142(1), or any other provision.
+
+1. Assess the scope and nature of the notice — determine whether it is a scrutiny, reassessment, information request, or defective return notice.
+2. Escalate to Partner immediately for strategic review and response planning.
+3. Prepare a detailed response with supporting documents and legal positions.
+4. File the response within the deadline specified in the notice (seek adjournment if needed before the deadline).
+
+**Turnaround target:** Response preparation within 3 business days of receipt; filing before the statutory deadline.
+
 ## Quality Checkpoints
 
 | Checkpoint | Owner | Trigger |
@@ -114,7 +180,11 @@ Document findings and route back to the filing lane.
 | Reconciliation resolved or flagged | Reviewer | Before filing blueprint |
 | Pre-filing gate passed | Reviewer/Partner | Before return preparation |
 | Computation cross-check | Reviewer | Before filing |
+| ITR verified | Coordinator | Within 1 day of filing |
+| 15CA/15CB accuracy check | Reviewer | Before submission to bank |
+| Form 67 completeness | Reviewer | Before or with ITR filing |
 | Advisory memo completed | Reviewer | Before client delivery |
+| 143(1) intimation reviewed | Reviewer | Within 2 days of receipt |
 
 ## Case Routing Rules
 
@@ -161,6 +231,11 @@ Every completed case file should contain:
 9. Advisory memo (from Advisory Memo Generator)
 10. Filing confirmation
 11. Client correspondence log
+12. Challan 280 receipts for advance tax / self-assessment tax paid
+13. Form 16 from Indian employer (if salaried)
+14. Form 16A from banks / tenants (TDS certificates)
+15. Form 16B from property buyer (Section 194IA / 195 TDS)
+16. TCS certificates (for LRS remittances)
 
 ## Turnaround Summary
 
@@ -173,7 +248,13 @@ Every completed case file should contain:
 | Specialist review (if needed) | 2 business days |
 | Pre-filing gate | 1 business day |
 | Return preparation + filing | 2 business days |
+| 15CA/15CB preparation (if needed) | 2 business days post-filing |
+| Form 67 filing (if FTC claimed) | With ITR filing |
+| Section 197 application (if needed) | 3–4 weeks before transaction |
 | Advisory memo delivery | With filing or +1 day |
+| ITR verification | Same day / within 1 day of filing |
+| 143(1) intimation review | Within 2 days of receiving intimation |
+| Notice response (if triggered) | Within 3 days; before statutory deadline |
 
 **Total typical turnaround (Green case, complete docs):** 5–7 business days  
 **Total typical turnaround (Amber/Red case):** 8–12 business days  

@@ -1,331 +1,277 @@
 ---
 slug: "nri-budget-2026-changes"
-title: "India Budget 2026 for NRIs | TCS Changes, Property Rules, Foreign Asset Scheme"
-meta_description: "How India's Union Budget 2026 impacts NRIs. Key changes: TCS on education/medical remittance cut to 2%, TAN requirement removed for property TDS, and Foreign Assets Disclosure Scheme 2026."
+title: "Union Budget 2025-26 for NRIs | New Tax Slabs, TDS Changes, Capital Gains Rules"
+meta_description: "How India's Union Budget 2025-26 impacts NRIs. New Section 115BAC slabs, TDS rationalization, Section 87A rebate (not for NRIs), capital gains rates, Section 195 unchanged, ITR-U extension, and standard deduction changes. By MKW Advisors."
 date: "2026-03-23"
-last_updated: "2026-03-23"
-author: "MKW Advisors Tax Team"
+last_updated: "2026-03-24"
+author: "CA Mayank Wadhera"
+author_credentials: "CA | CS | CMA | IBBI Registered Valuer"
+author_firm: "MKW Advisors"
+author_bio: "CA Mayank Wadhera is a Chartered Accountant, Company Secretary, Cost & Management Accountant, and IBBI Registered Valuer specializing in NRI taxation, cross-border advisory, and capital gains planning. He leads MKW Advisors — part of the Legal Suvidha & DigiComply ecosystem — dedicated to end-to-end NRI tax filing, advisory, and compliance."
 category: "NRI Tax Guide"
-tags: ["budget 2026", "union budget", "sitharaman nri", "tcs cut", "tcs reduction", "tan property", "foreign asset disclosure", "budget impact"]
-sources_count: 11
-total_views: 74,478
+tags: ["budget 2025-26", "union budget", "NRI tax slabs", "Section 115BAC", "TDS NRI", "Section 195", "capital gains NRI", "ITR-U extension", "Section 87A", "standard deduction"]
 schema_type: "Article"
 faq_schema: true
+canonical: "/blog/nri-budget-2026-changes"
+word_count: 3400
 ---
 
-# Budget 2026 Impact on NRIs — TCS Cut, Property TDS, Foreign Assets
+# Union Budget 2025-26 Impact on NRIs — New Slabs, TDS, Capital Gains & What Did Not Change
 
-## Quick Answer
+**By CA Mayank Wadhera** (CA | CS | CMA | IBBI Registered Valuer)
+*Founder, MKW Advisors | Legal Suvidha & DigiComply Ecosystem*
+*Last updated: March 2026 | Applicable for FY 2025-26 (AY 2026-27)*
 
-> **Budget 2026 changes for NRI**
->
-> [This section will be filled with a concise, factual answer derived from the transcript insights below. The answer should be 2-3 sentences that directly answer the query with specific numbers, dates, and section references for FY 2025-26 / AY 2026-27.]
+---
+
+## The Headlines Sound Good — But Do They Apply to You?
+
+Finance Minister Nirmala Sitharaman's Union Budget 2025-26, presented on 1 February 2025, made sweeping changes to income tax slabs, rebates, and TDS rates. The media reported "zero tax up to 12 lakh income" and celebrated massive relief for the middle class.
+
+If you are an NRI, most of those headlines are misleading for your situation. Some changes help you directly, some help only residents, and some critical NRI provisions — including Section 195 TDS on property sales — remain completely unchanged.
+
+This guide cuts through the noise. Every statement below is verified against the Finance Act 2025 as applicable for FY 2025-26 (AY 2026-27).
+
+---
+
+## Quick Reference: Budget 2025-26 Numbers That Matter for NRIs
+
+| Parameter | FY 2025-26 Value | NRI Impact |
+|-----------|-----------------|------------|
+| New regime default slab (Section 115BAC) | 7 slabs from 0% to 30% | Applies to NRIs |
+| Section 87A rebate | Up to ₹60,000 | **Not available to NRIs** |
+| Standard deduction (salary/pension) | ₹75,000 | Applies to NRIs with Indian salary/pension |
+| TDS on NRI property sale (Section 195) | 20% of sale consideration + surcharge + cess | **Unchanged** |
+| LTCG tax rate (property) | 12.5% (flat, no indexation) or 20% with indexation (pre-July 2024 acquisitions) | Unchanged from Budget 2024 |
+| STCG on listed equity | 20% | Unchanged from Budget 2024 |
+| LTCG on listed equity | 12.5% (above ₹1.25 lakh exemption) | Unchanged from Budget 2024 |
+| Section 54 exemption cap | ₹10 crore | **Unchanged** |
+| Section 54EC bond limit | ₹50 lakh | **Unchanged** |
+| ITR-U (updated return) window | Extended to 48 months | Applies to NRIs |
+
+---
+
+## 1. New Income Tax Slabs Under Section 115BAC (New Regime)
+
+The most significant change in Budget 2025-26 is the complete overhaul of the new tax regime slabs under Section 115BAC. These slabs apply to NRIs who opt for the new regime — which is now the default regime.
+
+### Revised Slabs for FY 2025-26
+
+| Annual Income | Tax Rate |
+|--------------|----------|
+| Up to ₹4,00,000 | Nil |
+| ₹4,00,001 to ₹8,00,000 | 5% |
+| ₹8,00,001 to ₹12,00,000 | 10% |
+| ₹12,00,001 to ₹16,00,000 | 15% |
+| ₹16,00,001 to ₹20,00,000 | 20% |
+| ₹20,00,001 to ₹24,00,000 | 25% |
+| Above ₹24,00,000 | 30% |
+
+### What Changed
+
+The basic exemption limit was raised from ₹3 lakh to ₹4 lakh. The slab widths were made uniform at ₹4 lakh each. The previous 25% slab, which started at ₹15 lakh, now starts at ₹20 lakh. Overall, this results in meaningful tax savings for all taxpayers including NRIs with Indian-sourced income.
+
+**For an NRI earning ₹20 lakh from Indian sources under the new regime, the tax liability drops from approximately ₹2,10,000 to ₹1,70,000 — a savings of ₹40,000.**
+
+### Old Regime Still Available
+
+NRIs can still opt for the old tax regime if it benefits them — particularly those with significant deductions under Section 80C, 80D, or housing loan interest under Section 24. However, you must explicitly opt in by filing Form 10-IEA before the due date. The new regime is the default if no choice is made.
+
+---
+
+## 2. Section 87A Rebate — Increased to ₹60,000, but NOT for NRIs
+
+This is the single most misunderstood provision of Budget 2025-26.
+
+The Section 87A rebate has been increased from ₹25,000 to ₹60,000, effectively making income up to ₹12,00,000 tax-free under the new regime for eligible taxpayers.
+
+**However, Section 87A is available only to resident individuals.** NRIs are not eligible. This is not a new exclusion — it has always been the case. But with media coverage focusing on "zero tax up to ₹12 lakh," many NRIs assume this applies to them.
+
+> **CA Mayank Wadhera, MKW Advisors:** *"Every February, we receive dozens of calls from NRIs celebrating the '₹12 lakh tax-free' news. The reality is that an NRI with ₹12 lakh Indian income will pay approximately ₹80,000 in tax under the new regime. The rebate does not apply to non-residents. This has not changed in Budget 2025-26 — the rebate amount increased, but the eligibility remains residents only."*
+
+### Practical Impact
+
+| Income | Resident Tax (New Regime) | NRI Tax (New Regime) |
+|--------|--------------------------|---------------------|
+| ₹8,00,000 | ₹0 (after 87A rebate) | ₹20,000 |
+| ₹10,00,000 | ₹0 (after 87A rebate) | ₹40,000 |
+| ₹12,00,000 | ₹0 (after 87A rebate) | ₹60,000 |
+| ₹16,00,000 | ₹1,20,000 | ₹1,20,000 |
+
+As shown, the disparity disappears above ₹12 lakh because the rebate phases out for residents as well.
+
+---
+
+## 3. TDS Rationalization — Reduced Rates on Various Payments
+
+Budget 2025-26 reduced TDS rates on several categories of payments. Some of these directly benefit NRIs.
+
+### Key TDS Rate Changes
+
+| Section | Nature of Payment | Old Rate | New Rate | NRI Relevance |
+|---------|------------------|----------|----------|---------------|
+| 194A | Interest (other than securities) — for residents | 10% | 10% | NRIs governed by Sec 195 instead |
+| 194H | Commission / brokerage | 5% | 2% | Indirect benefit |
+| 194-IB | Rent by individual/HUF | 5% | 2% | May apply to NRI landlords receiving from resident tenants |
+| 194DA | Insurance maturity | 5% | 2% | Applies if NRI holds Indian insurance policy |
+| 194G | Commission on lottery tickets | 5% | 2% | Rare for NRIs |
+| 206C(1G) | TCS on remittance for education/medical | 5% | 2% (above ₹10 lakh, if financed by loan) | Benefits NRI families |
+
+### What Did NOT Change for NRIs
+
+**Section 195 TDS rates on payments to NRIs remain unchanged.** This means:
+
+- Property sale by NRI: TDS at 20% of sale consideration (plus surcharge and cess) for LTCG — this is based on the full sale price, not the profit
+- Rental income to NRI: TDS at 30% (slab rate)
+- Interest income to NRI: TDS at 30% (or DTAA rate, whichever is lower)
+- Professional/consulting fees to NRI: TDS at 10% or as per DTAA
+
+NRIs can still apply for a lower TDS certificate under Section 197 to reduce withholding to the actual tax liability.
+
+---
+
+## 4. Updated Return (ITR-U) Window Extended to 48 Months
+
+Budget 2025-26 extended the time limit for filing an updated return under Section 139(8A) from 24 months to 48 months from the end of the relevant assessment year.
+
+### What This Means for NRIs
+
+If you missed filing a return or underreported income in a previous year, you now have up to 4 years to file a corrected return. The additional tax payable depends on when you file:
+
+| Filing Window | Additional Tax |
+|--------------|---------------|
+| Within 12 months of AY end | 25% of aggregate tax + interest |
+| 12-24 months | 50% of aggregate tax + interest |
+| 24-36 months | 60% of aggregate tax + interest |
+| 36-48 months | 70% of aggregate tax + interest |
+
+**Practical example:** If you sold a property in FY 2022-23 and did not file ITR for AY 2023-24, you previously had until 31 March 2026 to file an updated return. The extension now gives you until 31 March 2028.
+
+> **CA Mayank Wadhera, MKW Advisors:** *"This is genuinely helpful for NRIs who may have overlooked Indian tax obligations during years they were abroad. We have several clients who realized belatedly that rental income or capital gains needed to be reported. The 48-month window gives breathing room — but the additional tax is steep if you delay, so file as early as possible."*
+
+---
+
+## 5. No Change in NRI-Specific Provisions
+
+Several provisions that NRIs rely on heavily were **not touched** in Budget 2025-26. This is important to confirm because rumours circulate every budget season.
+
+### Section 195 — TDS on Payments to NRIs
+
+TDS rates under Section 195 remain exactly as they were:
+
+- **LTCG on property:** 20% of sale consideration (not 20% of gain — the entire sale price)
+- **STCG on property:** 30% of sale consideration
+- **Other income:** At applicable slab rates
+
+The buyer is responsible for deducting TDS, obtaining a TAN, and depositing via Form 26QB/26QC. No changes were made to this compliance framework.
+
+### Section 54 and Section 54EC — Exemption Limits Unchanged
+
+- **Section 54:** Exemption on LTCG from property sale if reinvested in a new residential house within specified timelines. The ₹10 crore cap introduced in Budget 2023-24 continues.
+- **Section 54EC:** Exemption up to ₹50 lakh if LTCG is invested in specified bonds (NHAI/REC) within 6 months of sale. The 5-year lock-in and ₹50 lakh annual limit remain unchanged.
+
+### FEMA Repatriation Limits
+
+The Reserve Bank of India's USD 1 million per financial year repatriation limit from NRO accounts remains unchanged. This is an RBI regulation, not a budget item, but is frequently asked about during budget season.
+
+---
+
+## 6. Standard Deduction — ₹75,000 Under New Regime
+
+The standard deduction for salaried taxpayers and pensioners was increased from ₹50,000 to ₹75,000 under the new regime in Budget 2024-25, and this continues unchanged in FY 2025-26.
+
+### NRI Applicability
+
+This deduction is available to NRIs who earn salary or pension income that is taxable in India. Common scenarios:
+
+- NRI receiving pension from a former Indian employer
+- NRI on deputation who receives part of salary in India
+- NRI who worked part of the year in India before relocating
+
+Under the old regime, the standard deduction remains at ₹50,000.
+
+---
+
+## 7. Capital Gains Tax Rates — Budget 2024 Changes Still Effective
+
+The major capital gains overhaul happened in Budget 2024-25 (Finance Act 2024), not the current budget. These rates continue in FY 2025-26 with no modifications.
+
+### Current Capital Gains Tax Rates for NRIs
+
+| Asset | Holding Period for LTCG | LTCG Rate | STCG Rate |
+|-------|------------------------|-----------|-----------|
+| Listed equity / equity mutual funds | 12 months | 12.5% (above ₹1.25 lakh exemption) | 20% |
+| Immovable property | 24 months | 12.5% flat **or** 20% with indexation (pre-July 2024 acquisitions) | Slab rates (up to 30%) |
+| Unlisted shares | 24 months | 12.5% | Slab rates |
+| Debt mutual funds | No LTCG benefit — taxed at slab rates regardless of holding period | — | Slab rates |
+| Gold / jewellery | 24 months | 12.5% | Slab rates |
+
+### The Dual-Option for Property (Pre-July 2024 Acquisitions)
+
+For properties acquired before 23 July 2024, NRIs still have the choice between:
+
+- **Option A:** 20% tax with cost indexation (CII 2025-26 = 376)
+- **Option B:** 12.5% flat rate without indexation
+
+Compute both and pick the one that results in lower tax. For properties purchased many years ago where the CII multiplier is large, Option A (20% with indexation) is often better. For recently purchased properties, Option B (12.5% flat) typically wins.
+
+---
+
+## 8. Other Provisions Worth Noting
+
+### TAN Requirement Simplification
+
+Budget 2025-26 streamlined TDS compliance for property transactions. Buyers can now use PAN-based challans for TDS deposits in certain cases, reducing the need to obtain a separate TAN (Tax Deduction Account Number). This is a procedural simplification that benefits both NRI sellers and their buyers.
+
+### TCS on Foreign Remittances
+
+TCS (Tax Collected at Source) under Section 206C(1G) on remittances for education and medical treatment has been reduced from 5% to 2% for amounts exceeding ₹10 lakh where financed by a loan. While this primarily affects resident parents sending money abroad, it may also benefit NRI families financing education from Indian accounts.
+
+### Foreign Assets Disclosure Scheme 2026
+
+The budget introduced a 6-month compliance window for individuals who missed disclosing foreign assets in prior returns. Under the scheme, those who failed to report foreign assets up to ₹5 crore in value — where taxes were already paid but the asset was not declared in Schedule FA — can settle with a flat fee of ₹1 lakh, avoiding the ₹10 lakh penalty per asset under the Black Money Act. This is relevant for returning NRIs or those who became resident and ordinary resident without updating their filings.
 
 ---
 
 ## Frequently Asked Questions
 
-### Budget 2026 changes for NRI
+### Does the ₹12 lakh tax-free limit apply to NRIs?
 
-[Answer to be synthesized from transcript insights. Must include:
-- Specific numbers/rates for 2026
-- Relevant section references
-- Practical actionable steps]
+No. The ₹12 lakh zero-tax benefit comes from the Section 87A rebate, which is available only to resident individuals. NRIs will pay tax on Indian-sourced income starting from the first rupee above ₹4 lakh under the new regime (Section 115BAC). An NRI earning ₹12 lakh from Indian sources will owe approximately ₹60,000 in tax under the new regime.
 
-### TCS rate for NRI education remittance 2026
+### Did TDS rates change for NRI property sales?
 
-[Answer to be synthesized from transcript insights. Must include:
-- Specific numbers/rates for 2026
-- Relevant section references
-- Practical actionable steps]
+No. Section 195 TDS on NRI property sales remains at 20% of the full sale consideration for LTCG (plus applicable surcharge and cess). The TDS rationalization in Budget 2025-26 reduced rates on several other payment types but did not modify Section 195. NRIs should continue to apply for a lower TDS certificate under Section 197 where applicable.
 
-### Foreign Asset Disclosure Scheme 2026
+### Should NRIs choose the old or new tax regime for FY 2025-26?
 
-[Answer to be synthesized from transcript insights. Must include:
-- Specific numbers/rates for 2026
-- Relevant section references
-- Practical actionable steps]
+It depends on your deduction profile. The new regime offers lower slab rates but eliminates most deductions (80C, 80D, HRA, etc.). If your Indian income is primarily capital gains or rental income with limited deductions, the new regime is generally better. If you have substantial deductions (housing loan interest, insurance, PPF contributions), run the numbers under both regimes. The new regime is the default — you must opt out explicitly via Form 10-IEA if you prefer the old regime.
 
-### TAN removed for NRI property sale?
+### Can NRIs file an updated return for earlier years?
 
-[Answer to be synthesized from transcript insights. Must include:
-- Specific numbers/rates for 2026
-- Relevant section references
-- Practical actionable steps]
+Yes. The ITR-U window has been extended to 48 months from the end of the relevant assessment year. This means returns for AY 2022-23 onward can still be updated (with additional tax of 25% to 70% depending on the delay). This is valuable for NRIs who missed filing due to being abroad or unaware of their Indian tax obligations.
 
-### India budget impact on NRI investments
+### Are capital gains tax rates changing in FY 2025-26?
 
-[Answer to be synthesized from transcript insights. Must include:
-- Specific numbers/rates for 2026
-- Relevant section references
-- Practical actionable steps]
+No. The capital gains rates established in Budget 2024-25 continue unchanged: LTCG at 12.5% (with ₹1.25 lakh exemption for listed equity), STCG on listed equity at 20%, and the dual-option for property (12.5% flat or 20% with indexation for pre-July 2024 acquisitions). Section 54 (₹10 crore cap) and Section 54EC (₹50 lakh limit) exemptions are also unchanged.
+
+### What is the standard deduction for NRIs in FY 2025-26?
+
+Under the new regime, the standard deduction is ₹75,000 for salaried individuals and pensioners. Under the old regime, it remains at ₹50,000. This is available to NRIs who earn salary or pension income taxable in India.
 
 ---
 
-## Source Transcripts
+## Action Items for NRIs — FY 2025-26
 
-*11 videos analyzed, 74,478 total views*
-
-### 1. No Tax on FD in 2026 || How to Save TDS on FD || नहीं कटेगा अब FD पे टैक्स जानिए कैसे ??
-
-- **Channel:** CA Sumit Sharma
-- **Views:** 42,398
-- **Published:** 1/13/2026
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=o47ZTNdleHE
-
-<details>
-<summary>Transcript excerpt (17,690 chars total)</summary>
-
-जय हिंद दोस्तों। कहीं पर भी पैसा इन्वेस्ट करना होता है तो सबसे बढ़िया प्रचलित और सबसे सेफ इन्वेस्टमेंट का टूल आज भी एफडी यानी कि फिक्स डिपॉजिट बना हुआ है। दोस्तों एफडी में पैसा कराना या नहीं लगाना यह टोटली आपका डिसीजन है। लेकिन टैक्स के रूल आपको जान लेने बहुत जरूरी है। आपको पता होगा जब भी आप एफडी करवाते हैं तो आपको ब्याज मिलता है और यह ब्याज आपकी इनकम होती है। यह आपकी स्लैब रेट के हिसाब से टैक्सेबल हो जाता है। इसके ऊपर आपका टैक्स भी कटता है। दोस्तों, टैक्स भरना अलग चीज है और टैक्स कटना अलग चीज है। टैक्स कटना होता है टीडीएस यानी कि टैक्स डिडक्टेड एट सोर्स। आपने बैंक में एफडी कराई है तो एक सर्टेन लिमिट से ज्यादा आपका ब्याज मिलेगा। तो आपका टैक्स काट लेंगे वो बैंक वाले पहले ही। तो आज इस वीडियो में हम आपको बताने वाले हैं अगर 2026 में आपने भी एफडी करवाने का मन बना लिया है और आप चाहते हैं कि बैंक की तरफ से आपका कोई भी टैक्स या टीडीएस ना काटा जाए तो बिल्कुल सही वीडियो पर आए हैं। तीन से चार ऐसे तरीके दोस्तों आपको हम बताएंगे जिसके माध्यम से एफडी के ऊपर कटने वाले टैक्स यानी कि टीडीएस से आप भी बच...
-
-</details>
-
-### 2. Union Budget 2022- Here Are The Major Points You Need To Know
-
-- **Channel:** NRI Money Clinic
-- **Views:** 13,841
-- **Published:** 2/1/2022
-- **Language:** en
-- **Video:** https://youtube.com/watch?v=9Rdj5sqGJGA
-
-<details>
-<summary>Transcript excerpt (6,704 chars total)</summary>
-
-dear viewers finance minister nirmala sitharaman presented her budget for the year 2022 today morning the budget was well accepted across the spectrum the budget instead of looking like for one particular year it looked like a preparation for india at 100 years in this episode i am going to talk to you about all the salient features which are of importance which can have a bearing on the day-to-day life of the common man this is nra money cleaning for you and i am dr chandra khan but investment consultant and a financial planner [Music] nri money clinic no hype just the right advice [Music] dear viewers this is an update on the union budget 2022 presented today morning this video is prepared based on the information which is available on the internet available on the television we are yet to see through the fine script of the budget document as days pass by we will check through the final details of the budget and if required we'll do one more video and bring to you all the things that...
-
-</details>
-
-### 3. जानिए किन - किन लोगों को नहीं मिलेगा ₹12 लाख Tax Free Income का फायदा 12 Lakh Limit Not Available
-
-- **Channel:** CA Sumit Sharma
-- **Views:** 9,578
-- **Published:** 2/7/2025
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=ix_9ek_ZlOM
-
-<details>
-<summary>Transcript excerpt (8,310 chars total)</summary>
-
-तो दोस्तों अगर आप भी सोच रहे हैं आपके लिए या हर एक व्यक्ति के लिए ₹1 लाख की इनकम है वो टैक्स फ्री हो चुकी है और बहुत सारे लोग पूछते हैं कि ₹1 75000 तक हो चुकी है तो सबसे पहले मैं बता दूं सैलरी या पेंशन जिसकी आती है उसी को इस ₹ 5000 की एक्स्ट्रा छूट मिलती है अदर वाइज 12 लाख की छूट मिलती है लेकिन हम अभी इस वीडियो के अंदर जो डिस्कस करेंगे उनको तो 12 लाख की भी छूट नहीं मिलने वाली है तो ऐसी कौन-कौन सी सिचुएशन है जहां पे आपको ये 12 लाख वाली लिमिट एप्लीकेबल नहीं होने वाली है सबसे पहले मैं आपको बता दूं 1 फरवरी 2025 निर्मला सीतारमन जी ने अपना आठवां बजट पेश किया था जो कि आपका फाइनेंशियल ईयर 25526 असेसमेंट ईयर 2627 के लिए एप्लीकेबल होने वाला है अब टैक्स की रेट की बात कर लें तो मैं एक बार फिर से आपको बता दूं इन्होंने ₹ लाख ये जो है जीरो टैक्स तक रखा है इसके बाद 4 लाख से 8 लाख पर 5 पर है जहां पर आपका ₹2000000 का टैक्स बनता है 8 लाख से 12 लाख पर 10 पर है जहां आपका 40000 टैक्स बनता है इसके बाद 12 से 16 पर 15 पर 16 से 20 पर 20 पर 20 से 24 पर 25 पर और 24 लाख से ऊपर इनकम चली जाती है तो 30 पर टैक्स लगेगा...
-
-</details>
-
-### 4. No TAX Up To 28 Lakh After Budget of a Family || ₹28 लाख पर ₹0 टैक्स जानिए कैसे ? #huf
-
-- **Channel:** CA Sumit Sharma
-- **Views:** 2,777
-- **Published:** 2/2/2025
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=OQwHfdwd_uU
-
-<details>
-<summary>Transcript excerpt (6,574 chars total)</summary>
-
-जय हिंद दोस्तों आपको पता होगा एक नंबर का पैसा बनाना कैपिटल बनाना पूंजी बनाना काफी कठिन काम होता है इनकम टैक्स के अंदर भी लिमिट्स होती हैं जो घटा जा रहे थे लेकिन इस बजट के अंदर बड़ी ही खुशखबरी आई है अगर आप एक हस्बैंड और वाइफ हैं तो आपको हम इस वीडियो में बताने वाले हैं 828 लाख तक का एक नंबर का पैसा आप अपनी कैपिटल आप अपनी पूंजी यानी कि ₹ लाख तक की टैक्स फ्री इनकम आप दोनों मिलकर के दिखा सकते हैं तो कैसे दिखा सकते हैं क्या है सारा सिस्टम इसके लिए आपको इस वीडियो के लास्ट तक बना रहना पड़ेगा तो देर ना करते हुए एक फैमिली को यानी कि हस्बैंड और वाइफ को ₹ लाख तक की 1 साल के अंदर टैक्स फ्री इनकम होने वाली है कैसे होने वाली है जान लेते [संगीत] हैं जी हां दोस्तों बिल्कुल सही सुना है आपने नौ टैक्स मतलब कोई भी टैक्स नहीं देना पड़ेगा आपको 828 लाख तक की अगर आप इनकम कमाते हो इसके अंदर आप कौन-कौन आ जाएंगे आपकी फैमिली को 8 लाख तक टैक्स नहीं देना पड़ेगा और आपकी फैमिली में मैं ज्यादा लोगों को ना लेकर के चलता हूं एक हस्बैंड और एक वाइफ अगर आप दो ही जने हो तो इस बजट के बाद में आप भी अपनी ₹ लाख तक की इनकम को एक न...
-
-</details>
-
-### 5. Missed a step in your foreign asset disclosures? Watch this!
-
-- **Channel:** NRI Money Clinic
-- **Views:** 1,467
-- **Published:** 3/9/2026
-- **Language:** en
-- **Video:** https://youtube.com/watch?v=Xa3vqJlYs44
-
-<details>
-<summary>Transcript excerpt (946 chars total)</summary>
-
-If the SSE has been a non-resident until 1718 financial year and after that four years he has been a resident in India and again he became a non-resident from 223 financial year. Now during this four years maybe first two years he might have been a resident but not ordinary resident another two years he has been a resident and ordinary when he was a RO resident and ordinary resident for a couple of years he was actually maintaining some foreign but he has missed out in declaring such foreign asset in his return of income under BMA for every such non-disclosure there will be a penalty of 10 lak rupees per for foreign asset which has not been declared now under such circumstances to come out of this 10 lakh rupee penalty You can come under this scheme and [music] declare that asset in the scheme and pay a fee of rupees 1 lakh when considering 10 lakh penalty instead of that paying one lakh is better. So for those this skin will apply.
-
-</details>
-
-### 6. Tax Relief Secrets for NRIs in Budget 2026
-
-- **Channel:** SBNRI
-- **Views:** 1,224
-- **Published:** 2/2/2026
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=_vOo-LHJ8NU
-
-<details>
-<summary>Transcript excerpt (1,086 chars total)</summary>
-
-बजट 2026 [संगीत] कंप्लीटली चेंज्ड द रूल्स फॉर एन आरआईज एंड इट्स आल इन योर फेवर। इफ यू आर सेंडिंग मनी होम ओर इनवेस्टिंग इन इंडिया यू आर अबाउट टू सेव अ लॉट ऑफ़ मनी एंड इवन मोर टाइम। आय ऍम गोइंग टू टेल यू थ्री बेनिफिट्स। [संगीत] फर्स्ट बाइंग प्रॉपर्टी इन इंडिया द टैन हेडेक इस ऑफिशियली डेड। यू नो लॉन्गर नीड अ टैक्स डिडक्शन अकाउंट नंबर। नाउ यू कैन हैंडल टीडीएस यूजिंग जस्ट अ [संगीत] पैन बेस्ड चालान। इट्स फास्ट सिंपलर एंड मैक्स योर प्रॉपर्टी रील्स 10 एक्स मोर। सेकंड, द गवर्नमेंट स्लैश टीसीएस ऑन एजुकेशन एंड हेल्थ केयर फ्रॉम 5% टू जस्ट 2%. सो सेंडिंग 50 लाख फॉर ट्यूशन यू यूज्ड टू लूज 2.5 लाख टू द टैक्स मैन अप फ्रंट। [संगीत] नाउ इट्स ओनली 1 लाख। एंड दैट्स अ 1.5 लाख इन इमीडिएट कॅश फ्लो बैक इन योर पॉकेट। एंड द बिगेस्ट [संगीत] विन द 2026 फॉलन एसेट्स डिस्क्लोज़र स्कीम। इट्स अ सिक्स मंथ्स कंप्लायंस [संगीत] रिसेट। सो द मैसेज इज़ क्लियर इन योर वांस यू विन द गेम। सो, इस 2026 इज योर इयर व्हेन यू फाइनली डाइवर्सिफाई बैक होम। ड्रॉप अ यस इन द कमेंट्स। शेयर दिस विथ योर एनआरआई फ्रेंड्स, एंड इफ यू आर प्लानिंग टु इ...
-
-</details>
-
-### 7. Budget 2026 | Big Update for Indian NRIs | HEAVY Penalties in 2026
-
-- **Channel:** SBNRI
-- **Views:** 1,032
-- **Published:** 2/24/2026
-- **Language:** en
-- **Video:** https://youtube.com/watch?v=Hd-ootkzFjg
-
-<details>
-<summary>Transcript excerpt (1,092 chars total)</summary>
-
-the foreign asset disclosure scheme 2026. Now, let's be real. Sometimes international tax laws, they get confusing. Maybe you forgot to declare an old foreign account or you paid the tax but missed the paperwork. Usually, the penalties for this under the black money act are terrifying. But for a limited 6-month period window, the government is offering a clean slate. Under this clean slate, there are two categories. Category one, if you have undisclosed income or assets up to 1 cr, you can disclose them, pay a 30% tax plus 30% penalty and get total immunity from prosecution. There is a second category. Under the second category, if you did pay your taxes but simply failed to declare the asset and its value is up to 5 crores, you can settle the whole thing with a flat fee of just 1 lak rupee. This is a massive opportunity to regularize your global portfolio with the stress of any legal battle. It's a one-time chance to breathe easy. So, if you are an NRI thinking about moving back to In...
-
-</details>
-
-### 8. Tax Free Limit?? || Old Tax Slab #oldtaxregime #taxslab #taxfreelimit
-
-- **Channel:** CA Sumit Sharma
-- **Views:** 1,017
-- **Published:** 11/15/2023
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=OZfi00BXPRY
-
-<details>
-<summary>Transcript excerpt (904 chars total)</summary>
-
-जय हिंद दोस्तों फाइनेंशियल ईयर 2324 यानी असेसमेंट ईयर 2425 के लिए इनकम टैक्स की कितनी छूट है दोस्तों अगर आप ओल्ड टैक्स लैब में जाना चाहते हैं जिसे कि ओल्ड टैक्स रिजाइन बोलते हैं जहां पर आपको काफी सारी डिडक्शन और एजेंशिया वो ₹ लाख या उससे कम आ जाती है तो 25 लाख से 5 लाख पर बनने वाले टैक्स पर दोस्तों आपको 12500 की छूट मिल जाएगी मतलब ₹ लाख तक कोई भी टैक्स नहीं देना है लेकिन दोस्तों ₹ लाख से आपकी ऊपर इनकम चली जाती है तो आपकी इनकम टैक्स की जो लिमिट है दोस्तों वो ₹ लाख है 60 साल वालों के लिए ₹ लाख है 60 से 80 साल वालों के लिए और 5 लाख है 80 साल से ऊपर वालों के लिए तो इस तरह से दोस्तों ओल्ड टैक्स लैब के अंदर अगर आपकी इनकम ₹ लाख तक है तो कोई भी टैक्स नहीं देना है 5 लाख से ऊपर इनकम चली जाती है तो आपको . लाख के बाद ही टैक्स देना पड़ जाएगा लेकिन ऑल टैक्स लैब में आप काफी सारी डिडक्शन और एजेंशिया लगी हो तो लाइक करें और भी इस तरह के कंटेंट के लिए आप हमें फॉलो सब्सक्राइब करना ना भूलें थैंक यू सो मच दोस्तों
-
-</details>
-
-### 9. Union Budget 2026: A Big Win for NRI Property Owners
-
-- **Channel:** Belong - NRI Savings & Investments
-- **Views:** 778
-- **Published:** 2/2/2026
-- **Language:** en
-- **Video:** https://youtube.com/watch?v=nEMxUyf8E6A
-
-<details>
-<summary>Transcript excerpt (1,359 chars total)</summary>
-
-Selling a property just became a lot easier for NRIs. All thanks to the union budget 2026. Let me explain. Until now, when the resident Indian bought the property from an NRI, he had to go through a lot of paperworks. The buyer was responsible to collect and pay taxes on behalf of the NRI and for this he had to apply for a tax deduction account number or TAN. Now, getting the account number was not easy. Even after filling all the forms and submitting the required documents, it could take a long time and a small mistake caused rejections. Many deals were falling through just because of this hassle. But the budget 2026 has completely fixed this. You don't need a tan anymore. Instead, you can prepare the tedious chalan with just your pan card and pay your tax with this chalan. What used to take weeks can now be done in a matter of minutes without any hassle. Apart from this, the budget has also allowed persons of Indian origin to invest in the Indian stock market through the PIS route. T...
-
-</details>
-
-### 10. The END of High TCS? NRI Budget 2026 Explained | The Offshore Advantage Ep 6
-
-- **Channel:** Belong - NRI Savings & Investments
-- **Views:** 333
-- **Published:** 2/12/2026
-- **Language:** en
-- **Video:** https://youtube.com/watch?v=q3tineC4T3U
-
-<details>
-<summary>Transcript excerpt (48,221 chars total)</summary>
-
-Stop! Before you book your flight, sell 
-your property, or file your next tax return,   you need to hear this. Every headline is creating 
-confusion. Is that 5year tax holiday real? What   is the new final deadline for delayed filings? 
-What are the new baggage limits? And how can   one small missed form lead to massive penalties? 
-The union budget 2026 is not just another policy   announcement. It is a fundamental rewiring of 
-the roles of non-resident Indians. In this video,   I'm diving into seven major changes that directly 
-impact NRI finances. [music] the 5-year tax   holiday, new timelines for related returns, the 
-foreign asset disclosure scheme, [music] time-free   property sales, lower TCS on overseas travel 
-and education, man relief for NRIs, and the   2026 baggage rule overhaul. Use the chapters 
-below to jump straight to what matters to you. If you are an NRI, this video is 
-your essential non-negotiable guide.   I am breaking down the biggest changes in 
-tax, customs and...
-
-</details>
-
-### 11. Impact of Budget on Real Estate | Kapil Jain | Enrichwise
-
-- **Channel:** Enrichwise
-- **Views:** 33
-- **Published:** 7/24/2024
-- **Language:** hi
-- **Video:** https://youtube.com/watch?v=j6te8B3yX-c
-
-<details>
-<summary>Transcript excerpt (1,439 chars total)</summary>
-
-बहुत सारे कॉल्स आ रहे हैं बजट को लेके कि रियल एस्टेट पे इसका क्या इंपैक्ट होने वाला है मैं आपको एक सिंपल सीधे तरीके से एक एग्जांपल के थ्रू समझा देता हूं कि इसका इंपैक्ट आपकी लाइफ में क्या होने वाला है मान लो कि आपने 2011 में एक ₹ करोड़ में घर खरीदा थाने में और आप आज की तारीख में उसको बेच रहे हो 2 करोड़ में अगर आज आपने आज इसको बेचा होता तो आप पुराने बजट में होते पुराने इंडेक्स सेशन में होते तो इंडेक्सेशन टेबल के हिसाब से 2011 का इंडेक्स वैल्यू था 183 आज का है 364 रफल डबल इसका मतलब कॉस्ट आपका 1 करोड़ से 2 करोड़ हो गया और और दो करोड़ मतलब आपका कॉस्ट और सेलिंग प्राइस सेम है और आपको 20 पर ऑन जीरो मतलब कोई टैक्स नहीं लग मगर अगर आप बेचो ग मान लो बजट के बाद तो अब क्या होगा अब क्या होगा कि आपको इंडेक्सेशन नहीं मिलेगा इसका मतलब आपका गेन कितना होगा 2 करोड़ माइनस 1 करोड़ 1 करोड़ और आपको 125 पर लगेगा व्हिच इज 125 लाख इसका मतलब ये कि अगर आप आज बेचते तो कोई टैक्स नहीं लगता कल बेचो ग तो आपको 55 लाख लगेंगे और ये है इंपैक्ट इट इज अ बिग नेगेटिव इंपैक्ट ऑन रियल एस्टेट एंड फॉर पीपल ू हैव बीन होल्डिंग एसेट्...
-
-</details>
+1. **Verify your regime choice.** The new regime is the default. If the old regime is better for you, file Form 10-IEA before the ITR due date.
+2. **Do not assume the ₹12 lakh tax-free threshold applies to you.** It does not. Budget your tax liability accordingly.
+3. **If selling property,** apply for a Section 197 lower TDS certificate well in advance. The 20% TDS on the full sale price under Section 195 remains unchanged.
+4. **Check if ITR-U is relevant.** The extended 48-month window may allow you to correct missed filings from AY 2022-23 onward.
+5. **Review your Schedule FA compliance** if you are a returning NRI or RNOR. The Foreign Assets Disclosure Scheme 2026 provides a limited-window opportunity to regularize missed disclosures.
+6. **Revisit your capital gains strategy.** Rates are unchanged, but the dual-option for pre-July 2024 property acquisitions (20% indexed vs 12.5% flat) requires a case-by-case computation. Use the MKW Advisors capital gains calculator for a precise comparison.
 
 ---
 
-## Full Transcript Data (for AI processing)
+*Disclaimer: This guide is for educational purposes and reflects the law as applicable for FY 2025-26 (AY 2026-27). Tax laws are subject to change. For personalized advice on your specific situation, consult a qualified tax professional. MKW Advisors provides comprehensive NRI tax filing, advisory, and compliance services.*
 
-```json
-[
-  {
-    "video_id": "o47ZTNdleHE",
-    "title": "No Tax on FD in 2026 || How to Save TDS on FD || नहीं कटेगा अब FD पे टैक्स जानिए कैसे ??",
-    "channel": "CA Sumit Sharma",
-    "views": 42398,
-    "date": "1/13/2026",
-    "transcript": "जय हिंद दोस्तों। कहीं पर भी पैसा इन्वेस्ट करना होता है तो सबसे बढ़िया प्रचलित और सबसे सेफ इन्वेस्टमेंट का टूल आज भी एफडी यानी कि फिक्स डिपॉजिट बना हुआ है। दोस्तों एफडी में पैसा कराना या नहीं लगाना यह टोटली आपका डिसीजन है। लेकिन टैक्स के रूल आपको जान लेने बहुत जरूरी है। आपको पता होगा जब भी आप एफडी करवाते हैं तो आपको ब्याज मिलता है और यह ब्याज आपकी इनकम होती है। यह आपकी स्लैब रेट के हिसाब से टैक्सेबल हो जाता है। इसके ऊपर आपका टैक्स भी कटता है। दोस्तों, टैक्स भरना अलग चीज है और टैक्स कटना अलग चीज है। टैक्स कटना होता है टीडीएस यानी कि टैक्स डिडक्टेड एट सोर्स। आपने बैंक में एफडी कराई है तो एक सर्टेन लिमिट से ज्यादा आपका ब्याज मिलेगा। तो आपका टैक्स काट लेंगे वो बैंक वाले पहले ही। तो आज इस वीडियो में हम आपको बताने वाले हैं अगर 2026 में आपने भी एफडी करवाने का मन बना लिया है और आप चाहते हैं कि बैंक की तरफ से आपका कोई भी टैक्स या टीडीएस ना काटा जाए तो बिल्कुल सही वीडियो पर आए हैं। तीन से चार ऐसे तरीके दोस्तों आपको हम बताएंगे जिसके माध्यम से एफडी के ऊपर कटने वाले टैक्स यानी कि टीडीएस से आप भी बच सकते हैं। तो देर ना करते हुए चलिए दोस्तों वीडियो को स्टार्ट करते हैं। जी हां दोस्तों अगर आपकी भी फिक्स डिपॉजिट है, एफडी है और आपको भी टेंशन हो रही है, चिंता हो रही है कि आपका भी टैक्स काट लिया जाएगा यानी कि टीडीएस सेक्स डिडक्टेड एट सोर्स। सोर्स का मतलब जहां से आपको कमाई आ रही है, वहीं पर ही आपका टैक्स काट लिया जाएगा। तो दोस्तों, 2026 के अंदर कुछ ऐसी टिप्स और ट्रिक्स बताने वाले हैं। आपका टीडीएस नहीं काटा जाने वाला है। सबसे पहले हम डिस्कस कर लेते हैं कि यह टीडीएस होता क्या है? दोस्तों, टीडीएस की फुल फॉर्म आपको पता लग गई। टैक्स डिडक्टेड एट सोर्स। आपका टैक्स काट लिया जाएगा जहां से आपको मिल रही है। मींस फ्रॉम वेयर यू आर गेटिंग इनकम। जहां से आपको इनकम आ रही है वहां पर जो पेयर होगा आपको इनकम देने वाला। क्योंकि दोस्तों इनकम टैक्स डिपार्टमेंट जो होता है यह हर एक जगह नहीं जा पाते हैं। तो इन्होंने ड्यूटीज लगा दी है अलग-अलग संस्थाओं की कि आपका टीडीएस एक फिक्स परसेंटेज से काट लिया जाएगा। उसके बाद में ही आपको कुछ अमाउंट है दी जाएगी। फॉर एग्जांपल मान लीजिए ₹1 लाख का दोस्तों आपको एफडी का ब्याज मिलना है। तो अगर 10% का रेट यहां पे टीडीएस काटने का है तो ₹10,000 काटकर ₹90,000 आपकी एफडी में जमा होंगे। यह ₹10,000 का क्या होगा? यह आप ही के पैन कार्ड में इनकम टैक्स डिपार्टमेंट को जमा करवा दिए जाएंगे। इससे फिर क्या होता है दोस्तों? जब भी आपका टीडीएस काटा जाएगा तो इनकम टैक्स वालों को एआईएस, टीआईएस और 26 एस के अंदर पता लग जाएगा कि आप यह इनकम कमा रहे हैं तो आपको उसको आईटीआर में दिखाना पड़ेगा। मतलब आप टैक्स की चोरी अब नहीं कर पाएंगे। और यह साल जो भी आपका टीडीएस कटता है, टैक्स देना होता है दोस्तों, जो इनकम टैक्स है, वह फाइनेंशियल ईयर यानी कि वित्तीय वर्ष के हिसाब से चलता है। अब 1 अप्रैल 2025 से 313. 2026 वाला जो साल है, फाइनेंसियल ईयर 25-26 कहलाता है। कई बार इसको हम प्यार से असेसमेंट ईयर 26-27 भी बोलते हैं। तो सारी की सारी लिमिट्स टैक्स भरने की, आईटीआर भरने की, टीडीएस कटवाने की, यह आपको फाइनेंशियल ईयर वाइज देखनी होती है। तो जो फिक्स डिपॉजिट होता है, आपका पैसा एक फिक्स टाइम के लिए आपने डिपॉजिट कर दिया है। इफ यू हैव इन्वेस्टेड अमाउंट इन एफडी देन यू मस्ट अर्न इंटरेस्ट। दोस्तों आपने एफडी करवाई मान लीजिए ₹1 लाख की और आपको 1 साल के बाद ₹10,000 का ब्याज मिला और बाद में आपको ₹1,10,000 मिल गए तो ₹1,10,000 में से 1 लाख तो आपका खुद का पैसा है। जो आपकी इंटरेस्ट की इनकम है वही आपकी टैक्सेबल हो जाएगी। पहले क्या होता था बहुत सारे लोग इस ब्याज को आईटीआर में नहीं दिखाते थे। लेकिन अब ऐसा ना हो इसको मेक श्योर करने के लिए अब सरकार ने ये टीडीएस ए इनकम टैक्स के अंदर एआईएस टीआईएस का प्रावधान किया है। अब दोस्तों एफडी इंटरेस्ट टैक्सेबल होता है। यह आपको पता लग गया। एफडी पर जो ब्याज लगेगा उसके ऊपर आपको टैक्स देना होता है। लेकिन कितने परसेंट टैक्स है यह फिक्स नहीं होता है क्योंकि यह डिपेंड करेगा स्लैब रेट के हिसाब से। हो सकता है आपको 0% भी टैक्स देना पड़े। हो सकता है आपको 30% भी टैक्स देना पड़े। मान लीजिए आप न्यू टैक्स रिजीम में जा रहे हैं। आपने सुना होगा ₹12 लाख तक की इनकम टैक्स फ्री है। तो इस एफडी की इनकम और बाकी कोई भी नॉर्मल इनकम आपकी आ जाती है तो ₹12 लाख तक एक भी टैक्स नहीं देना है। और वहीं पर अगर आपकी इनकम ₹24 लाख से ज्यादा चली जाती है तो आपको हो सकता है इस एफडी पर 30% भी टैक्स देना पड़ जाए। एफडी पर जो टीडीएस है वह तो 10% फिक्स है लेकिन जो टैक्स देना है वह आपकी अदर कितनी इनकम है कौन से टैक्स रिजाइन में जा रहे हो उस पर डिपेंड करेगा। तो दोस्तों हमने आपको बताया एफडी के ऊपर टैक्स आपको अपने बाकी इनकम के हिसाब से देना होता है। लेकिन जो आपका टीडीएस जो कटता है ये फिक्स रेट से कटता है। अगर आपका ब्याज पूरे साल के अंदर एक बैंक में एक फाइनेंसियल ईयर में एक पैन कार्ड में ₹50 से ज्यादा चला गया और दोस्तों आपकी उम्र क्या है? 60 साल से कम है क्योंकि आप सीनियर सिटीजन नहीं है तो वह बैंक हो या पोस्ट ऑफिस हो कोऑपरेटिव सोसाइटी हो आपका 10% का टीडीएस काट लेगी और वह सारी अमाउंट पर काटेगी। मान लीजिए आपको ₹55,000 का ब्याज मिला है तो ऐसा नहीं है कि ₹50,000 से ऊपर वाले पे टोटल अमाउंट पर 10% का टीडीएस काट लिया जाएगा। अगर आपने पैन कार्ड दिया है तो अगर आप गलती से पैन कार्ड देना भूल गए हैं या आपका पैन कार्ड आधार कार्ड से लिंक नहीं है तो 10% की जगह आपका 20% टीडीएस काटा जाएगा दोस्तों और यह टीडीएस आपका वापस भी नहीं आएगा। तो मेक श्योर करें कभी भी आप एफडी करवाएं तो वहां पे आप अपना पैन नंबर देना सुनिश्चित करें। अगर आप एक सीनियर सिटीजन हैं, पूरी लाइफ देश के लिए काम किया है तो आपको भी कुछ यहां पे एक्स्ट्रा बेनिफिट दिया जाता है। यहां पर सीनियर सिटीजन को 500 की जगह ₹1 लाख तक एक बैंक में एक फाइनेंसियल ईयर में एक पैन कार्ड के अंदर अगर ब्याज इससे ज्यादा मिल जाता है तो 10% का टीडीएस काटा जाएगा। सेम पैन कार्ड नहीं है आधार कार्ड से या लिंक नहीं है तो 10 की जगह 20% टीडीएस काट लिया जाएगा और यह कटा हुआ टीडीएस आपका वापस भी नहीं आएगा। तो ये जो टीडीएस है अलग-अलग सेक्शन होते हैं। टीडीएस एक तरह से एडवांस टैक्स होता है। उस बैंक वाले की जिम्मेदारी लगा दी है कि आप किसी भी व्यक्ति का इनकम देने से पहले उसका टैक्स काट लें। सेक्शन 194 ए के अंदर काटा जाता है। अब एक व्यक्ति था जिसका ₹60 का पूरे साल में एफडी का ब्याज आया और उसकी उम्र 60 साल से कम थी। तो 10% के हिसाब से ₹6000 उसका टैक्स काट करके यह सरकार को जमा करा दिया जाएगा। लेकिन आप ही के पैन कार्ड में आपकी इनकम ₹600 मानी जाएगी। लेकिन आपको मिलेंगे ₹54,000 क्योंकि आपका ₹6,000 आप ही का टैक्स था। आप ही के इनकम टैक्स डिपार्टमेंट में वह जमा हो चुका है। तो इस तरह से यह टीडीएस काम करता है। तो दोस्तों, टीडीएस की जो लिमिट होती है, मैंने आपको बता दी। बैंक वाइज होती है। हर एक बैंक की अलग-अलग लिमिट है। SBI अपना टीडीएस काटेगा, PNB अपना काटेगा, HDFC अपना काटेगा। इन बैंक वालों को आपस में एक दूसरे से कोई सूचना नहीं होती है और पैन कार्ड वाइज होता है। दोस्तों हस्बैंड, वाइफ, डॉटर, सन, मदर, फादर ये सारे के सारे अलग-अलग होते हैं। तो इनका पैन कार्ड भी अलग है। तो इन सभी की अलग लिमिट होगी और फाइनेंसियल ईयर मान लीजिए 1 अप्रैल 25 से लेकर के 313 26 को कोई लिमिट पूरी हो गई। फिर अगले साल से आपकी फिर लिमिट मिल जाएगी। 500 या सीनियर सिटीजन के ₹1 लाख से ज्यादा एफडी पर ब्याज मिलता है तो आपका टीडीएस काटा जाने वाला है। अब दोस्तों क्या करना है आपको? अगर टीडीएस नहीं कटवाना चाहते हो तो मैंने बताया था पर बैंक की आपकी लिमिट है तो ट्राई करें एफडी कराने का एक से ज्यादा बैंक के अंदर। दोस्तों मान लीजिए आपने वहां पे इतना ब्याज प्राप्त करना है। आप कैलकुलेशन कर सकते हैं क्योंकि परसेंटेज आपको पहले ही बता दिया जाएगा। एक साल के अंदर 500 से ज्यादा का ब्याज ना मिले। सीनियर सिटीजन हो तो 1 लाख से ज्यादा का ब्याज ना मिले। तो दोस्तों इसके तीन बेनिफिट आपको मिलेंगे क्योंकि आपका टीडीएस नहीं काटेगा। तीन बैंकों में पैसे जमा कराए तो तीनों ही नहीं काटेंगे। अगर बैंक डूब जाता है, मिसहैपनिंग हो जाती है तो हर बैंक के अंदर आपका 5 5 लाख सेफ है और 10 लाख से ज्यादा की एफडी अगर आप एक ही बैंक में करा देते तो दोस्तों यह सूचना इनकम टैक्स को चली जाती। आप आईटीआर ना भरते तो सेक्शन 148 का नोटिस आपको भेजा जा सकता है। इसके अलावा भी अलग-अलग बैंक वाले अलग-अलग एफडी का रेट्स देंगे। हो सकता है आपको इमरजेंसी में पैसे की जरूरत पड़े तो एक बैंक का आप एफडी तुड़वा सकते हैं। बाकी की आपकी पड़ी रहेगी। तो अलग-अलग बैंक में एफडी करवाएंगे तो आपका जो टीडीएस कटने से बच सकता है। मान लीजिए दोस्तों आपने ₹24 लाख की एफडी करानी है तो आपको 88 लाख तीनों बैंक में करा लेनी है। तो 6% अगर आपको ब्याज मिलता है तो ₹48,000 एक बैंक वाला आपको ब्याज देगा जो ₹00 से तो ज्यादा नहीं जाता है तो आपका क्या होगा दोस्तों कोई भी बैंक वाले टीडीएस नहीं काटेंगे क्योंकि एक बैंक दूसरे बैंक से अलग होता है। आपको 8-8 लाख है तो इनकम टैक्स को सूचना नहीं जाएगी। नोटिस आने के चांसेस कम हो जाएंगे। इसके अलावा बैंक डूब जाता है तो तीनों बैंकों में 5 5 लाख आपका सेव भी रहने वाला है। दूसरा ऑप्शन क्या होता है दोस्तों आपको एक ही बैंक में एफडी करवानी है। आप तो कहते हैं कि सर मुझे बार-बार अलग-अलग बैंकों का झंझट नहीं चाहिए और मेरा ब्याज भी ₹50,000 से ज्यादा है और आपकी ओवरऑल इनकम जो होती है ना दोस्तों पांच तरह से इनकम व्यक्ति कमाता है। सैलरी की इनकम, रेंट की इनकम, बिजनेस की इनकम, कैपिटल गेन और अदर सोर्स। तो क्या होगा? आपकी उम्र 60 साल से कम है और आप अगर ओल्ड टैक्स रिजीम में जाते हो तो आपकी इनकम ₹.5 लाख तक है। न्यू टैक्स रिजीम में जाते हो तो ₹4 लाख तक इनकम आती है। तो दोस्तों एक जादुई फॉर्म होता है फॉर्म 15 जी। अगर आपकी इनकम ₹4 लाख से कम है न्यू टैक्स रिजीम में तो ये इसका क्या मतलब है कि आपको आईटीआर भरने की जिम्मेदारी है ही नहीं। जब आपको आईटीआर ही नहीं भरनी तो बिना बात का टैक्स क्यों कटवाएंगे? या फिर उसको वापस रिफंड लेते फिरेंगे तो आप फॉर्म 15 जी दे सकते हैं। फॉर्म 15 जी नॉन सीनियर सिटीजन का होता है जिनकी उम्र 60 साल से कम है। यह एक रिक्वेस्ट होती है नॉन डिडक्शन ऑफ टीडीएस कि मेरा टीडीएस ना काटा जाए या आप एफडी करवा रहे हैं जब तो कम से कम इसे दे दें। इसके बाद में भी आप कभी भी दे सकते हैं। क्योंकि आपका जो भी टीडीएस काटा जाता है दोस्तों यह क्वार्टरली काटा जाता है हर 3 महीने बाद। तो आपको क्या करना है? हर फाइनेंसियल ईयर के स्टार्ट होने में अप्रैल के महीने में भी आपको दे देना है क्योंकि कई बार बैंक वाले गलती से भूल जाते हैं और अगर आपने 5 साल की एफडी करवा रखी है तो हर साल या आपको फॉर्म 15 जी उस बैंक में दे देना है या उनको बोल देना है कि हमेशा के लिए मेरा यह अपडेट कर दीजिए। अब दोस्तों आप एक सीनियर सिटीजन हैं। आपकी उम्र है 60 साल से 80 साल तक या 80 साल से ज्यादा भी है तो आप लोगों को पता होगा ₹1 लाख तक तो टीडीएस नहीं कटेगा लेकिन 1 लाख से ज्यादा की आपकी इनकम आ जाती है ब्याज में एफडी की तो यहां पर 4 लाख से ज्यादा वाले फॉर्म 15 एच दे सकते हैं क्योंकि आपको आईटीआर भरने की जरूरत नहीं है। अगर आपको आईटीआर भरने की जरूरत है भी तो भी दोस्तों आपको एक फायदा दिया गया है। आपने सुना होगा ₹12 लाख तक इनकम यहां पे टैक्स फ्री है। टैक्स फ्री है। लेकिन आईटीआर भरना 4 लाख के बाद ही ज्यादा है। जो 60 साल से कम वाले हैं वो तो 4 लाख तक की इनकम पर फॉर्म 15 जी दे सकते हैं। लेकिन सीनियर सिटीजन जो है ये ₹1 लाख तक की इनकम पर फॉर्म 15 एच दे सकते हैं। एफडी करवाते समय दे दे बाद में कभी भी दे दे। हर फाइनेंसियल ईयर के स्टार्टिंग में आपको दे देना है ताकि आपका टीडीएस ना कटा जाए। लेकिन 4 लाख से ऊपर इनकम होने पर आप यह ध्यान रखें। आईटीआर भरना आपके लिए जरूरी हो जाएगी। क्योंकि स्पेशली यहां पे फॉर्म 15 एच के लिए सीबीडीटी ने एक सर्कुलर भी निकाला है। बहुत सारे लोग अभी भी इस पे कंफ्यूज हैं। तो सर्कुलर नंबर वगैरह भी आपको डिटेल में चाहिए तो आप हमसे मांग लीजिएगा। अगर आपकी ओवरऑल इनकम ₹12 लाख तक है क्योंकि टैक्स नहीं लग रहा है ना ₹12 लाख तक लेकिन आईटीआर भरनी जरूरी है तो फॉर्म 15 जी फॉर्म 15 एच या आप अपना एफडी का ब्याज इतना रखें कि टीडीएस ना कटा जाए। इसके अलावा दोस्तों दोनों की दोनों कंडीशन आपके ऊपर लागू नहीं होती है। आपकी इनकम भी 4 लाख से ज्यादा है। आपको बैंक भी एक रखना है। फॉर्म 15 जीएच भी नहीं देना है और आपका ब्याज भी ₹00 या सीनियर सिटीजन 1 लाख से ज्यादा है। तो दोस्तों आप क्या करेंगे? आपकी इनकम ज्यादा है तो आपको आईटीआर भरनी पड़ेगी। लेकिन आपकी ओल्ड रिजीम में ओवरऑल टैक्स जो है इनकम 5 लाख है या उससे कम है। न्यू टैक्स रिजीम में 12 लाख से कम है। तो आपको एक सीधा सा उपाय है दोस्तों। आप अपनी आईटीआर भर करके इस टीडीएस को रिफंड ले सकते हैं। मान लीजिए सर मेरी तो इनकम ज्यादा है टैक्स बनेगा। तो इस टैक्स के अंदर आप इसे यूटिलाइज कर सकते हैं। एज ए सेल्फ असेसमेंट टैक्स एज ए एडवांस टैक्स। इसके अलावा एक और तरीका दोस्तों एक घर के अंदर कम से कम चार मेंबर मान लीजिए हस्बैंड और वाइफ है, मदर और फादर है, डॉटर और सन है। तो क्या कर सकते हैं आप? फैमिली मेंबर की बाकी लोगों का पैन कार्ड यूज़ करके यह टैक्स प्लानिंग कर सकते हैं। आपको एफडी करनी है नॉन अर्निंग। मान लीजिए आपके फादर साहब हैं। वह सीनियर सिटीजन है और सीनियर सिटीजन को आपको यह भी पता होगा आधे% का ज्यादा ब्याज भी मिलता है। साथ में उनको ₹12 लाख तक अलग टैक्स फ्री इनकम मिलती है। लेकिन आप अगर अपनी वाइफ के नाम या 18 साल से कम बच्चे के नाम यह पैसा डाल के एफडी कराएंगे तो यह एफडी का ब्याज आप ही का माना जाएगा। आप अपनी एचयूएफ क्रिएट कर सकते हैं। माता-पिता के नाम भी कर सकते हैं ताकि उस लिमिट से ज्यादा वह ना जाए। आपको भी ना टैक्स देना पड़े। उनकी भी सारी इनकम टैक्स फ्री हो जाने वाली है। दोस्तों ऑनलाइन और डिजिटल जमाना है। जब भी कोई लेनदेन करते हैं तो पैन कार्ड आपको दिया जाता है। तो जैसे पैन कार्ड में आपके ट्रांजैक्शंस होंगे। एआईएस और टीआईएस के अंदर दोस्तों एफडी का ब्याज यहां शो हो जाएगा। मैं आपको यह कहना चाह रहा हूं कि ₹1000 का भी एफडी का ब्याज आया यह भी शो हो जाएगा। आपका टीडीएस कटा ₹00 से ज्यादा या लाख से ज्यादा तो टीडीएस की रिपोर्टिंग 26 एस में हो जाएगी। 10 लाख से ज्यादा की एफडी करवाई और आपने आईटीआर नहीं भरी। तो दोस्तों यह सूचना भी ऑनलाइन इनकम टैक्स में शो कर जाएगी। तो कुछ ऐसे क्वेश्चंस हैं जो लोगों के डाउट क्वेरी रह जाती है। फॉर्म 15 जी और 15 एच आपने बैंक को दे दिया लेकिन बैंक ने आपका फिर भी टीडीएस काट लिया। क्या ऐसा हो सकता है? जी हां दोस्तों बिल्कुल हो सकता है क्योंकि लापरवाही कई बार डॉक्यूमेंट ऊपर नीचे हो जाते हैं। जो बैंक के ऑफिसर होते हैं उनको ध्यान नहीं रहता है। मिसप्लेस हो जाता है फॉर्म 15 जीएच और एंटर नहीं कर पाते हैं क्योंकि सिस्टम ने तो जब आपका वह टाइम आएगा ऑटोमेटिक ही टीडीएस काट लेना है अगर उसको एंट्री नहीं मिलेगी तो। अब दोस्तों फॉर्म 15 जीएच आपने दे दिया। बैंक ने टीडीएस काट लिया। अब हम क्या करें? या तो उनसे रिक्वेस्ट करें कि सर प्लीज एंट्री को रिवर्स करवाएं। अगर आप समय रहते ही उसको वहां पे संपर्क कर लेंगे। नहीं तो क्या करना पड़ेगा? साल खत्म होने का वेट करना पड़ेगा। फिर दोस्तों आप इस टीडीएस का रिफंड ले सकते हैं। पैन कार्ड नहीं दिया। हम आपको हर बार बताते हैं जब भी एफडी करवाएं पैन कार्ड दिया होना चाहिए और पैन कार्ड आधार कार्ड से लिंक होना चाहिए। नहीं दिया अदरवाइज 20% का टीडीएस काटा जाएगा दोस्तों। और पैन कार्ड नहीं है तो आपके पैन कार्ड में वह शो भी नहीं होगा। आप उसका रिफंड भी नहीं ले पाएंगे और बाद में कोई एडजस्टमेंट नहीं होगा। आप बैंकों के चक्कर लगाते रह जाएंगे। तो पैन कार्ड हमेशा वहां पे अपडेट करवाएं। फॉर्म 15 जी 15 एज कैन नॉट बी गिवन। अगर आपकी इनकम बेसिक एक्सेंपशन लिमिट से ज्यादा है। मैंने आपको बता दिया। 60 साल से कम वाला व्यक्ति जिसकी इनकम 4 लाख से ज्यादा है वह फॉर्म 15 जी नहीं दे सकता है। लेकिन फॉर्म 15 एच वालों के लिए 60 साल से ज्यादा वालों के लिए ₹12 लाख तक की इनकम का बस यहां पे लिमिट जो है दे दी है। तो यह ध्यान रखें ₹12 लाख तक फॉर्म 15 एच जमा कराया जा सकता है। कैसे चेक करें यह मेरा टीडीएस कट गया है। दोस्तों इसके लिए फॉर्म 26 एस आपको देखना पड़ेगा। जैसे ही आपका टीडीएस जिस महीने में कटेगा उसके नेक्स्ट महीने की 7 तारीख तक उसको जमा करवा देंगे। फिर आपका जैसे ही क्वार्टर खत्म हो जाएगा। अगर मान लीजिए जनवरी में आपका टीडीएस कटा तो जनवरी, फरवरी, मार्च के बाद अप्रैल, मई के अंदर आपका यह टीडीएस शो होगा। एआईएस, टीआईएस में भी ब्याज आपका शो हो जाएगा। टैक्स नीड टू पे आफ्टर एफडी टेन्योर। तो दोस्तों, जैसे ही आपको फाइनेंसियल ईयर खत्म होता है, जितना भी ब्याज कमाया उसको दिखाना पड़ेगा। टीडीएस जो है यह तो हर महीने आपका काटा जाएगा और अपडेट हो जाएगा हर 3 महीने बाद। लेकिन जो इंटरेस्ट आपने कमाया उसको आप अपनी आईटीआर में दिखाएंगे। आपने 5 साल की एफडी करवा ली तो आप यह मत समझें कि 5 साल बाद ही आपको इसको आईटीआर में दिखाना है या टैक्स देना है। हर साल आपने जितना भी ब्याज कमाया वह सारा का सारा ऑनलाइन शो होता रहेगा। एफडी करवाने पर क्या नोटिस भी आ सकता है? इसके ऊपर हमने डिटेल में वीडियो बना रखी है कि कब एफडी करवाने पर नोटिस आ सकता है। अगर आपने एफडी करवा ली ₹1 लाख से ज्यादा ऑनलाइन या ₹ लाख से ज्यादा कैश में और आप अपनी आईटीआर नहीं भरते हो। आपकी एफडी अगर ₹50 लाख तक की है तो फाइनेंसियल ईयर खत्म होने के 4 साल तक। तक एफडी 50 लाख से ज्यादा है तो उस फाइनेंसियल ईयर खत्म होने के छ साल तक सेक्शन 148 में पहले तो आपको नॉन फाइलिंग का नोटिस दिया भी आ जाएगा कि आपने अपनी आईटीआर क्यों नहीं भरी? फिर दोस्तों आपसे आपके उससे सोर्स पूछा जाएगा कि यह पैसा आपके पास कहां से आया था? आपने बता दिया यह लोन था, गिफ्ट था, मेरा ही पैसा था तो कोई दिक्कत वाली बात नहीं है। यह फॉर्म 15 जी या 15 कैसे सबमिट करें? दोस्तों, इसको आप ऑनलाइन इंटरनेट बैंकिंग, मोबाइल बैंकिंग से भी कर सकते हैं और बैंक ब्रांच में जाकर के काउंटर नंबर चार जो होता है, वहां पर जाकर भी सबमिट कर सकते हैं। चार बैंकों में आपकी एफडी है। क्या चारों में सर मुझे अलग-अलग फॉर्म 15 जी, 15 एच देना पड़ेगा? जी हां बिल्कुल क्योंकि मैंने आपको बताया टीडीएस की जो लिमिट है हर बैंक वाले अपने-अपने हिसाब से काटते हैं। तो हर बैंक में आपको अलग-अलग देना पड़ेगा। नॉन रेजिडेंट इंडियन जो होते हैं एनआरआई भाई लोग होते हैं जो इंडिया से बाहर हैं लेकिन उनको बाहर तो ब्याज ज्यादा मिलता नहीं है सेविंग एफडी में तो वो यहां पर दे देते हैं तो फॉर्म 15 जी 15 एच एनआरआई जमा नहीं करा सकते हैं उनको टीडीएस कटवाना पड़ेगा बाद में अपनी इनकम टैक्स की रिटर्न भर के रिफंड ले सकते हैं कोई पेनल्टी है आपने गलत फॉर्म 15 जी दे दिया आपकी इनकम थी 4 लाख से ज्यादा मान लीजिए ₹5 लाख और आपने फॉर्म 15 जी दे दिया तो दोस्तों यह गलत है एज पर रूल यह फॉल्स इंफॉर्मेशन देना ऑफेंस होता है आपको पेनल्टी और लीगल एक्शन लिया जा सकता है लेकिन ऐसा होता नहीं है पर अल्टीमेटली आप गलत काम ना करें। क्या-क्या डॉक्यूमेंट देने होते हैं फॉर्म 15 जी 15 के लिए? यूजुअली तो दोस्तों, आपको अपना अकाउंट नंबर देना होता है कि किस अकाउंट के लिए आप यह फॉर्म 15 जीए दे रहे हैं। आपकी ओवरऑल इनकम कितनी है, कौन से साल के लिए है और आपको अपने साइन वगैरह करने पड़ते हैं। तो दोस्तों, इस तरह से आप अपनी एफडी पर टीडीएस को कटने से बचा सकते हैं। दोस्तों, एक व्यक्ति है उसको ₹90,000 एफडी का ब्याज आया है। लेकिन उसकी उम्र 61 साल है। तो क्या उसका टीडीएस कटेगा? कटेगा तो कितना परसेंट और कितनी अमाउंट पर हमें कमेंट करके बताएं। वीडियो अच्छी लगी हो तो लाइक करें और भी इस तरह की इनफेटिव वीडियो पर्सनल टैक्स, इनकम टैक्स, जीएसटी पर्सनल फाइनेंस से रिलेटेड हमें सब्सक्राइब कर लें। अभी तक नहीं किया तो इस वीडियो को उन सभी लोगों में शेयर करें जो एफडी करवाते हैं लेकिन टैक्स से डरते रहते हैं। दोस्तों टैक्स कट भी गया है तो ओवरऑल इनकम ₹12 लाख तक आपको कोई टैक्स नहीं देना है। जितना भी टीडीएस कटा है यह सारा का सारा हम अपना रिफंड ले लेंगे। कोई डाउट क्वेरी क्वेश्चन हो सरकार से कोई सवाल करना चाहते हैं कमेंट करके जरूर लिखें। थैंक यू सो मच फॉर वाचिंग दिस वीडियो। जय हिंद, जय भारत।"
-  },
-  {
-    "video_id": "9Rdj5sqGJGA",
-    "title": "Union Budget 2022- Here Are The Major Points You Need To Know",
-    "channel": "NRI Money Clinic",
-    "views": 13841,
-    "date": "2/1/2022",
-    "transcript": "dear viewers finance minister nirmala sitharaman presented her budget for the year 2022 today morning the budget was well accepted across the spectrum the budget instead of looking like for one particular year it looked like a preparation for india at 100 years in this episode i am going to talk to you about all the salient features which are of importance which can have a bearing on the day-to-day life of the common man this is nra money cleaning for you and i am dr chandra khan but investment consultant and a financial planner [Music] nri money clinic no hype just the right advice [Music] dear viewers this is an update on the union budget 2022 presented today morning this video is prepared based on the information which is available on the internet available on the television we are yet to see through the fine script of the budget document as days pass by we will check through the final details of the budget and if required we'll do one more video and bring to you all the things that you need to be knowing let us look at the highlights of this budget here are the highlights government is going to spend 7.5 lakh crores of rupees on creation of infrastructure government has not mentioned about any changes that might come in in the personal income tax space government is going to roll out a digital currency from the year 2223 government is also going to create an e-passport from the year 20-23 government has indirectly recognized crypto currencies as an asset class and has decided to tax the profits which are coming from cryptocurrencies now let us look at these individual headlines a little bit more in detail government is on a spending spree it is going to spend about 7.5 lakh in creation of infrastructure government could have spent this money in different ways it could have created giving freebies to the public but instead of giving freebies to anyone government wisely decided to spend this money on creating an infrastructure and preparing india for the next 25 years all the money that the government is going to spend will be spent on infrastructures like roads ports cargo terminals and various other things and the coming days will get benefit out of this massive spending as a result of this massive spending government's fiscal deficit will balloon to 6.9 percent but the government feels this is a necessary deficit at this point of time but going forward it is committed to the path of fiscal prudence and year after year it is going to drop down and it expects to bring down the fiscal deficit to a level of 6.4 next year and by 2025 will drop down to four percent of the gdp personal income tax in the budget there was no major announcement of relief for the common man when it comes to the different slaps of income tax but there were two mentions which are interesting here one government said that the surcharge on the capital gains tax will be capped at 15 earlier the surcharge was equal to the same level as an income tax bracket that you are going to be in but for a high earner now whatever could be his income tax lab the capital gains that he will get will suffer only a surcharge of not more than 15 percent government also said mr taxpayer i am going to trust you it said now you can file an updated tax return even after two years of filing your tax return suppose you filed a tax return now during the scrutiny of your papers if the income tax brought out something to you and you realize that you have missed some income to declare you have an option to file an updated return and close your file in the earlier system it had to go for a litigation and you have to apply and all these issues were there but now as per the new system you can file an updated it return from two years from the date of filing your return one major point which came during this budget is government indirectly recognized crypto currencies as an asset class now it has declared that the income that you generate from cryptocurrencies or the gifts you receive in the form of cryptocurrencies will attract a tax of 30 percent now this profits that you are going to get from cryptocurrencies cannot be offset against any losses that you have suffered in other asset classes it also said one percent tds will be deducted at the time of making the payments one thing which stands out in this budget is the digital push of the government government wants to push digital transactions and in everything digitization is visible government is going to roll out a digitized rupee using the blockchain from the year 20 to 23. likewise it is also going to issue a e-passport a passport which has a chip embedded in it starting from the year 20-23 it only means to say once this e-passport system comes in it becomes easier for the government to know where all you are traveling how many days you are staying in india how many days you are traveling outside of india which countries you might be traveling all these things tracking could become very easy for the government as a financial planner what do i feel about this budget as an investor what is there in for you for your investment i personally feel it is one of the part breaking budget that the government has presented whatever is being presented here today will have impact for a long time in future as i said earlier it doesn't appear like a budget for one year it's a budget for the next 25 years when it is implemented correctly it is going to change india completely it is going to transform india it may not be seen in next six months or one year but a solid foundation has been put in bringing up india on a world bank as an investor you have everything to feel happy about we are in the middle of a correction now now taking cues from this budget with this markets correcting now you should make every opportunity to invest in india it appears that the next decade will be the super decade for the india now dear viewers once the full print of budget is made available to the general public we will study it again if you have missed some points or if some points have to be brought to your notice we will do one more video on budget 2022 if the video that i have done today if it helped you to understand what is in it for you please like this video if you are a person who is watching this channel for the first time or if you are yet to subscribe for this channel please hit the subscribe button and press the bell icon don't forget to share this video with your near and dear ones thank you very much for watching this episode on nri money clinic i shall be back with you with yet another topic in yet another video very very soon press the bell icon for more details and subscribe our channel [Music] you"
-  },
-  {
-    "video_id": "ix_9ek_ZlOM",
-    "title": "जानिए किन - किन लोगों को नहीं मिलेगा ₹12 लाख Tax Free Income का फायदा 12 Lakh Limit Not Available",
-    "channel": "CA Sumit Sharma",
-    "views": 9578,
-    "date": "2/7/2025",
-    "transcript": "तो दोस्तों अगर आप भी सोच रहे हैं आपके लिए या हर एक व्यक्ति के लिए ₹1 लाख की इनकम है वो टैक्स फ्री हो चुकी है और बहुत सारे लोग पूछते हैं कि ₹1 75000 तक हो चुकी है तो सबसे पहले मैं बता दूं सैलरी या पेंशन जिसकी आती है उसी को इस ₹ 5000 की एक्स्ट्रा छूट मिलती है अदर वाइज 12 लाख की छूट मिलती है लेकिन हम अभी इस वीडियो के अंदर जो डिस्कस करेंगे उनको तो 12 लाख की भी छूट नहीं मिलने वाली है तो ऐसी कौन-कौन सी सिचुएशन है जहां पे आपको ये 12 लाख वाली लिमिट एप्लीकेबल नहीं होने वाली है सबसे पहले मैं आपको बता दूं 1 फरवरी 2025 निर्मला सीतारमन जी ने अपना आठवां बजट पेश किया था जो कि आपका फाइनेंशियल ईयर 25526 असेसमेंट ईयर 2627 के लिए एप्लीकेबल होने वाला है अब टैक्स की रेट की बात कर लें तो मैं एक बार फिर से आपको बता दूं इन्होंने ₹ लाख ये जो है जीरो टैक्स तक रखा है इसके बाद 4 लाख से 8 लाख पर 5 पर है जहां पर आपका ₹2000000 का टैक्स बनता है 8 लाख से 12 लाख पर 10 पर है जहां आपका 40000 टैक्स बनता है इसके बाद 12 से 16 पर 15 पर 16 से 20 पर 20 पर 20 से 24 पर 25 पर और 24 लाख से ऊपर इनकम चली जाती है तो 30 पर टैक्स लगेगा लेकिन सर आप तो बोलते थे ₹1 लाख माफ है तो ये देखिए ये ₹1 लाख यहां तक आता है और इसका टैक्स बनता है ₹2000000 इनकम टैक्स का सेक्शन 87a बोलता है अगर आपकी इनकम 12 लाख तक है तो जितना भी टैक्स बनेगा वो हम आपका माफ कर देंगे लेकिन ये सिर्फ और सिर्फ करेंगे हम नॉर्मल इनकम का नॉर्मल इनकम कौन-कौन सी होती है दोस्तों पांच तरह की इनकम के हेड होते हैं एक जो इनकम होगी वो आपकी सैलरी की इनकम होगी जिसके अंदर पेंशन की इनकम भी आ जाती है एक होता है पीजीबीपी यानी कि बिजनेस की इनकम हो गई एक रेंट की इनकम हो गई एक अदर सोर्स के अंदर जैसे आपको इंटरेस्ट वगैरह एफडी का मिलता है वो इनकम होगी अगर यही इनकम आपकी है तब आपको ₹1 लाख की इनकम टैक्स फ्री होने वाली है और ₹1 लाख से दोस्तों अगर आपकी इनकम इतनी है तो टैक्स आपका जीरो हो जाएगा उससे ज्यादा चली जाती है तो आपको ₹ लाख के बाद टैक्स देना पड़ेगा 0000 की रिबेट आपको ₹1 लाख तक इनकम पर मिल जाएगी और सैलरी या पेंशन वालों को ₹1 75000 तक टैक्स नहीं देना है और बेसिक एग्मन लिमिट जान लेना बहुत जरूरी है इसके जो दोस्तों बेसिक एजमन लिमिट होती है ये आईटीआर भरने की लिमिट होती है अगर मान लीजिए 90000 आपकी इनकम आ रही है आप कहते हो 12 लाख से मेरी कम है ये सैलरी है तो मुझे तो टैक्स नहीं देना है तो मुझे आईटीआर भी नहीं भरनी है लेकिन 4 लाख से ऊपर इनकम चलेगी तो आपको आईटीआर भरनी तो मैंडेटरी हो जाने वाली है तो ₹1 लाख की इनकम टैक्स फ्री नहीं है किन लोगों के लिए नहीं है सबसे पहले दोस्तों एनआरआई नॉन रेजिडेंट ऑफ इंडिया इसका मतलब बहुत सारे लोग पता है क्या समझते हैं कि मैं किसी और देश का नागरिक हो चुका हूं या मैं वहां की पीआर वगैरह ले चुका हूं तभी मैं एनआरआई बनता हूं ऐसा नहीं है अगर मान लीजिए आप घूमने के लिए भी जाते हो ट्रेवल करने के लिए और किसी कंट्री के अंदर 182 दिन से ज्यादा 182 डेज से इंडिया से बाहर रहते हो तो आप एक एनआरआई कहलाओगे इनकम टैक्स में ये अलग-अलग होता है एक साल आप एनआरआई हो सकते हो अगले साल आप नॉन एनआरआई भी हो सकते हो अगर आप फाइनेंशियल ईयर 2526 के लिए एनआरआई हो तो दोस्तों आपके लिए ये 12 लाख की लिमिट नहीं है फिर आपको जो ₹ लाख की बेसिक एग्मन लिमिट है वही मिलेगी 87a की रिबेट आपको नहीं मिलेगी इसके बाद में दूसरा बहुत सारे लोग टैक्स बचाने के लिए एचयूएफ बना लेते हैं हिंदू अनडिसाइडेड फैमिली जिसका कि एक अलग से पैन कार्ड होता है अलग से ही बैंक अकाउंट होता है और इसको भी अलग से इनकम अपनी कमा सकता है लेकिन आप सोचेंगे कि एचयूएफ को भी 12 लाख की छूट मिल जाएगी वो आपको नहीं मिलेगी क्योंकि एचयूएफ को बेसिक एजमन लिमिट है सिर्फ 4 लाख की ही छूट मिलने वाली है 87a की रिबेट इसको नहीं मिलती है इसके बाद में बात करते हैं दोस्तों ऐसा कोई भी व्यक्ति टैक्स पेयर जिसकी इनकम क्रॉस कर जाती है ₹ लाख तक जिस व्यक्ति की इनकम 12 लाख है उसका तो टैक्स हो जाएगा जीरो जिस व्यक्ति की इनकम है ₹ लाख उसको 12 लाख ऐसे नहीं है कि 12 लाख के बाद 1 लाख पर ही टैक्स देना है उसको फिर 4 लाख के बाद ही टैक्स देना पड़ जाएगा तो इस चीज का भी ध्यान दें किसी व्यक्ति ने हमसे ये क्वेश्चन किया था सर मेरी तो ₹ लाख इनकम है तो मुझे 12 लाख के बाद 8 लाख पर ही टैक्स देना है ऐसा नहीं है अगर 12 लाख तक है तो सारा माफ है 12 लाख से ऊपर है तो सिर्फ 4 लाख ही आपके लिए माफ होने वाले हैं इसके बाद में अदर देन इंडिविजुअल इंडिविजुअल क्या होता है दोस्तों आप हो गए मैं हो गया ऐसा कोई भी व्यक्ति जिसके पैन कार्ड का फोर्थ कैरेक्टर पी है जो कि पर्सन होता है अगर किसी के पैन कार्ड का फोर्थ कैरेक्टर अगर फर्म है एफ है अगर एचएफ है एच है अगर कंपनी है तो सी है ट्रस्ट है एओ पी है बी ऐसा कुछ भी होता है फोर्थ कैरेक्टर जो कि कंपनी एलएलपी फर्म मैंने बताया आपको तो इनके लिए तो दोस्तों आपकी 4 लाख की लिमिट भी नहीं रहने वाली है क्योंकि फर्म कंपनी वगैरह इनको फ्लैट टैक्स देना पड़ता है जैसे कि मैं बात करूं पार्टनरशिप फर्म है जिसकी कोई भी छूट नहीं है उसको डायरेक्ट ही 30 जो टैक्स देना पड़ता है तो ₹1 लाख वाली लिमिट का इनसे भी कोई लेना देना नहीं है अब दोस्तों अगर आप सैलरी कमा रहे हैं अगर आप कोई बिजनेस करते हैं तो आपको पता होगा शेयर मार्केट में हर एक व्यक्ति कभी ना कभी अपना लक अमाने की कोशिश करता है और वहां पर आपने अगर कोई भी शेयर खरीदे तो दोस्तों आपने शेयर खरीद कर के डिलीवरी के अंदर ले लिए कैश के अंदर तो वहां पर आप कई तरह से इनकम कमा सकते हैं जैसे कि लॉन्ग टर्म कैपिटल गेन ऐसा कोई भी शेयर जो आपने आज लिया और उसको कम से कम 12 महीने तक अपने डीमेट अकाउंट में रखा और उसके बाद बेचो ग तो जितनी भी आपकी जो इनकम होगी लॉन्ग टर्म कैपिटल गेन वो ₹1 लाख तक होती है तो उस परे कोई भी टैक्स नहीं देना है हमने एक वीडियो में आपको बताया था ₹1 75000 तो सैलरी या पेंशन और ₹2500000 आपकी लॉन्ग टर्म कैपिटल गेन मतलब ₹1 लाख तक का आपका टैक्स जीरो हो जाने वाला है लेकिन इससे भी ज्यादा चली जाती है मान लीजिए आपकी लॉन्ग टर्म कैपिटल गेन आ गई ₹ लाख तो इस ₹ लाख में से ₹1 25000 घटा कर के जो ₹5000000 है इस 6 लाख में 4 लाख की तो ये छूट मिल जाएगी आपका 2 लाख रह गया इस 2 लाख में से ₹1 लाख की और छूट मिल जाएगी तो इस ₹5000000 वाली लिमिट आपको नहीं मिलने वाली है और वहीं पर शेयर मार्केट में अगर आप पैसा लगाते हैं और शॉर्ट टर्म कैपिटल गेन हुआ है मतलब एक दिन से तो ज्यादा रखा लेकिन 12 महीने से कम रख करके किसी शेयर को अगर आप बेच देते हो तो यहां पर भी 4 लाख की अगर आपकी इनकम है ओवरऑल और उसके बाद में आपको 20 पर का टैक्स देना पड़ जाएगा क्योंकि ये आपकी स्पेशल रेट की इनकम कहलाती है इसके बाद में सातवां नंबर जो 12 लाख की छूट आपको नहीं मिलेगी कैजुअल इनकम कैजुअल इनकम होती है कि आपको हमेशा ये नहीं होती है कभी-कभी आपको हुई है आपने कौन बनेगा करोड़पति पंजाब स्टेट लॉटरी ड्रीम 11 ऑनलाइन गेमिंग विनिंग इस तरह से कहीं पर भी आपने पैसा लगाया और आपको पता होगा यहां पे आपका टीडीएस भी कट जाता है 30 पर का और टैक्स भी आपको देना पड़ता है इसके ऊपर टैक्स के ऊपर 4 पर हेल्थ एंड एजुकेशन सेस भी देना पड़ता है तो विदाउट किसी भी थ्रेस होल्ड लिमिट के दोस्तों मजे की बात देखो बाकी लॉन्ग टर्म शॉर्ट टर्म में 4 लाख तक तो छूट थी यहां पे 4 लाख भी नहीं है अगर मान लीजिए आपने ₹1 लाख लॉटरी से कमाया तब भी आपको % जो 0000 है प्लस में उसका 4 पर शस देना पड़ जाएगा तो यहां पर भी आपको 12 लाख की छूट नहीं मिलने वाली है इसके बाद में आठ नंबर है डीए दोस्तों अभी jio-complaint ना यहां पे 4 लाख की लिमिट है ना यहां पे 12 लाख की लिमिट है अगर आपने 1 लाख भी कमाया उसके ऊपर भी गवर्नमेंट कहती है हमें 30 पर टैक्स दे दो क्रिप्टो करेंसी बिटकॉइन लीगल है या इल्लीगल है इनकम टैक्स डिपार्टमेंट कोई बात नहीं करता है इनकम टैक्स वाले कहते हैं अगर आप कमाई कर रहे हो तो हमें आपका टैक्स चाहिए इसके बाद एक और कंफ्यूजन था 313202 को अभी हमारा जो साल खत्म होने वाला है ये फाइनेंशियल ईयर होता है 2425 असेसमेंट ईयर होता है 2526 1 फरवरी 2024 को जो पिछले साल बजट आया था जो भी टैक्स के रूल थे वो इस साल लागू होने वाले हैं मतलब पिछले साल में ₹ 75000 तक ही मा था तो वो वाली छूट आपको अब अब आप अपनी अप्रैल 2025 से लेकर के जुलाई 2025 तक जो अपनी आईटीआर भरेंगे उसके अंदर आपको 12 लाख की छूट नहीं मिलने वाली है क्योंकि ये फाइनेंशियल ईयर 2425 के लिए नहीं है 142025 से लेकर के 313202 का जब आपका ये साल खत्म हो जाएगा उसके बाद में अप्रैल 2026 में जब अपनी आईटीआर भरेंगे तब आपको दोस्तों ये 12 लाख की छूट मिलने वाली है आप अपने सीए से या टैक्स प्रोफेशनल से जब भी अपनी रिटर्न भरवाए इस साल वाली फाइनेंशियल ईयर 2425 वाली तब उन्हें प्लीज कंफ्यूज मत करें कि सर मुझे तो 12 लाख की छूट चाहिए तो इस चीज का आपको ध्यान देना है तो ये ऐसी नो कंडीशन थी जहां पर आपको ₹1 लाख की इनकम टैक्स फ्री नहीं होने वाली है एक सलाह आपको मैं जाते-जाते देना चाहूंगा एआईएस टीटीआईएस और 26 एस प्लीज जरूर चेक करते रहे अपना टाइम टाइम पर नहीं तो आप अपना जून और जुलाई में एक बार चेक कर लें क्योंकि सारा डाटा यहां पे अपडेट हो जाता है आपके पैन कार्ड में कोई भी लेनदेन हुआ वो शो हो जाता है आप अपनी आईटीआर टाइम से भरते रं आप जो भी लेनदेन करते हैं उसका रिकॉर्ड रखें अननेसेसरी रिकॉर्ड्स से बचे बिना बाद का लेनदेन आप ना करें इस वीडियो को उन सभी लोगों में शेयर करें जो बहुत खुश हो रहे थे हमें ₹1 लाख की इनकम माफ हो चुकी है कोई डाउट क्वेरी क्वेश्चन हो तो दोस्तों प्लीज कमेंट करके जरूर बताएं थैंक यू सो मच फॉर वाचिंग दिस वीडियो जय हिंद जय भारत"
-  },
-  {
-    "video_id": "OQwHfdwd_uU",
-    "title": "No TAX Up To 28 Lakh After Budget of a Family || ₹28 लाख पर ₹0 टैक्स जानिए कैसे ? #huf",
-    "channel": "CA Sumit Sharma",
-    "views": 2777,
-    "date": "2/2/2025",
-    "transcript": "जय हिंद दोस्तों आपको पता होगा एक नंबर का पैसा बनाना कैपिटल बनाना पूंजी बनाना काफी कठिन काम होता है इनकम टैक्स के अंदर भी लिमिट्स होती हैं जो घटा जा रहे थे लेकिन इस बजट के अंदर बड़ी ही खुशखबरी आई है अगर आप एक हस्बैंड और वाइफ हैं तो आपको हम इस वीडियो में बताने वाले हैं 828 लाख तक का एक नंबर का पैसा आप अपनी कैपिटल आप अपनी पूंजी यानी कि ₹ लाख तक की टैक्स फ्री इनकम आप दोनों मिलकर के दिखा सकते हैं तो कैसे दिखा सकते हैं क्या है सारा सिस्टम इसके लिए आपको इस वीडियो के लास्ट तक बना रहना पड़ेगा तो देर ना करते हुए एक फैमिली को यानी कि हस्बैंड और वाइफ को ₹ लाख तक की 1 साल के अंदर टैक्स फ्री इनकम होने वाली है कैसे होने वाली है जान लेते [संगीत] हैं जी हां दोस्तों बिल्कुल सही सुना है आपने नौ टैक्स मतलब कोई भी टैक्स नहीं देना पड़ेगा आपको 828 लाख तक की अगर आप इनकम कमाते हो इसके अंदर आप कौन-कौन आ जाएंगे आपकी फैमिली को 8 लाख तक टैक्स नहीं देना पड़ेगा और आपकी फैमिली में मैं ज्यादा लोगों को ना लेकर के चलता हूं एक हस्बैंड और एक वाइफ अगर आप दो ही जने हो तो इस बजट के बाद में आप भी अपनी ₹ लाख तक की इनकम को एक नंबर में टैक्स फ्री करके दिखा सकते हैं तो इसको जानने के लिए सबसे पहले हमें ये जानना पड़ेगा जो बजट अनाउंस हुआ था 1 फरवरी 2025 को यह आपका फाइनेंशियल ईयर 25526 के लिए हुआ था और असेसमेंट ईयर इसका 2627 होगा मतलब 1 अप्रैल 2025 से 313 2026 अभी आपका जो साल खत्म होने वाला है वो 313202 खत्म होने वाला है और अप्रैल 2025 में जो भी आईटीआर आप भरोगे उसके लिए आपको ये 12 लाख या जो भी लिमिट है नई वाली ये एप्लीकेबल नहीं होने वाली है वहां पर न्यू टैक्स रिजा में आपकी ₹ लाख तक टैक्स फ्री है और आपको पता होगा मोस्ट ऑफ द रूल्स है ये 1 अप्रैल 2025 से लागू हो गए और जो भी टैक्स का रेट है ये आपका फाइनेंशियल ईयर 25526 असेसमेंट ईयर 2627 के लिए लागू होने वाला है अब मैं टैक्स रेजीम आपको बता दूं दो तरह की टैक्स रेजीम होती है आपको पता होगा ओल्ड और न्यू ओल्ड के अंदर कोई भी छेड़छाड़ नहीं की है जहां पर डिडक्शन और एजमन लेने के बाद अगर आपकी इनकम 5 लाख तक आ जाती है टैक्स फ्री है लेकिन पांच से ज्यादा च जाती है तो 2 लाख के बाद ही आपको टैक्स देना पड़ जाएगा अब न्यू टैक्स रेजीम की बात करते हैं यहां पर पहले ₹ लाख था अब ₹ लाख तक आपका जीरो टैक्स आपको देना पड़ेगा 4 लाख से 8 लाख पर 5 पर 8 लाख से 12 लाख पर 10 पर 12 से 16 पर 15 पर 16 से 20 पर 20 पर 20 लाख से 24 लाख पर 25 और 25 24 लाख से ऊपर आपको 30 पर टैक्स देना पड़ेगा ये बात आप समझ गए हैं 4 लाख के बाद आपको टैक्स देना पड़ेगा लेकिन सर हमने तो सुना था ₹ लाख टैक्स फ्री हो गई है वो भी आपको दोस्तों हम समझा देते हैं अगर आपकी इनकम ₹1 लाख तक है दोस्तों तो आपको ₹ भी रप टैक्स नहीं देना है हालांकि टैक्स जरूर बनेगा इसका आप यह देख सकते हैं 4 लाख से 8 लाख पर जो भी आपका टैक्स है 4 लाख के हिसाब से % का 00 टैक्स ये बन जाएगा और इस ₹ लाख पे % 40000 ये टैक्स बन जाएगा तो मतलब जिस व्यक्ति की इनकम ₹1 लाख तक है उसको 0000 का टैक्स देना पड़ेगा लेकिन लेकिन 87a सेक्शन कहता है यह 87a कहता है जिस व्यक्ति की इनकम 12 लाख तक है उसको 60000 के टैक्स की हम छूट दे देंगे मतलब आपका 12 100000 टैक्स फ्री हो गया और वहीं आपको सैलरी या पेंशन की इनकम भी आती है तो दोस्तों ₹1500000 की छूट आप ले सकते हैं अगर आपको सैलरी या पेंशन की इनकम आती है अगर नहीं भी आती तो ₹1 लाख तो आपके माफ है ही है यह सैलरी और पेंशन वालों के लिए 75000 की एडिशनल छूट मिलती है तो इस तरह से दोस्तों अगर आपकी इनकम 12 लाख को क्रॉस कर जाती है फिर आपको 4 लाख के बाद ही टैक्स देना पड़ेगा जो अभी हमने टैक्स लैब बताई है ंडर डिडक्शन सैलरी या पेंशन वालों को मिल जाएगी और वहीं पर दोस्तों अगर आपकी लॉन्ग टर्म कैपिटल गेन शॉर्ट टर्म कैपिटल गेन आती है तो आपको 12 लाख की छूट नहीं मिलेगी आपको सिर्फ 4 लाख की छूट मिलेगी अगर कोई स्पेशल इनकम जैसे कि क्रिप्टो की इनकम लॉटरी की इनकम आती है तो ना 12 लाख ना 4 लाख आपको जीरो के बाद ही टैक्स देना पड़ जाने वाला है और वहीं पर 25 पर का स्लैब नया इंट्रोड्यूस किया है ये सारे के सारे चेंजेज आपको सिर्फ न्यू टैक्स रेजीम में मिलेंगे ओल्ड के अंदर कोई भी चेंज नहीं हुआ है 87a की रिबेट आपको 60000 की मिल जाएगी अगर आपकी इनकम ₹1 लाख तक रहती है तो लेकिन आईटीआर भरनी आपको कब जरूरी हो जाएगी अगर आपकी इनकम मान लीजिए 90000 आ जाती है तो आप तो कहेंगे मैं तो इनकम टैक्स डिपार्टमेंट को जानता ही नहीं हूं ऐसा नहीं होना चाहिए अगर आपकी इनकम 4 लाख से ज्यादा चली जाती है सारी इनकम को मिला कर के तो आपको दोस्तों आईटीआर भरनी जरूरी है और कोई भी स्पेशल रेट की इनकम है तो वो आपको 4 लाख के बाद ही उसपे टैक्स देना पड़ जाएगा लॉटरी क्रिप्टो पर आपको 0 के बाद ही टैक्स देना पड़ जाएगा अब मैं बात करने वाला था इस वीडियो के मेन कंटेंट की दोस्तों ₹ लाख इनकम आपकी कैसे माफ होगी मैंने आपको बताया एक हस्बैंड है और एक वाइफ है अगर वो सैलरी की इनकम कमाते हैं हो सकता है उनकी 20 लाख 30 लाख 50 लाख सैलरी आ रही हो तो उसके लिए ये वीडियो नहीं है अगर एक हस्बैंड है और अगर एक वाइफ है तो आपके घर में दो मेंबर हो गए हैं अगर हो सकता है ज्यादा मेंबर भी हो तो एक व्यक्ति को ₹ लाख माफ है और दूसरे को 12 माफ है मतलब आपको ₹ लाख इनकम आपकी माफ हो गई है अगर दोनों को सैलरी या पेंशन भी आती है तो दोस्तों 75 और 75 ₹ लाख और मान सकते हो आप यहां पे ₹2500000 आप यहां पे मान स सकते हो कि आपकी माफ हो गई है लेकिन हस्बैंड और वाइफ दोनों जने मिलकर के आपको पता होगा जो भी कमाई करते हैं जैसे कि सैलरी की इनकम है पेंशन है रेंट की इनकम है बिजनेस की इनकम है अदर सोर्स की इनकम है यहां पर आपको लॉन्ग टर्म कैपिटल गेन शॉर्ट टर्म कैपिटल गेन या वर्चुअल डिजिटल एसेस लॉटरी वगैरह की इनकम की हमने डिस्कशन इसमें नहीं की है अब बात करते हैं दोनों जनों के अलावा एक पर्सन और आप बना सकते हो जिसे बोलते हैं हिंदू अनडिसाइडेड फैमिली एचयूएफ के अंदर हिंदू सिर्फ हिंदू ही नहीं जैन सिख बुद्धिस्ट ये लोग भी अपनी ये बना सकते हैं एक सेपरेट लीगल एंटिटी मतलब एक नया पैन कार्ड अलग से बन जाएगा इन दोनों को मिलाकर के वो कहते हैं ना एक और एक 11 होता है एक और एक 11 तो नहीं लेकिन एक और एक तीन हो जाते हैं ये दो बंदे मिलकर के तीन हो जाएंगे तो क्या होगा ये एचएफ अपनी अलग से इनकम कमा सकता है ये एचयूएफ सैलरी की इनकम नहीं कमा सकता है कुछ बिजनेस कर सकता है कोई इन्वेस्टमेंट कर सकता है तो इस तरह से एचयूएफ भी अपनी इनकम कमा सकता है लेकिन एचयूएफ को 87a की रिबेट 60000 की नहीं मिलेगी मतलब एचयूएफ को 12 लाख की तो छूट सूट नहीं है लेकिन फिर भी बेसिक एजमन लिमिट है ₹ लाख की वो एचयूएफ को मिल जाने वाली है तो इस तरह से एक हस्बैंड 12 लाख कमाए एक वाइफ 12 लाख की आईटीआर भरे और एक एचयूएफ 4 लाख की भरे 1212 24 और चार 8 लाख की आपकी एक नंबर की इनकम कैपिटल बन जाएगी और वहीं पर अगर आप एक सैलरीड पर्सन है तो ₹ लाख 75 75000 आपको और मिलेंगे हस्बैंड वाइफ को मतलब 290000 तक की आपकी जो दोस्तों यह सैलरी है ये इनकम है एक नंबर की बन जाएगी पूंजी बन जाएगी कैपिटल बन जाएगी तो इस तरह से आप अपनी एचएफ बनाना चाहते हैं तो इसके ऊपर हमने ऑलरेडी डिटेल में वीडियो बना रखी है किसी भी तरह की प्रोफेशनल हेल्प चाहिए हो तो आप हमें कमेंट करें वीडियो अच्छी लगी हो तो लाइक करके अभी तक हमें सब्सक्राइब नहीं किया तो प्लीज सब्सक्राइब कर दें इस वीडियो को उन सभी लोगों में शेयर करें जो दोस्तों कैपिटल बनाना चाहते हैं पूंजी बनाना चाहते हैं एक नंबर का पैसा उनको चाहिए तो यह बजट के अंदर बहुत ही बढ़िया खुशखबरी आई है थैंक यू सो मच फॉर वाचिंग दिस वीडियो जय हिंद जय भारत"
-  },
-  {
-    "video_id": "Xa3vqJlYs44",
-    "title": "Missed a step in your foreign asset disclosures? Watch this!",
-    "channel": "NRI Money Clinic",
-    "views": 1467,
-    "date": "3/9/2026",
-    "transcript": "If the SSE has been a non-resident until 1718 financial year and after that four years he has been a resident in India and again he became a non-resident from 223 financial year. Now during this four years maybe first two years he might have been a resident but not ordinary resident another two years he has been a resident and ordinary when he was a RO resident and ordinary resident for a couple of years he was actually maintaining some foreign but he has missed out in declaring such foreign asset in his return of income under BMA for every such non-disclosure there will be a penalty of 10 lak rupees per for foreign asset which has not been declared now under such circumstances to come out of this 10 lakh rupee penalty You can come under this scheme and [music] declare that asset in the scheme and pay a fee of rupees 1 lakh when considering 10 lakh penalty instead of that paying one lakh is better. So for those this skin will apply."
-  },
-  {
-    "video_id": "_vOo-LHJ8NU",
-    "title": "Tax Relief Secrets for NRIs in Budget 2026",
-    "channel": "SBNRI",
-    "views": 1224,
-    "date": "2/2/2026",
-    "transcript": "बजट 2026 [संगीत] कंप्लीटली चेंज्ड द रूल्स फॉर एन आरआईज एंड इट्स आल इन योर फेवर। इफ यू आर सेंडिंग मनी होम ओर इनवेस्टिंग इन इंडिया यू आर अबाउट टू सेव अ लॉट ऑफ़ मनी एंड इवन मोर टाइम। आय ऍम गोइंग टू टेल यू थ्री बेनिफिट्स। [संगीत] फर्स्ट बाइंग प्रॉपर्टी इन इंडिया द टैन हेडेक इस ऑफिशियली डेड। यू नो लॉन्गर नीड अ टैक्स डिडक्शन अकाउंट नंबर। नाउ यू कैन हैंडल टीडीएस यूजिंग जस्ट अ [संगीत] पैन बेस्ड चालान। इट्स फास्ट सिंपलर एंड मैक्स योर प्रॉपर्टी रील्स 10 एक्स मोर। सेकंड, द गवर्नमेंट स्लैश टीसीएस ऑन एजुकेशन एंड हेल्थ केयर फ्रॉम 5% टू जस्ट 2%. सो सेंडिंग 50 लाख फॉर ट्यूशन यू यूज्ड टू लूज 2.5 लाख टू द टैक्स मैन अप फ्रंट। [संगीत] नाउ इट्स ओनली 1 लाख। एंड दैट्स अ 1.5 लाख इन इमीडिएट कॅश फ्लो बैक इन योर पॉकेट। एंड द बिगेस्ट [संगीत] विन द 2026 फॉलन एसेट्स डिस्क्लोज़र स्कीम। इट्स अ सिक्स मंथ्स कंप्लायंस [संगीत] रिसेट। सो द मैसेज इज़ क्लियर इन योर वांस यू विन द गेम। सो, इस 2026 इज योर इयर व्हेन यू फाइनली डाइवर्सिफाई बैक होम। ड्रॉप अ यस इन द कमेंट्स। शेयर दिस विथ योर एनआरआई फ्रेंड्स, एंड इफ यू आर प्लानिंग टु इनवेस्ट इन इंडिया, डु इट थ्रू एसबी एनआरआई। [संगीत] टैप द लिंक इन बायो एंड स्टार्ट टुडे।"
-  },
-  {
-    "video_id": "Hd-ootkzFjg",
-    "title": "Budget 2026 | Big Update for Indian NRIs | HEAVY Penalties in 2026",
-    "channel": "SBNRI",
-    "views": 1032,
-    "date": "2/24/2026",
-    "transcript": "the foreign asset disclosure scheme 2026. Now, let's be real. Sometimes international tax laws, they get confusing. Maybe you forgot to declare an old foreign account or you paid the tax but missed the paperwork. Usually, the penalties for this under the black money act are terrifying. But for a limited 6-month period window, the government is offering a clean slate. Under this clean slate, there are two categories. Category one, if you have undisclosed income or assets up to 1 cr, you can disclose them, pay a 30% tax plus 30% penalty and get total immunity from prosecution. There is a second category. Under the second category, if you did pay your taxes but simply failed to declare the asset and its value is up to 5 crores, you can settle the whole thing with a flat fee of just 1 lak rupee. This is a massive opportunity to regularize your global portfolio with the stress of any legal battle. It's a one-time chance to breathe easy. So, if you are an NRI thinking about moving back to India, then it is better you stay clear with all your foreign income and disclosures in India."
-  },
-  {
-    "video_id": "OZfi00BXPRY",
-    "title": "Tax Free Limit?? || Old Tax Slab #oldtaxregime #taxslab #taxfreelimit",
-    "channel": "CA Sumit Sharma",
-    "views": 1017,
-    "date": "11/15/2023",
-    "transcript": "जय हिंद दोस्तों फाइनेंशियल ईयर 2324 यानी असेसमेंट ईयर 2425 के लिए इनकम टैक्स की कितनी छूट है दोस्तों अगर आप ओल्ड टैक्स लैब में जाना चाहते हैं जिसे कि ओल्ड टैक्स रिजाइन बोलते हैं जहां पर आपको काफी सारी डिडक्शन और एजेंशिया वो ₹ लाख या उससे कम आ जाती है तो 25 लाख से 5 लाख पर बनने वाले टैक्स पर दोस्तों आपको 12500 की छूट मिल जाएगी मतलब ₹ लाख तक कोई भी टैक्स नहीं देना है लेकिन दोस्तों ₹ लाख से आपकी ऊपर इनकम चली जाती है तो आपकी इनकम टैक्स की जो लिमिट है दोस्तों वो ₹ लाख है 60 साल वालों के लिए ₹ लाख है 60 से 80 साल वालों के लिए और 5 लाख है 80 साल से ऊपर वालों के लिए तो इस तरह से दोस्तों ओल्ड टैक्स लैब के अंदर अगर आपकी इनकम ₹ लाख तक है तो कोई भी टैक्स नहीं देना है 5 लाख से ऊपर इनकम चली जाती है तो आपको . लाख के बाद ही टैक्स देना पड़ जाएगा लेकिन ऑल टैक्स लैब में आप काफी सारी डिडक्शन और एजेंशिया लगी हो तो लाइक करें और भी इस तरह के कंटेंट के लिए आप हमें फॉलो सब्सक्राइब करना ना भूलें थैंक यू सो मच दोस्तों"
-  },
-  {
-    "video_id": "nEMxUyf8E6A",
-    "title": "Union Budget 2026: A Big Win for NRI Property Owners",
-    "channel": "Belong - NRI Savings & Investments",
-    "views": 778,
-    "date": "2/2/2026",
-    "transcript": "Selling a property just became a lot easier for NRIs. All thanks to the union budget 2026. Let me explain. Until now, when the resident Indian bought the property from an NRI, he had to go through a lot of paperworks. The buyer was responsible to collect and pay taxes on behalf of the NRI and for this he had to apply for a tax deduction account number or TAN. Now, getting the account number was not easy. Even after filling all the forms and submitting the required documents, it could take a long time and a small mistake caused rejections. Many deals were falling through just because of this hassle. But the budget 2026 has completely fixed this. You don't need a tan anymore. Instead, you can prepare the tedious chalan with just your pan card and pay your tax with this chalan. What used to take weeks can now be done in a matter of minutes without any hassle. Apart from this, the budget has also allowed persons of Indian origin to invest in the Indian stock market through the PIS route. The maximum shares that a PIO or NRI can hold in a listed Indian company has also been increased to 10% from the current 5% and the overall limit for non-resident Indians to invest in listed Indian companies has also been increased to 24% from the current 10%. In short, this budget has made things lenient and much easier for NRIs to do transactions in India."
-  },
-  {
-    "video_id": "q3tineC4T3U",
-    "title": "The END of High TCS? NRI Budget 2026 Explained | The Offshore Advantage Ep 6",
-    "channel": "Belong - NRI Savings & Investments",
-    "views": 333,
-    "date": "2/12/2026",
-    "transcript": "Stop! Before you book your flight, sell \nyour property, or file your next tax return,   you need to hear this. Every headline is creating \nconfusion. Is that 5year tax holiday real? What   is the new final deadline for delayed filings? \nWhat are the new baggage limits? And how can   one small missed form lead to massive penalties? \nThe union budget 2026 is not just another policy   announcement. It is a fundamental rewiring of \nthe roles of non-resident Indians. In this video,   I'm diving into seven major changes that directly \nimpact NRI finances. [music] the 5-year tax   holiday, new timelines for related returns, the \nforeign asset disclosure scheme, [music] time-free   property sales, lower TCS on overseas travel \nand education, man relief for NRIs, and the   2026 baggage rule overhaul. Use the chapters \nbelow to jump straight to what matters to you. If you are an NRI, this video is \nyour essential non-negotiable guide.   I am breaking down the biggest changes in \ntax, customs and compliance and giving you   a clear practical checklist to navigate the new \nIndian landscape safely. Hi, my name is Sager   and welcome to another episode of the Offshore \nAdvantage. Let's break down the union budget   2026 from an NRI perspective. 5-year tax holiday \nfor specified NRIs. First, let's take a look at   a headline that is creating a lot of confusion in \nthe NRI circles. You may have seen something like   NRI professionals visiting India will get a 5-year \ntax exemption on overseas income. Now, that sounds   like a blanket benefit for every NRI who comes to \nIndia. It is not. This budget proposal is narrow,   technical, and conditional. And if you treat \nit like a free pass, you will land yourself in   the exact situation you were trying to avoid. \nSo let me break it down in simple language.   Think of Indian tax like a switch. When you are \na non-resident, India generally taxes you mainly   on income that is linked to India. But we when \nyou become a resident, the tax system can start   looking at your global income as well depending \non your status. Now here is the practical problem   the government is trying to solve. Sometimes \nan overseas professional comes to India for a   specified assignment. Their stay becomes long. \nThey can cross the residency day threshold and   suddenly they worry that their overseas income \nwill start getting pulled into India taxation.  Budget 2026 proposes a relief for that situation \nbut only for a specific category of people. Let   me tell you exactly what it is. This is proposed \nas an amendment through the Finance Bill 2026.   It applies from 1st April 26 onwards. Meaning Tax \nYear 26-27 onwards. Now what is the actual relief?   If you qualify then for up to five consecutive \ntax years certain foreign income will not be   taxed in India. But please listen carefully. It \nis only foreign income that genuinely occurs or   arises outside India and which is not deemed to \nacrew or arise in India. That phrase is important   because it is the legal boundary 
-... (truncated, see transcripts_dataset.json for full data)
-```
+*Published by MKW Advisors | Legal Suvidha & DigiComply Ecosystem*

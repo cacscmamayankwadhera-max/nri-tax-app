@@ -435,6 +435,9 @@ export default function ClientIntake() {
               <I l="Years Abroad"><S v={f.yearsAbroad} ch={v => u('yearsAbroad', v)} o={['Less than 1 year', '1-3 years', '3-5 years', '5+ years']} /></I>
               <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />
               <I l="Phone" v={f.phone} ch={v => u('phone', v)} ph="+44 / +91..." />
+              <I l="PAN Number" v={f.pan} ch={v => u('pan', v)} ph="ABCDE1234F" />
+              <I l="Date of Birth" v={f.dob} ch={v => u('dob', v)} type="date" />
+              <I l="Citizenship"><S v={f.citizenship} ch={v => u('citizenship', v)} o={['Indian Citizen', 'OCI Holder', 'PIO']} /></I>
             </div>
           </div>
           <button onClick={() => goStep(1)} disabled={!f.name || !f.country}
@@ -448,6 +451,9 @@ export default function ClientIntake() {
               <I l="Days in India this year" v={f.stayDays} ch={v => u('stayDays', v)} ph="38" tip="Approximate is fine \u2014 we verify later" />
               <I l="How do you know?"><S v={f.staySource} ch={v => u('staySource', v)} o={['Self-estimate', 'Passport records', 'Travel summary']} /></I>
               <I l="Family / home in India?"><S v={f.familyInIndia} ch={v => u('familyInIndia', v)} o={['Yes', 'No', 'Partly']} /></I>
+              <I l="Total India stay in preceding 4 years (days)" v={f.stayDays4yr} ch={v => u('stayDays4yr', parseNum(v))} ph="300" type="number" tip="Required for residency determination" />
+              <I l="Total India stay in preceding 7 years (days)" v={f.stayDays7yr} ch={v => u('stayDays7yr', parseNum(v))} ph="500" type="number" tip="Required for RNOR test" />
+              <I l="Number of properties owned in India"><S v={f.propertiesOwned} ch={v => u('propertiesOwned', v)} o={['0', '1', '2', '3+']} /></I>
               <I l="Did you sell property this year?"><S v={f.propertySale ? 'Yes' : 'No'} ch={v => { u('propertySale', v === 'Yes'); u('cgProperty', v === 'Yes'); }} o={['No', 'Yes']} /></I>
               {f.propertySale && <>
                 <I l="When was it purchased?" tip="This determines which tax option applies"><S v={f.propertyAcqFY} ch={v => u('propertyAcqFY', v)} o={Object.keys(CII).filter(k => parseInt(k) >= 2005).map(k => ({ v: k, l: 'FY ' + k }))} /></I>
@@ -471,6 +477,12 @@ export default function ClientIntake() {
                 {f.jointOwnership && f.jointOwnership !== 'No \u2014 sole owner' && (
                   <I l="Your ownership %" v={f.ownershipPercent || 100} ch={v => u('ownershipPercent', parseNum(v, 100))} ph="100" type="number" />
                 )}
+                <I l="Property type"><S v={f.propertyType} ch={v => u('propertyType', v)} o={['Residential Flat', 'Residential Plot', 'Commercial Property', 'Agricultural Land (Urban)', 'Agricultural Land (Rural)']} /></I>
+                <I l="Stamp duty value (\u20B9)" v={f.stampDutyValue} ch={v => u('stampDutyValue', parseNum(v))} ph="7000000" type="number" tip="Circle rate / government valuation at time of sale" />
+                <I l="Registration & stamp duty expenses (\u20B9)" v={f.registrationExpenses} ch={v => u('registrationExpenses', parseNum(v))} ph="350000" type="number" tip="Stamp duty, registration, brokerage paid on sale" />
+                <I l="TDS deducted by buyer (\u20B9)" v={f.tdsDeductedBuyer} ch={v => u('tdsDeductedBuyer', parseNum(v))} ph="1360000" type="number" tip="Actual TDS amount from Form 16B/27Q" />
+                <I l="Section 197 lower TDS certificate"><S v={f.section197} ch={v => u('section197', v)} o={['Not applied', 'Applied \u2014 pending', 'Obtained', 'Not applicable']} /></I>
+                <I l="Was property acquired before April 2001?"><S v={f.preApril2001} ch={v => u('preApril2001', v)} o={['No', 'Yes \u2014 will use FMV as of 01/04/2001']} /></I>
               </>}
             </div>
           </div>
@@ -485,11 +497,20 @@ export default function ClientIntake() {
           <div className="card-theme p-8 mb-5">
             <div className="text-sm font-semibold text-theme mb-4">What Indian income do you have? <span className="text-theme-muted font-normal">(tick all that apply)</span></div>
             <div className="grid grid-cols-2 gap-1">
-              {[['salary', 'Salary in India'], ['rent', 'Rental income'], ['interest', 'Bank / FD interest'], ['dividend', 'Dividends'], ['cgShares', 'Sold shares'], ['cgMF', 'Sold mutual funds'], ['cgESOPRSU', 'ESOP / RSU sale'], ['business', 'Business / consulting'], ['crypto', 'Crypto / Virtual Digital Assets']].map(([k, l]) =>
+              {[['salary', 'Salary in India'], ['rent', 'Rental income'], ['interest', 'Bank / FD interest'], ['dividend', 'Dividends'], ['cgShares', 'Sold shares'], ['cgMF', 'Sold mutual funds'], ['cgESOPRSU', 'ESOP / RSU sale'], ['business', 'Business / consulting'], ['crypto', 'Crypto / Virtual Digital Assets'], ['epf', 'EPF/PF Withdrawal'], ['gratuity', 'Gratuity received'], ['leaveEncash', 'Leave encashment'], ['npsWithdraw', 'NPS withdrawal'], ['pension', 'Pension from India'], ['reitInvit', 'REIT/InvIT income']].map(([k, l]) =>
                 <C key={k} l={l} c={f[k]} ch={v => u(k, v)} />
               )}
             </div>
           </div>
+          {(f.epf || f.gratuity || f.leaveEncash || f.npsWithdraw) && <div className="card-theme p-8 mb-5">
+            <div className="text-sm font-semibold text-theme mb-4">Retirement & employment benefits <span className="text-theme-muted font-normal">(amounts received)</span></div>
+            <div className="grid grid-cols-2 gap-5">
+              {f.epf && <I l="EPF withdrawal amount (\u20B9)" v={f.epfAmount} ch={v => u('epfAmount', parseNum(v))} ph="0" type="number" />}
+              {f.gratuity && <I l="Gratuity amount (\u20B9)" v={f.gratuityAmount} ch={v => u('gratuityAmount', parseNum(v))} ph="0" type="number" />}
+              {f.leaveEncash && <I l="Leave encashment amount (\u20B9)" v={f.leaveEncashAmount} ch={v => u('leaveEncashAmount', parseNum(v))} ph="0" type="number" />}
+              {f.npsWithdraw && <I l="NPS withdrawal amount (\u20B9)" v={f.npsWithdrawAmount} ch={v => u('npsWithdrawAmount', parseNum(v))} ph="0" type="number" />}
+            </div>
+          </div>}
           {(f.rent || f.interest) && <div className="card-theme p-8 mb-5">
             <div className="text-sm font-semibold text-theme mb-4">Quick amounts <span className="text-theme-muted font-normal">(approximate is fine)</span></div>
             {f.rent && <I l="Monthly rent amount (\u20B9)" v={f.rentalMonthly} ch={v => u('rentalMonthly', parseNum(v))} ph="25000" type="number" />}
@@ -548,6 +569,16 @@ export default function ClientIntake() {
               <p className="text-xs text-theme-muted mt-2">Taxed at 30% flat rate. No deductions except cost. 1% TDS under Section 194S.</p>
             </div>
           )}
+          <div className="card-theme p-8 mb-5">
+            <div className="text-sm font-semibold text-theme mb-4">Deductions & Investments</div>
+            <div className="grid grid-cols-2 gap-5">
+              <I l="Section 80C total (\u20B9)" v={f.section80C} ch={v => u('section80C', parseNum(v))} ph="150000" type="number" tip="PPF + ELSS + LIC + home loan principal + tuition fees" />
+              <I l="Health insurance premium \u2014 self (\u20B9)" v={f.healthInsuranceSelf} ch={v => u('healthInsuranceSelf', parseNum(v))} ph="25000" type="number" />
+              <I l="Health insurance premium \u2014 parents (\u20B9)" v={f.healthInsuranceParents} ch={v => u('healthInsuranceParents', parseNum(v))} ph="25000" type="number" />
+              <I l="NPS contribution (\u20B9)" v={f.npsContribution} ch={v => u('npsContribution', parseNum(v))} ph="50000" type="number" tip="Section 80CCD(1B) additional deduction" />
+              <I l="Education loan interest (\u20B9)" v={f.educationLoanInterest} ch={v => u('educationLoanInterest', parseNum(v))} ph="0" type="number" tip="Section 80E \u2014 no cap, max 8 years" />
+            </div>
+          </div>
           <div className="flex gap-3 mt-5">
             <button onClick={() => goStep(1)} className="btn-secondary flex-1 py-3 rounded-xl">{'\u2190'} Back</button>
             <button onClick={() => goStep(3)} className="btn-dark flex-[2] py-3 rounded-xl">Continue {'\u2192'}</button>
@@ -565,6 +596,15 @@ export default function ClientIntake() {
             </div>
             <div className="mt-5">
               <I l="Home loan interest on rented property (\u20B9/year)" v={f.homeLoanInterest} ch={v => u('homeLoanInterest', parseNum(v))} ph="0" type="number" tip="Deductible against rental income \u2014 no cap for let-out property" />
+            </div>
+            <div className="mt-5">
+              <div className="grid grid-cols-2 gap-5">
+                <I l="Advance tax paid this year (\u20B9)" v={f.advanceTaxPaid} ch={v => u('advanceTaxPaid', parseNum(v))} ph="0" type="number" tip="Challan 280 amounts already paid" />
+                <I l="TCS paid on LRS remittances (\u20B9)" v={f.tcsPaidLRS} ch={v => u('tcsPaidLRS', parseNum(v))} ph="0" type="number" tip="20% TCS on foreign remittances above \u20B97L" />
+              </div>
+              <div className="mt-3">
+                <C l="15CA/15CB already filed for prior remittances" c={f.filed15CA15CB} ch={v => u('filed15CA15CB', v)} />
+              </div>
             </div>
             <div className="mt-5"><I l="Anything else we should know?" wide>
               <textarea value={f.notes || ''} onChange={e => u('notes', e.target.value)} rows={3}

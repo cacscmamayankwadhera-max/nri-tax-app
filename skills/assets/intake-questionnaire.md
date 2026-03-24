@@ -2,7 +2,9 @@
 
 ## 1. Basic Profile
 - Full Name
-- PAN
+- PAN number?
+- Date of birth?
+- Aadhaar linked to PAN? (Yes / No)
 - Mobile Number
 - Email Address
 - Current Country of Residence
@@ -20,6 +22,8 @@
 ## 3. Residential Status Inputs
 - Number of days stayed in India during the relevant financial year
 - Number of days stayed in India during the last 4 preceding financial years, if available
+- Total days in India in preceding 4 years?
+- Total days in India in preceding 7 years?
 - Arrival and departure dates for India during the relevant year, if available
 - Are these details based on passport records, self-estimate, or travel summary?
 - Do you maintain a home in India? (Yes / No)
@@ -36,7 +40,7 @@
 
 ### B. House Property Income
 - Rental income from property in India (Yes / No)
-- Number of properties in India
+- Number of properties owned in India?
 - Is any property sold during the year? (Yes / No)
 
 ### C. Interest / Dividend / Other Passive Income
@@ -44,6 +48,9 @@
 - Fixed deposit interest (Yes / No)
 - NRO account interest (Yes / No)
 - Dividend income (Yes / No)
+- Have you received EPF / PF withdrawal this year? (Yes / No)
+- Have you received gratuity or leave encashment? (Yes / No)
+- Do you hold NPS? Any withdrawals? (Yes / No)
 - Any other passive or miscellaneous receipts? (Yes / No)
 
 ### D. Capital Gains / Transactions
@@ -58,6 +65,11 @@
 - Consulting or freelance income linked to India (Yes / No)
 - Proprietorship / professional income in India (Yes / No)
 - Any online / platform income credited in India? (Yes / No)
+
+## 4F. Deductions & Investments
+- Section 80C investments this year (PPF, ELSS, LIC, home loan principal)? (Yes / No — specify types and amounts)
+- Health insurance premiums paid (self + parents)? (Yes / No — amount)
+- NPS contributions this year? (Yes / No — amount)
 
 ## 5. Foreign / Cross-Border Relevance
 - Foreign employment income during the year (Yes / No)
@@ -77,6 +89,9 @@
 - Broker / capital gains statements available (Yes / No)
 - Property sale / purchase documents available (Yes / No)
 - Foreign tax documents available (Yes / No)
+- Advance tax already paid for this FY? (Yes / No — amount and challan details)
+- TCS paid on any LRS remittances? (Yes / No — amount)
+- Have you filed 15CA / 15CB for any prior remittances? (Yes / No)
 
 ## 7. Prior Notices / Litigation / History
 - Any prior notice, defective return, reassessment, scrutiny, or tax dispute in India? (Yes / No)
@@ -86,11 +101,15 @@
 ## 8. Specific Transaction Details (Complete only if relevant)
 
 ### If Property Sold
-- Property type
+- Property type: flat / plot / commercial / agricultural?
+- Was property acquired before April 2001?
 - Date of purchase
 - Date of sale
 - Sale consideration
+- Stamp duty value of property sold (circle rate)?
 - Whether buyer deducted TDS (Yes / No / Not Sure)
+- TDS actually deducted by buyer and amount?
+- Section 197 certificate applied / obtained? (Yes / No)
 - Are purchase deed and sale deed available? (Yes / No)
 - Any improvement cost claimed? (Yes / No)
 
