@@ -19,11 +19,11 @@ function useSlider(items, autoMs = 5000) {
 const COUNTRIES = [
   { flag: '🇺🇸', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
   { flag: '🇦🇪', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
-  { flag: '🇬🇧', name: 'UK', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 15%' },
+  { flag: '🇬🇧', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
   { flag: '🇨🇦', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
   { flag: '🇦🇺', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
-  { flag: '🇸🇬', name: 'Singapore', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 15%' },
-  { flag: '🇩🇪', name: 'Germany', slug: 'dtaa-double-taxation-ftc', stat: 'DTAA 10%' },
+  { flag: '🇸🇬', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: '🇩🇪', name: 'Germany', slug: 'germany-nri-tax-guide', stat: 'DTAA 10%' },
   { flag: '🇸🇦', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
   { flag: '🇶🇦', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
   { flag: '🇴🇲', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
@@ -31,8 +31,8 @@ const COUNTRIES = [
 ];
 
 const STATS_BAR = [
-  { value: '80', label: 'Expert Guides' },
-  { value: '526K+', label: 'Words of Content' },
+  { value: '97', label: 'Expert Guides' },
+  { value: '576K+', label: 'Words of Content' },
   { value: '30+', label: 'Countries Covered' },
   { value: 'FY 2025-26', label: 'All Numbers Verified' },
 ];
@@ -299,7 +299,7 @@ export default function BlogHub() {
           <div className="relative mb-5">
             <input
               type="text"
-              placeholder="Search 80 guides... (try: property sale, TDS, FBAR, DTAA, NRE, FEMA, ESOP)"
+              placeholder="Search 97 guides... (try: property sale, TDS, FBAR, DTAA, NRE, FEMA, ESOP)"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-5 py-3.5 rounded-xl text-sm transition-all focus:shadow-lg"
