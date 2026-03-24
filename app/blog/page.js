@@ -30,8 +30,8 @@ const COUNTRIES = [
 ];
 
 const STATS_BAR = [
-  { value: '76', label: 'Expert Guides' },
-  { value: '500K+', label: 'Words of Content' },
+  { value: '80', label: 'Expert Guides' },
+  { value: '526K+', label: 'Words of Content' },
   { value: '30+', label: 'Countries Covered' },
   { value: 'FY 2025-26', label: 'All Numbers Verified' },
 ];
@@ -309,7 +309,7 @@ export default function BlogHub() {
           <div className="relative mb-5">
             <input
               type="text"
-              placeholder="Search 76 guides... (try: property sale, TDS, FBAR, DTAA, NRE, FEMA, ESOP)"
+              placeholder="Search 80 guides... (try: property sale, TDS, FBAR, DTAA, NRE, FEMA, ESOP)"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-5 py-3.5 rounded-xl text-sm transition-all focus:shadow-lg"
