@@ -970,6 +970,36 @@ export default function Dashboard() {
             }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
               Copy Client Portal Link
             </button>
+            {/* Payment Link */}
+            <button onClick={async () => {
+              const amount = prompt('Enter amount in \u20B9 (e.g. 35000):');
+              if (!amount) return;
+              try {
+                const res = await fetch('/api/payment', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    amount: parseInt(amount),
+                    clientName: ac?.name || ac?.client_name,
+                    clientEmail: ac?.client_email || ac?.formData?.email,
+                    clientPhone: ac?.client_phone || ac?.formData?.phone,
+                    caseRef: (ac?.dbId || ac?.id)?.toString().slice(0, 8),
+                    caseId: ac?.dbId || ac?.id,
+                  }),
+                });
+                const data = await res.json();
+                if (data.available && data.data?.shortUrl) {
+                  navigator.clipboard.writeText(data.data.shortUrl);
+                  setToast({ type: 'success', message: `Payment link copied! \u20B9${amount} \u2014 share with client` });
+                } else {
+                  setToast({ type: 'error', message: data.message || data.error || 'Payment not configured' });
+                }
+              } catch (e) {
+                setToast({ type: 'error', message: 'Failed to create payment link' });
+              }
+            }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
+              Send Payment Link
+            </button>
             {/* Priority toggle (GAP 23) */}
             {(() => { const curPriority = ac?.priority || ac?.formData?.priority; return (
             <div className="flex items-center gap-2 mt-2">

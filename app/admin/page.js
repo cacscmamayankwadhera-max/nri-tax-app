@@ -599,6 +599,32 @@ export default function AdminPage() {
                             </div>
                           </>
                         )}
+                        {(id === 'setu' || id === 'cams' || id === 'resend' || id === 'sentry') && (
+                          <div>
+                            <label className="block text-[10px] font-semibold text-theme-muted uppercase tracking-wider mb-1">API Key</label>
+                            <MaskedInput value={integration.maskedKey} placeholder="Not configured" />
+                          </div>
+                        )}
+                        {id === 'razorpay' && (
+                          <>
+                            <div>
+                              <label className="block text-[10px] font-semibold text-theme-muted uppercase tracking-wider mb-1">Key ID</label>
+                              <MaskedInput value={integration.maskedKey} placeholder="Not configured" />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-semibold text-theme-muted uppercase tracking-wider mb-1">Key Secret</label>
+                              <MaskedInput value="" placeholder="Not configured" />
+                            </div>
+                          </>
+                        )}
+                        {integration.envVars && (
+                          <div className="text-[10px] text-theme-muted mt-1">
+                            <span className="font-medium">Env vars:</span>{' '}
+                            {integration.envVars.map((v, i) => (
+                              <code key={v} className="px-1 rounded" style={{ background: 'var(--bg-secondary)' }}>{v}{i < integration.envVars.length - 1 ? ', ' : ''}</code>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       {/* Test result */}
