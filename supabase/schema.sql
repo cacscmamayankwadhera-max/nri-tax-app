@@ -65,9 +65,10 @@ create table public.cases (
 );
 
 alter table public.cases enable row level security;
-create policy "Users can view own cases" on public.cases for select using (auth.uid() = user_id);
+-- Team members can view ALL cases (including public intake with user_id = null)
+create policy "Team can view all cases" on public.cases for select using (auth.role() = 'authenticated');
 create policy "Users can create cases" on public.cases for insert with check (auth.uid() = user_id);
-create policy "Users can update own cases" on public.cases for update using (auth.uid() = user_id);
+create policy "Team can update any case" on public.cases for update using (auth.role() = 'authenticated');
 
 -- ═══ Module Outputs ═══
 create table public.module_outputs (

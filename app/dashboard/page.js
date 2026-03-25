@@ -322,13 +322,22 @@ export default function Dashboard() {
   const cfg = FY_CONFIG[fy];
   const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
 
-  // ── Load cases from Supabase on mount ──
+  // ── Load cases via API (bypasses RLS — team sees ALL cases including public intake) ──
   useEffect(() => {
     async function loadCases() {
       try {
-        const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
-        if (data) setCases(data.map(c => { c.status = c.status || 'intake'; return { ...c, name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed }; }));
-      } catch (e) { /* Supabase not configured yet — use local state */ }
+        const res = await fetch('/api/cases');
+        if (res.ok) {
+          const { cases: data } = await res.json();
+          if (data) setCases(data.map(c => ({ ...c, status: c.status || 'intake', name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
+        }
+      } catch (e) {
+        // Fallback: try direct Supabase (works for own cases via RLS)
+        try {
+          const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
+          if (data) setCases(data.map(c => ({ ...c, status: c.status || 'intake', name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
+        } catch (e2) { /* Supabase not configured */ }
+      }
     }
     loadCases();
   }, []);
