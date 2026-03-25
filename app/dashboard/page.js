@@ -315,6 +315,9 @@ export default function Dashboard() {
   const [dlLd, setDlLd] = useState(false);   // downloading docx
   const [toast, setToast] = useState(null);
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [panResult, setPanResult] = useState(null);
+  const [panLoading, setPanLoading] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
@@ -323,11 +326,36 @@ export default function Dashboard() {
     async function getUser() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (user) setUser(user);
+        if (user) {
+          setUser(user);
+          // Get role for admin link visibility
+          const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+          if (profile) setUserRole(profile.role);
+        }
       } catch (e) {}
     }
     getUser();
   }, []);
+
+  // PAN verification handler
+  async function handleVerifyPAN() {
+    const pan = ac?.pan || ac?.formData?.pan || ac?.intake_data?.pan;
+    if (!pan) return;
+    setPanLoading(true);
+    setPanResult(null);
+    try {
+      const res = await fetch('/api/verify-pan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pan: pan.toUpperCase() }),
+      });
+      const data = await res.json();
+      setPanResult(data);
+    } catch (e) {
+      setPanResult({ available: true, error: e.message });
+    }
+    setPanLoading(false);
+  }
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -463,6 +491,13 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <span className="text-[10px] px-2 py-0.5 rounded" style={{ background:'var(--bg-badge)', color:'var(--text-badge)', border:'1px solid var(--border)' }}>v3 · FY {fy}</span>
           <ThemeToggle />
+          {['admin','partner'].includes(userRole) && (
+            <a href="/admin" className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors" style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }} title="Admin Settings"
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </a>
+          )}
           {user && (
             <span className="text-xs text-theme-muted hidden md:inline">
               {user.email?.split('@')[0]}
@@ -735,6 +770,13 @@ export default function Dashboard() {
           <button onClick={()=>setView('home')} className="text-[10px] px-2 py-0.5 rounded text-theme-on-dark" style={{ border:'1px solid var(--border)' }}>Home</button>
           <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="text-[10px] text-theme-accent px-2 py-0.5 rounded" style={{ border:'1px solid var(--accent)' }}>+ New</button>
           <ThemeToggle />
+          {['admin','partner'].includes(userRole) && (
+            <a href="/admin" className="w-7 h-7 flex items-center justify-center rounded-md transition-colors" style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }} title="Admin Settings"
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.borderColor = 'var(--accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </a>
+          )}
           <div className="flex items-center gap-3">
             {user && (
               <span className="text-xs text-theme-muted hidden md:inline">
@@ -844,6 +886,46 @@ export default function Dashboard() {
                 </div>
               );
             })}
+          </div>
+
+          {/* Case Enrichment */}
+          <div className="px-3 py-2 border-t border-theme">
+            <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider mb-2">Enrich Case</div>
+            <div className="flex gap-2 mb-2">
+              <input type="text" value={ac?.pan || ''} onChange={e => setAc(prev => ({...prev, pan: e.target.value}))}
+                placeholder="Enter PAN" className="input-theme text-xs py-1.5 px-2 flex-1" maxLength={10}
+                style={{ textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '0.05em' }} />
+              <button onClick={() => handleVerifyPAN()} disabled={panLoading || !(ac?.pan)}
+                className="text-[9px] px-2 py-1 rounded-md flex-shrink-0 transition-all"
+                style={{ background: 'var(--accent)', color: 'var(--text-on-cta)', opacity: panLoading || !(ac?.pan) ? 0.5 : 1 }}>
+                {panLoading ? '...' : 'Verify'}
+              </button>
+            </div>
+            {panResult && (
+              <div className="text-xs space-y-1 mb-2">
+                {panResult.data?.valid && (
+                  <>
+                    <div style={{ color: 'var(--green)' }} className="font-medium">&#10003; {panResult.data.name}</div>
+                    {panResult.data.category && <div className="text-theme-muted text-[10px]">Category: {panResult.data.category}</div>}
+                    <div className="text-theme-muted text-[10px]">Aadhaar: {panResult.data.aadhaarLinked ? 'Linked \u2713' : 'Not linked \u26A0'}</div>
+                  </>
+                )}
+                {panResult.data?.valid === false && panResult.error && <div style={{ color: 'var(--red)' }} className="text-[10px]">{panResult.error}</div>}
+                {!panResult.available && <div className="text-theme-muted text-[10px]">{panResult.message}</div>}
+              </div>
+            )}
+            <div className="space-y-1">
+              <button className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between"
+                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}>
+                <span className="text-theme-secondary">26AS</span>
+                <span className="text-theme-muted">Coming soon</span>
+              </button>
+              <button className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between"
+                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}>
+                <span className="text-theme-secondary">AIS</span>
+                <span className="text-theme-muted">Coming soon</span>
+              </button>
+            </div>
           </div>
         </div>
 
