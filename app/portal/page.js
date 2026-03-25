@@ -153,7 +153,7 @@ function ClientPortal() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Unable to find your case.');
+        setError(data.error || 'Case not found. This could happen if: (1) The tracking code is incorrect — please check and try again, (2) Your submission is being processed — please wait a few minutes and try again, (3) If the issue persists, contact us on WhatsApp.');
         setLoading(false);
         return;
       }

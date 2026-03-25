@@ -467,6 +467,10 @@ export default function Dashboard() {
         </div>
         {cases.length === 0 ? (
           <div className="text-center py-16 text-theme-muted">
+            <div className="card-theme p-4 mb-4 text-center" style={{ borderColor: 'var(--amber)', borderWidth: '1px' }}>
+              <p className="text-sm font-medium" style={{ color: 'var(--amber)' }}>No cases found</p>
+              <p className="text-xs text-theme-muted mt-1">Cases submitted through the intake form will appear here once connected to Supabase. Check your .env.local configuration.</p>
+            </div>
             <div className="text-4xl mb-3 opacity-30">📋</div>
             <p className="font-semibold">No cases yet</p>
             <p className="text-xs mt-1">Click "New NRI Case" to start</p>

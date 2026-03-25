@@ -8,6 +8,65 @@ import Footer from '@/app/components/Footer';
 
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
 
+// ═══ Reusable form components — defined at module scope to avoid remounts ═══
+const I = ({ l, v, ch, ph, type, tip, wide, children }) => (
+  <div className={wide ? 'col-span-2' : ''}>
+    <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">{l}</label>
+    {children || <input type={type || 'text'} value={v || ''} onChange={e => ch(e.target.value)} placeholder={ph}
+      className="input-theme py-3 px-4" />}
+    {tip && <p className="text-[10px] text-theme-muted mt-1">{tip}</p>}
+  </div>
+);
+const S = ({ v, ch, o, ph }) => (
+  <select value={v || ''} onChange={e => ch(e.target.value)} className="input-theme py-3 px-4">
+    <option value="">{ph || 'Select'}</option>
+    {o.map(x => typeof x === 'string' ? <option key={x}>{x}</option> : <option key={x.v} value={x.v}>{x.l}</option>)}
+  </select>
+);
+const C = ({ l, c, ch }) => (
+  <label className="flex items-center gap-2.5 text-sm cursor-pointer py-1.5 text-theme hover:text-theme-accent transition-colors">
+    <input type="checkbox" checked={!!c} onChange={e => ch(e.target.checked)} className="accent-[#C49A3C] w-4 h-4" />{l}
+  </label>
+);
+
+function StepIndicator({ step, stepLabels }) {
+  return (
+    <div className="flex items-center justify-between mb-8 px-2">
+      {stepLabels.map((label, i) => {
+        const isCompleted = i < step;
+        const isActive = i === step;
+        const isFuture = i > step;
+        return (
+          <div key={i} className="flex items-center" style={{ flex: i < 4 ? 1 : 'none' }}>
+            <div className="flex flex-col items-center" style={{ minWidth: 48 }}>
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300"
+                style={{
+                  background: isCompleted ? 'var(--green)' : isActive ? 'var(--accent)' : 'transparent',
+                  color: isCompleted || isActive ? '#fff' : 'var(--text-muted)',
+                  border: isFuture ? '2px solid var(--border)' : 'none',
+                  boxShadow: isActive ? '0 0 0 4px rgba(196, 154, 60, 0.2)' : 'none'
+                }}
+              >
+                {isCompleted ? '\u2713' : i + 1}
+              </div>
+              <span className="text-[10px] mt-1.5 font-medium" style={{
+                color: isActive ? 'var(--accent)' : isCompleted ? 'var(--green)' : 'var(--text-muted)'
+              }}>{label}</span>
+            </div>
+            {i < 4 && (
+              <div className="flex-1 h-0.5 mx-1 rounded-full" style={{
+                background: isCompleted ? 'var(--green)' : 'var(--border)',
+                marginTop: '-12px'
+              }} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ClientIntake() {
   const [step, setStep] = useState(0);
   const [f, setF] = useState({});
@@ -81,77 +140,7 @@ export default function ClientIntake() {
     setSubmitting(false);
   }
 
-  const I = ({ l, v, ch, ph, type, tip, wide, children }) => (
-    <div className={wide ? 'col-span-2' : ''}>
-      <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">{l}</label>
-      {children || <input type={type || 'text'} value={v || ''} onChange={e => ch(e.target.value)} placeholder={ph}
-        className="input-theme py-3 px-4" />}
-      {tip && <p className="text-[10px] text-theme-muted mt-1">{tip}</p>}
-    </div>
-  );
-  const S = ({ v, ch, o, ph }) => (
-    <select value={v || ''} onChange={e => ch(e.target.value)} className="input-theme py-3 px-4">
-      <option value="">{ph || 'Select'}</option>
-      {o.map(x => typeof x === 'string' ? <option key={x}>{x}</option> : <option key={x.v} value={x.v}>{x.l}</option>)}
-    </select>
-  );
-  const C = ({ l, c, ch }) => (
-    <label className="flex items-center gap-2.5 text-sm cursor-pointer py-1.5 text-theme hover:text-theme-accent transition-colors">
-      <input type="checkbox" checked={!!c} onChange={e => ch(e.target.checked)} className="accent-[#C49A3C] w-4 h-4" />{l}
-    </label>
-  );
-
   const stepLabels = ['Details', 'India', 'Income', 'Documents', 'Review'];
-
-  // -- Step indicator component --
-  const StepIndicator = () => (
-    <div className="flex items-center justify-between mb-8 px-2">
-      {stepLabels.map((label, i) => {
-        const isCompleted = i < step;
-        const isActive = i === step;
-        const isFuture = i > step;
-        return (
-          <div key={i} className="flex items-center" style={{ flex: i < 4 ? 1 : 'none' }}>
-            <div className="flex flex-col items-center" style={{ minWidth: 48 }}>
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300"
-                style={{
-                  background: isCompleted ? 'var(--green)' : isActive ? 'var(--accent)' : 'transparent',
-                  color: isCompleted || isActive ? '#fff' : 'var(--text-muted)',
-                  border: isFuture ? '2px solid var(--border)' : 'none',
-                  boxShadow: isActive ? '0 0 0 4px rgba(196, 154, 60, 0.2)' : 'none'
-                }}
-              >
-                {isCompleted ? '\u2713' : i + 1}
-              </div>
-              <span className="text-[10px] mt-1.5 font-medium" style={{
-                color: isActive ? 'var(--accent)' : isCompleted ? 'var(--green)' : 'var(--text-muted)'
-              }}>{label}</span>
-            </div>
-            {i < 4 && (
-              <div className="flex-1 h-0.5 mx-1 rounded-full" style={{
-                background: isCompleted ? 'var(--green)' : 'var(--border)',
-                marginTop: '-12px'
-              }} />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-
-  // -- Theme toggle button --
-  const ThemeToggle = () => (
-    <button
-      onClick={toggleTheme}
-      className="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all hover:scale-110"
-      style={{ background: 'rgba(255,255,255,0.1)' }}
-      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-      title={isDark ? 'Switch to Luxury Consultancy theme' : 'Switch to Premium Financial theme'}
-    >
-      {isDark ? '\u2600\uFE0F' : '\u{1F319}'}
-    </button>
-  );
 
   // -- SUBMITTED: Show diagnostic --
   if (submitted) {
@@ -414,7 +403,7 @@ export default function ClientIntake() {
         </div>
 
         {/* Step Indicator */}
-        <StepIndicator />
+        <StepIndicator step={step} stepLabels={stepLabels} />
         {/* Time estimate per step */}
         <p className="text-center text-xs text-theme-muted mb-4">
           Step {step + 1} of 5 &middot; About {[3, 2, 3, 1, 1][step]} minutes
@@ -649,7 +638,7 @@ export default function ClientIntake() {
             <div className="text-sm font-semibold text-theme mb-4">Deductions & Investments</div>
             {/* Educational guide link */}
             <div className="mb-4">
-              <a href="/blog/nri-tax-saving-investments" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} Which deductions can NRIs claim?</a>
+              <a href="/blog/nri-tax-saving-strategies" className="text-xs text-theme-accent hover:underline">{"\uD83D\uDCD6"} Which deductions can NRIs claim?</a>
             </div>
             <div className="grid grid-cols-2 gap-5">
               <I l="Section 80C total (\u20B9)" v={f.section80C} ch={v => u('section80C', parseNum(v))} ph="150000" type="number" tip="PPF + ELSS + LIC + home loan principal + tuition fees" />
