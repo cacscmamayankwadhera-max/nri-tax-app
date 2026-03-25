@@ -94,11 +94,18 @@ export async function GET(request) {
       },
     };
 
+    // Include phone + dob for client-side identity verification (stripped after verification on frontend)
+    const verificationData = {
+      phone: caseData.intake_data?.phone || '',
+      dob: caseData.intake_data?.dob || '',
+    };
+
     return NextResponse.json({
       case: sanitizedCase,
       modules: clientModules,
       modulesCompleted: clientModules.filter(m => m.has_output).length,
       totalModules: 9, // total client-visible modules (excluding pricing)
+      intake_data: verificationData, // for identity verification only
     });
 
   } catch (error) {

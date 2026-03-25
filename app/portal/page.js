@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { useSearchParams } from 'next/navigation';
 import { computeCapitalGains, formatINR, FY_CONFIG } from '@/lib/compute';
@@ -131,6 +131,10 @@ function ClientPortal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [vis, setVis] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [verificationInput, setVerificationInput] = useState('');
+  const [pendingCaseData, setPendingCaseData] = useState(null);
+  const verifiedRef = useRef(false);
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -145,8 +149,12 @@ function ClientPortal() {
 
     setLoading(true);
     setError('');
-    setCaseData(null);
-    setModules([]);
+
+    // Only reset case data on initial lookup, not during poll refreshes
+    if (!verifiedRef.current) {
+      setCaseData(null);
+      setModules([]);
+    }
 
     try {
       const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
@@ -158,9 +166,16 @@ function ClientPortal() {
         return;
       }
 
-      setCaseData(data.case);
-      setModules(data.modules || []);
-      setModulesCompleted(data.modulesCompleted || 0);
+      // If already verified (polling for updates), update data directly
+      if (verifiedRef.current) {
+        setCaseData(data.case);
+        setModules(data.modules || []);
+        setModulesCompleted(data.modulesCompleted || 0);
+      } else {
+        // First load — require identity verification before showing case
+        setPendingCaseData(data);
+        setNeedsVerification(true);
+      }
     } catch (e) {
       setError('Connection error. Please check your internet and try again.');
     }
@@ -199,10 +214,84 @@ function ClientPortal() {
     fetchCase(trimmed);
   };
 
+  function handleVerification() {
+    const phone = pendingCaseData?.intake_data?.phone || '';
+    const dob = pendingCaseData?.intake_data?.dob || '';
+    const last4Phone = phone.replace(/\D/g, '').slice(-4);
+
+    // Verify: last 4 digits of phone OR DOB match
+    const input = verificationInput.trim();
+    if (input === last4Phone || input === dob) {
+      verifiedRef.current = true;
+      setCaseData(pendingCaseData.case);
+      setModules(pendingCaseData.modules || []);
+      setModulesCompleted(pendingCaseData.modulesCompleted || 0);
+      setNeedsVerification(false);
+      setPendingCaseData(null);
+      setVerificationInput('');
+      setError('');
+    } else {
+      setError('Verification failed. Please check and try again.');
+    }
+  }
+
   const stage = caseData ? determineStage(caseData, modulesCompleted) : 0;
   const findings = caseData ? computeFindings(caseData.intake_data, caseData.fy) : null;
   const completedModuleIds = modules.filter(m => m.has_output).map(m => m.module_id);
   const isDark = theme === 'dark';
+
+  // ═══ Render: Verification Step ═══
+  if (needsVerification && !caseData) {
+    return (
+      <div className="min-h-screen bg-theme">
+        <div className="gold-gradient-line" />
+        <NavBar />
+        <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="card-theme p-8 text-center shadow-sm">
+            <div className="text-3xl mb-3">{'\uD83D\uDD12'}</div>
+            <h3 className="font-serif text-xl font-bold text-theme mb-2">Verify Your Identity</h3>
+            <p className="text-sm text-theme-secondary mb-6">
+              For your security, please enter the last 4 digits of your registered phone number or your date of birth (YYYY-MM-DD).
+            </p>
+            <input
+              type="text"
+              value={verificationInput}
+              onChange={e => setVerificationInput(e.target.value)}
+              placeholder="Last 4 digits of phone or DOB"
+              maxLength={10}
+              className="input-theme py-3 px-4 max-w-xs mx-auto text-center text-lg tracking-wider"
+              autoFocus
+            />
+            {error && (
+              <div className="mt-4 rounded-lg px-4 py-3 text-sm" style={{
+                background: 'rgba(160,72,72,0.08)',
+                border: '1px solid rgba(160,72,72,0.2)',
+                color: 'var(--red)',
+              }}>
+                {error}
+              </div>
+            )}
+            <button onClick={handleVerification} className="btn-primary mt-4 mx-auto block py-3 px-8">
+              Verify & View Case
+            </button>
+            <button
+              onClick={() => {
+                setNeedsVerification(false);
+                setPendingCaseData(null);
+                setVerificationInput('');
+                setError('');
+              }}
+              className="mt-4 text-xs text-theme-muted hover:text-theme-accent transition"
+            >
+              Back to lookup
+            </button>
+          </div>
+        </div>
+        <ContactBar />
+        <Footer />
+      </div>
+    );
+  }
 
   // ═══ Render: Lookup Form (no case loaded) ═══
   if (!caseData && !loading) {

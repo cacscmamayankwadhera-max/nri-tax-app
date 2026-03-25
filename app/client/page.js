@@ -71,6 +71,21 @@ export default function ClientIntake() {
   const [step, setStep] = useState(0);
   const [f, setF] = useState({});
   const [fy] = useState('2025-26');
+
+  // Restore draft from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('nri-intake-draft');
+      if (saved) setF(JSON.parse(saved));
+    } catch (e) {}
+  }, []);
+
+  // Save draft to localStorage on every change
+  useEffect(() => {
+    if (Object.keys(f).length > 0) {
+      localStorage.setItem('nri-intake-draft', JSON.stringify(f));
+    }
+  }, [f]);
   const [narr, setNarr] = useState('');
   const [prs, setPrs] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -113,7 +128,11 @@ export default function ClientIntake() {
     setParseDone(true);
     setTimeout(() => {
       setParseDone(false);
-      goStep(1);
+      // Only advance to next step if mandatory fields are filled
+      setF(prev => {
+        if (prev.name && prev.country) goStep(1);
+        return prev;
+      });
     }, 1200);
   }
 
@@ -138,6 +157,8 @@ export default function ClientIntake() {
     setCaseRef(ref);
     setSubmitted(true);
     setSubmitting(false);
+    // Clear draft after successful submission
+    localStorage.removeItem('nri-intake-draft');
   }
 
   const stepLabels = ['Details', 'India', 'Income', 'Documents', 'Review'];
@@ -470,8 +491,18 @@ export default function ClientIntake() {
           {/* Manual form */}
           <div className="card-theme p-8">
             <div className="grid grid-cols-2 gap-5 stagger-children">
-              <I l="Your Full Name *" v={f.name} ch={v => u('name', v)} ph="Rajesh Mehta" />
-              <I l="Country of Residence *" tip="Your country of residence determines which DTAA (tax treaty) applies"><S v={f.country} ch={v => u('country', v)} o={COUNTRIES} /></I>
+              <div>
+                <I l="Your Full Name *" v={f.name} ch={v => u('name', v)} ph="Rajesh Mehta" />
+                {parseDone && !f.name && (
+                  <p className="text-xs text-red-500 mt-1">Please enter your name — AI couldn't extract it</p>
+                )}
+              </div>
+              <div>
+                <I l="Country of Residence *" tip="Your country of residence determines which DTAA (tax treaty) applies"><S v={f.country} ch={v => u('country', v)} o={COUNTRIES} /></I>
+                {parseDone && !f.country && (
+                  <p className="text-xs text-red-500 mt-1">Please select your country — AI couldn't extract it</p>
+                )}
+              </div>
               <I l="Occupation" v={f.occupation} ch={v => u('occupation', v)} ph="e.g. IT Manager" />
               <I l="Years Abroad" tip="Helps determine residential status history"><S v={f.yearsAbroad} ch={v => u('yearsAbroad', v)} o={['Less than 1 year', '1-3 years', '3-5 years', '5+ years']} /></I>
               <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />

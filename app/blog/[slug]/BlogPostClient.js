@@ -5,6 +5,22 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { BLOGS } from '../data';
 
+const headingWithId = (Tag, className, style) => {
+  const Component = ({ children, ...props }) => {
+    const extractText = (node) => {
+      if (typeof node === 'string') return node;
+      if (Array.isArray(node)) return node.map(extractText).join('');
+      if (node && node.props && node.props.children) return extractText(node.props.children);
+      return '';
+    };
+    const text = extractText(children);
+    const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return <Tag id={id} className={className} style={style} {...props}>{children}</Tag>;
+  };
+  Component.displayName = `Heading_${Tag}`;
+  return Component;
+};
+
 export default function BlogPostClient({ blog, blogContent }) {
   const { theme, toggleTheme } = useTheme();
   const [progress, setProgress] = useState(0);
@@ -176,9 +192,9 @@ export default function BlogPostClient({ blog, blogContent }) {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: ({ children }) => <h1 className="font-serif text-3xl mt-10 mb-4" style={{ color: 'var(--text-primary)' }}>{children}</h1>,
-                  h2: ({ children }) => <h2 className="font-serif text-2xl mt-10 mb-4 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid var(--border)' }}>{children}</h2>,
-                  h3: ({ children }) => <h3 className="font-serif text-xl mt-8 mb-3" style={{ color: 'var(--text-primary)' }}>{children}</h3>,
+                  h1: headingWithId('h1', 'font-serif text-3xl mt-10 mb-4', { color: 'var(--text-primary)' }),
+                  h2: headingWithId('h2', 'font-serif text-2xl mt-10 mb-4 pb-2', { color: 'var(--text-primary)', borderBottom: '1px solid var(--border)' }),
+                  h3: headingWithId('h3', 'font-serif text-xl mt-8 mb-3', { color: 'var(--text-primary)' }),
                   h4: ({ children }) => <h4 className="font-bold text-base mt-6 mb-2">{children}</h4>,
                   p: ({ children }) => <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>{children}</p>,
                   strong: ({ children }) => <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{children}</strong>,

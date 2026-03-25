@@ -314,9 +314,25 @@ export default function Dashboard() {
   const [dv, setDv] = useState(null);        // active deliverable view
   const [dlLd, setDlLd] = useState(false);   // downloading docx
   const [toast, setToast] = useState(null);
+  const [user, setUser] = useState(null);
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) setUser(user);
+      } catch (e) {}
+    }
+    getUser();
+  }, []);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    window.location.href = '/login';
+  }
 
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   const cfg = FY_CONFIG[fy];
@@ -359,6 +375,7 @@ export default function Dashboard() {
         user_id: user.id,
         client_name: caseObj.name,
         client_email: f.email,
+        client_phone: f.phone,
         country: caseObj.country,
         fy, ay: cfg.ay,
         classification: caseObj.classification,
@@ -399,7 +416,7 @@ export default function Dashboard() {
       const output = await runAIModule(mod.id, f, fy, outs);
       setOuts(p => ({ ...p, [mod.id]: output }));
       setAc(p => p ? { ...p, modulesDone: Math.max(p.modulesDone || 1, idx + 1) } : p);
-      if (ac?.dbId) saveModuleOutput(ac.dbId, mod.id, output);
+      saveModuleOutput(ac?.dbId || ac?.id, mod.id, output);
     } catch (e) {
       setOuts(p => ({ ...p, [mod.id]: `Error: ${e.message}. Check your ANTHROPIC_API_KEY in .env.local.` }));
     }
@@ -446,6 +463,18 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <span className="text-[10px] px-2 py-0.5 rounded" style={{ background:'var(--bg-badge)', color:'var(--text-badge)', border:'1px solid var(--border)' }}>v3 · FY {fy}</span>
           <ThemeToggle />
+          {user && (
+            <span className="text-xs text-theme-muted hidden md:inline">
+              {user.email?.split('@')[0]}
+            </span>
+          )}
+          <button onClick={handleLogout} className="text-xs px-3 py-1.5 rounded-lg transition-all"
+            style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--red)'; e.currentTarget.style.borderColor = 'var(--red)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+          >
+            Logout
+          </button>
         </div>
       </nav>
       <div className="max-w-4xl mx-auto py-8 px-5 md:px-8">
@@ -487,13 +516,34 @@ export default function Dashboard() {
         ) : (
           <div className="stagger-children">
             {cases.map(c => (
-              <div key={c.id || c.dbId} onClick={()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);}}
+              <div key={c.id || c.dbId} onClick={async ()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);
+                // Load module outputs from DB
+                if (c.dbId || c.id) {
+                  try {
+                    const { data: outputs } = await supabase.from('module_outputs')
+                      .select('module_id, output_text')
+                      .eq('case_id', c.dbId || c.id);
+                    if (outputs && outputs.length > 0) {
+                      const loadedOuts = {};
+                      outputs.forEach(o => { loadedOuts[o.module_id] = o.output_text; });
+                      setOuts(prev => ({ ...prev, ...loadedOuts }));
+                    }
+                  } catch (e) { /* continue with local state */ }
+                }
+              }}
                 className="bg-theme-card rounded-lg border border-theme p-4 mb-3 cursor-pointer transition animate-fade-in-up flex justify-between items-center"
                 style={{ '--tw-bg-opacity':'1' }}
                 onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-card-hover, var(--bg-secondary))'}
                 onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-card)'}>
                 <div>
-                  <div className="font-semibold text-sm text-theme">{c.name || c.client_name}</div>
+                  <div className="font-semibold text-sm text-theme">{c.name || c.client_name}
+                    {c.client_email && (
+                      <span className="text-xs text-theme-muted ml-2">{c.client_email}</span>
+                    )}
+                    {c.client_phone && (
+                      <span className="text-xs text-theme-muted ml-2">{c.client_phone}</span>
+                    )}
+                  </div>
                   <div className="text-xs text-theme-muted">{c.country} · FY {c.fy}</div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -558,6 +608,12 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 gap-3">
                 <Inp l="Name *" v={f.name} ch={v=>u('name',v)} ph="Rajesh Mehta" />
                 <Inp l="Country *"><Sel v={f.country} ch={v=>u('country',v)} o={COUNTRIES} /></Inp>
+                <div><label className="block text-xs font-medium mb-1">Email</label>
+                  <input type="email" value={f.email || ''} onChange={e => u('email', e.target.value)} placeholder="client@email.com" className="input-theme py-2 px-3 text-sm" />
+                </div>
+                <div><label className="block text-xs font-medium mb-1">Phone</label>
+                  <input type="tel" value={f.phone || ''} onChange={e => u('phone', e.target.value)} placeholder="+91 98765 43210" className="input-theme py-2 px-3 text-sm" />
+                </div>
                 <Inp l="Occupation" v={f.occupation} ch={v=>u('occupation',v)} ph="IT Manager" />
                 <Inp l="Years abroad"><Sel v={f.yearsAbroad} ch={v=>u('yearsAbroad',v)} o={['<1yr','1-3yr','3-5yr','5+yr']} /></Inp>
               </div>
@@ -680,6 +736,20 @@ export default function Dashboard() {
           <button onClick={()=>setView('home')} className="text-[10px] px-2 py-0.5 rounded text-theme-on-dark" style={{ border:'1px solid var(--border)' }}>Home</button>
           <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="text-[10px] text-theme-accent px-2 py-0.5 rounded" style={{ border:'1px solid var(--accent)' }}>+ New</button>
           <ThemeToggle />
+          <div className="flex items-center gap-3">
+            {user && (
+              <span className="text-xs text-theme-muted hidden md:inline">
+                {user.email?.split('@')[0]}
+              </span>
+            )}
+            <button onClick={handleLogout} className="text-xs px-3 py-1.5 rounded-lg transition-all"
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--red)'; e.currentTarget.style.borderColor = 'var(--red)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -690,6 +760,16 @@ export default function Dashboard() {
             <div className="font-bold text-xs text-theme">{ac?.name}</div>
             <div className="text-[10px] text-theme-muted">{ac?.country} · FY {fy}</div>
             <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{background:CLS_COLORS[ac?.classification]+'20',color:CLS_COLORS[ac?.classification]}}>{ac?.classification}</span>
+            {ac?.client_email && (
+              <div className="text-xs text-theme-muted mt-1 truncate" title={ac.client_email}>
+                📧 {ac.client_email}
+              </div>
+            )}
+            {ac?.client_phone && (
+              <div className="text-xs text-theme-muted mt-0.5">
+                📱 {ac.client_phone}
+              </div>
+            )}
             <div className="mt-2">
               <select value={ac?.status || 'intake'}
                 onChange={async (e) => {

@@ -62,12 +62,12 @@ const FEATURES = [
 ];
 
 const COUNTRIES = [
-  { name: 'United States', flag: '\uD83C\uDDFA\uD83C\uDDF8' },
-  { name: 'United Kingdom', flag: '\uD83C\uDDEC\uD83C\uDDE7' },
-  { name: 'UAE', flag: '\uD83C\uDDE6\uD83C\uDDEA' },
-  { name: 'Singapore', flag: '\uD83C\uDDF8\uD83C\uDDEC' },
-  { name: 'Canada', flag: '\uD83C\uDDE8\uD83C\uDDE6' },
-  { name: 'Australia', flag: '\uD83C\uDDE6\uD83C\uDDFA' },
+  { name: 'United States', code: 'us', flag: 'https://flagcdn.com/w40/us.png' },
+  { name: 'United Kingdom', code: 'gb', flag: 'https://flagcdn.com/w40/gb.png' },
+  { name: 'UAE', code: 'ae', flag: 'https://flagcdn.com/w40/ae.png' },
+  { name: 'Singapore', code: 'sg', flag: 'https://flagcdn.com/w40/sg.png' },
+  { name: 'Canada', code: 'ca', flag: 'https://flagcdn.com/w40/ca.png' },
+  { name: 'Australia', code: 'au', flag: 'https://flagcdn.com/w40/au.png' },
 ];
 
 const TESTIMONIALS = [
@@ -76,21 +76,21 @@ const TESTIMONIALS = [
     name: 'Rajesh K.',
     role: 'Software Engineer',
     country: 'Singapore',
-    flag: '\uD83C\uDDF8\uD83C\uDDEC',
+    flag: 'https://flagcdn.com/w40/sg.png',
   },
   {
     quote: 'I had excess TDS of \u20B917 lakhs stuck for two years. They not only filed the refund but restructured my entire India portfolio to be tax-efficient going forward.',
     name: 'Priya M.',
     role: 'Investment Banker',
     country: 'London',
-    flag: '\uD83C\uDDEC\uD83C\uDDE7',
+    flag: 'https://flagcdn.com/w40/gb.png',
   },
   {
     quote: 'My previous CA filed me as Resident and I was facing global income tax liability. They corrected my status, filed revised returns, and saved me over \u20B924 lakhs.',
     name: 'Amit S.',
     role: 'Business Owner',
     country: 'Dubai',
-    flag: '\uD83C\uDDE6\uD83C\uDDEA',
+    flag: 'https://flagcdn.com/w40/ae.png',
   },
 ];
 
@@ -627,12 +627,10 @@ export default function Home() {
             {COUNTRIES.map((c, i) => (
               <span
                 key={i}
-                className="text-2xl md:text-3xl"
-                role="img"
-                aria-label={c.name}
                 title={c.name}
+                className="inline-flex items-center"
               >
-                {c.flag}
+                <img src={c.flag} alt={c.name} width={32} height={22} className="rounded-sm" />
               </span>
             ))}
             <span
@@ -659,7 +657,7 @@ export default function Home() {
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">{t.flag}</span>
+                  <img src={t.flag} alt={t.country} width={24} height={16} className="rounded-sm" />
                   <div>
                     <div
                       className="text-sm font-semibold"

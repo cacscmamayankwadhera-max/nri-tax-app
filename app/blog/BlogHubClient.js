@@ -19,17 +19,17 @@ function useSlider(items, autoMs = 5000) {
 
 /* ─── Country Quick-Access Data ───────────────────────────── */
 const COUNTRIES = [
-  { flag: '\u{1F1FA}\u{1F1F8}', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
-  { flag: '\u{1F1E6}\u{1F1EA}', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
-  { flag: '\u{1F1EC}\u{1F1E7}', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
-  { flag: '\u{1F1E8}\u{1F1E6}', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
-  { flag: '\u{1F1E6}\u{1F1FA}', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
-  { flag: '\u{1F1F8}\u{1F1EC}', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
-  { flag: '\u{1F1E9}\u{1F1EA}', name: 'Germany', slug: 'germany-nri-tax-guide', stat: 'DTAA 10%' },
-  { flag: '\u{1F1F8}\u{1F1E6}', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
-  { flag: '\u{1F1F6}\u{1F1E6}', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
-  { flag: '\u{1F1F4}\u{1F1F2}', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
-  { flag: '\u{1F1F0}\u{1F1FC}', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
+  { flag: 'https://flagcdn.com/w40/us.png', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
+  { flag: 'https://flagcdn.com/w40/ae.png', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
+  { flag: 'https://flagcdn.com/w40/gb.png', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: 'https://flagcdn.com/w40/ca.png', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
+  { flag: 'https://flagcdn.com/w40/au.png', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
+  { flag: 'https://flagcdn.com/w40/sg.png', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: 'https://flagcdn.com/w40/de.png', name: 'Germany', slug: 'germany-nri-tax-guide', stat: 'DTAA 10%' },
+  { flag: 'https://flagcdn.com/w40/sa.png', name: 'Saudi/GCC', slug: 'gulf-gcc-nri-tax-guide', stat: 'Zero Tax + EOSB' },
+  { flag: 'https://flagcdn.com/w40/qa.png', name: 'Qatar', slug: 'gulf-gcc-nri-tax-guide', stat: 'DTAA 10%' },
+  { flag: 'https://flagcdn.com/w40/om.png', name: 'Oman', slug: 'gulf-gcc-nri-tax-guide', stat: 'Golden Visa' },
+  { flag: 'https://flagcdn.com/w40/kw.png', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
 ];
 
 const STATS_BAR = [
@@ -261,7 +261,7 @@ export default function BlogHubClient({ blogs }) {
               <div id="country-scroll" className="flex gap-3 overflow-x-auto pb-2 px-1 scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
                 {COUNTRIES.map(c => (
                   <a key={c.name} href={`/blog/${c.slug}`} className="flex-shrink-0 w-36 rounded-xl p-4 text-center transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-                    <div className="text-3xl mb-2">{c.flag}</div>
+                    <div className="mb-2"><img src={c.flag} alt={c.name} width={32} height={22} className="rounded-sm mx-auto" /></div>
                     <div className="text-sm font-bold mb-1">{c.name}</div>
                     <div className="text-xs" style={{ color: 'var(--accent)' }}>{c.stat}</div>
                   </a>
