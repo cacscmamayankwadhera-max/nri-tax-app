@@ -3,6 +3,7 @@ import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, HeadingLevel, BorderStyle, WidthType, ShadingType,
   LevelFormat } from 'docx';
 import { computeCapitalGains, computeHouseProperty, computeTotalIncome, computeAdvanceTax, formatINR, FY_CONFIG, CII } from '@/lib/compute';
+import { logActivity } from '@/lib/activity-log';
 
 const FIRM = process.env.FIRM_NAME || 'MKW Advisors';
 const TAG = process.env.FIRM_TAGLINE || 'NRI Tax Filing · Advisory · Compliance';
@@ -534,6 +535,8 @@ export async function POST(request) {
     }
 
     const buffer = await Packer.toBuffer(doc);
+
+    logActivity(null, null, 'deliverable_generated', { type }).catch(() => {});
 
     return new NextResponse(buffer, {
       headers: {

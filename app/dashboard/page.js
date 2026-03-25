@@ -670,7 +670,21 @@ export default function Dashboard() {
                   <Inp l="Purchase cost ₹" v={f.purchaseCost} ch={v=>u('purchaseCost',parseInt(v)||0)} ph="2200000" type="number" />
                   <Inp l="Location" v={f.propertyLocation} ch={v=>u('propertyLocation',v)} ph="Nashik" />
                   <Inp l="Section 54" wide tip="New house? Bonds?"><Sel v={f.section54} ch={v=>u('section54',v)} o={['Not discussed','House purchased','Planning purchase','Considering 54EC','Not applicable']} /></Inp>
+                  <Inp l="Property type"><Sel v={f.propertyType} ch={v=>u('propertyType',v)} o={['Residential Flat','Residential Plot','Commercial','Agricultural (Urban)','Agricultural (Rural)']} /></Inp>
+                  <Inp l="Stamp duty ₹" v={f.stampDutyValue} ch={v=>u('stampDutyValue',parseInt(v)||0)} ph="7000000" type="number" tip="Circle rate" />
+                  <Inp l="Registration ₹" v={f.registrationExpenses} ch={v=>u('registrationExpenses',parseInt(v)||0)} ph="350000" type="number" />
+                  <Inp l="TDS by buyer ₹" v={f.tdsDeductedBuyer} ch={v=>u('tdsDeductedBuyer',parseInt(v)||0)} ph="1360000" type="number" tip="From Form 16B" />
+                  <Inp l="Improvement ₹" v={f.improvementCost} ch={v=>u('improvementCost',parseInt(v)||0)} ph="0" type="number" />
+                  <Inp l="Sec 197"><Sel v={f.section197} ch={v=>u('section197',v)} o={['Not applied','Applied','Obtained','N/A']} /></Inp>
+                  <Inp l="Pre-2001?"><Sel v={f.preApril2001} ch={v=>u('preApril2001',v)} o={['No','Yes — FMV as cost']} /></Inp>
+                  <Inp l="Co-owner" v={f.coOwnerName} ch={v=>u('coOwnerName',v)} ph="If joint" />
+                  <Inp l="Co-owner PAN" v={f.coOwnerPAN} ch={v=>u('coOwnerPAN',v.toUpperCase())} ph="FGHIJ5678K" />
                 </>}
+                <Inp l="PAN" v={f.pan} ch={v=>u('pan',v.toUpperCase())} ph="ABCDE1234F" />
+                <Inp l="DOB" v={f.dob} ch={v=>u('dob',v)} type="date" />
+                <Inp l="Aadhaar" v={f.aadhaar} ch={v=>u('aadhaar',v)} ph="1234 5678 9012" />
+                <Inp l="Stay 4yr (days)" v={f.stayDays4yr} ch={v=>u('stayDays4yr',parseInt(v)||0)} ph="300" type="number" tip="Preceding 4 years total" />
+                <Inp l="Stay 7yr (days)" v={f.stayDays7yr} ch={v=>u('stayDays7yr',parseInt(v)||0)} ph="500" type="number" tip="Preceding 7 years total" />
               </div>
             </div>
             <div className="flex gap-2 mt-3">
@@ -695,6 +709,17 @@ export default function Dashboard() {
                 <Inp l="NRO int ₹/yr" v={f.nroInterest} ch={v=>u('nroInterest',parseInt(v)||0)} ph="140000" type="number" />
                 <Inp l="FD int ₹/yr" v={f.fdInterest} ch={v=>u('fdInterest',parseInt(v)||0)} ph="85000" type="number" />
               </div>}
+            </div>}
+            {(f.salary||f.cgESOPRSU||f.rent) && <div className="card-theme p-5 mb-3">
+              {f.salary && <Inp l="Salary ₹/yr" v={f.salaryAmount} ch={v=>u('salaryAmount',parseInt(v)||0)} ph="1200000" type="number" tip="From Form 16" />}
+              {f.cgESOPRSU && <div className="grid grid-cols-2 gap-3 mt-2">
+                <Inp l="Employer" v={f.esopEmployer} ch={v=>u('esopEmployer',v)} ph="Company name" />
+                <Inp l="Listed?"><Sel v={f.esopListed} ch={v=>u('esopListed',v)} o={['Listed India','Listed abroad','Unlisted']} /></Inp>
+              </div>}
+              <div className="grid grid-cols-2 gap-3 mt-2">
+                <Inp l="Home loan int ₹" v={f.homeLoanInterest} ch={v=>u('homeLoanInterest',parseInt(v)||0)} ph="0" type="number" tip="On rental property" />
+                <Inp l="Municipal tax ₹" v={f.municipalTax} ch={v=>u('municipalTax',parseInt(v)||0)} type="number" />
+              </div>
             </div>}
             <div className="card-theme p-5 mb-3">
               <div className="text-xs font-semibold mb-2 text-theme">Cross-Border</div>
@@ -722,6 +747,18 @@ export default function Dashboard() {
                 <Inp l="Regime"><Sel v={f.taxRegime} ch={v=>u('taxRegime',v)} o={['New (default)','Old','Help decide']} /></Inp>
               </div>
               <div className="mt-3"><Inp l="Notes" wide><textarea value={f.notes||''} onChange={e=>u('notes',e.target.value)} rows={2} className="input-theme" style={{ resize:'vertical' }} /></Inp></div>
+            </div>
+            <div className="card-theme p-5 mb-3 mt-3">
+              <div className="text-xs font-semibold mb-2 text-theme">Deductions & Tax Paid</div>
+              <div className="grid grid-cols-2 gap-3">
+                <Inp l="80C total ₹" v={f.section80C} ch={v=>u('section80C',parseInt(v)||0)} ph="150000" type="number" tip="PPF+ELSS+LIC+loan principal" />
+                <Inp l="80D self ₹" v={f.healthInsuranceSelf} ch={v=>u('healthInsuranceSelf',parseInt(v)||0)} ph="25000" type="number" />
+                <Inp l="80D parents ₹" v={f.healthInsuranceParents} ch={v=>u('healthInsuranceParents',parseInt(v)||0)} ph="25000" type="number" />
+                <Inp l="NPS ₹" v={f.npsContribution} ch={v=>u('npsContribution',parseInt(v)||0)} ph="50000" type="number" />
+                <Inp l="Edu loan int ₹" v={f.educationLoanInterest} ch={v=>u('educationLoanInterest',parseInt(v)||0)} type="number" />
+                <Inp l="Advance tax ₹" v={f.advanceTaxPaid} ch={v=>u('advanceTaxPaid',parseInt(v)||0)} type="number" tip="Challan 280" />
+                <Inp l="TCS on LRS ₹" v={f.tcsPaidLRS} ch={v=>u('tcsPaidLRS',parseInt(v)||0)} type="number" />
+              </div>
             </div>
             <div className="flex gap-2 mt-3">
               <button onClick={()=>setStep(2)} className="flex-1 btn-secondary">← Back</button>
@@ -819,6 +856,12 @@ export default function Dashboard() {
                   if (ac?.dbId) {
                     try {
                       await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                      // Fire notification (fire-and-forget)
+                      fetch('/api/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ caseId: ac.dbId || ac.id, newStatus }),
+                      }).catch(() => {}); // Don't block UI on notification failure
                     } catch(e) {}
                   }
                 }}

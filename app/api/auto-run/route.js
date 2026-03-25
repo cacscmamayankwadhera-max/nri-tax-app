@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
 import { createServerClient } from '@/lib/supabase-server';
+import { logActivity } from '@/lib/activity-log';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -127,6 +128,7 @@ export async function POST(request) {
         await updateCaseStatus(supabase, caseId, 'in_progress', completedCount);
 
         const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
+        logActivity(caseId, null, 'module_completed', { moduleId, elapsed }).catch(() => {});
         console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${completedCount}/${MODULE_ORDER.length})`);
 
       } catch (moduleError) {

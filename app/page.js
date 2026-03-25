@@ -148,10 +148,22 @@ const PRICING_TIERS = [
 
 export default function Home() {
   const [vis, setVis] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
     setVis(true);
+    // Check for in-progress assessment draft
+    try {
+      const draft = localStorage.getItem('nri-intake-draft');
+      if (draft && Object.keys(JSON.parse(draft)).length > 0) setHasDraft(true);
+    } catch (e) {}
+    // Check for verified client session
+    try {
+      const session = sessionStorage.getItem('nri-mycases-session');
+      if (session) setHasSession(true);
+    } catch (e) {}
   }, []);
 
   const isDark = theme === 'dark';
@@ -197,6 +209,24 @@ export default function Home() {
               vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
+            {/* Return visitor banner */}
+            {(hasDraft || hasSession) && (
+              <div className="mb-6 animate-fade-in-up">
+                {hasDraft && (
+                  <a href="/client" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-105"
+                    style={{ background: 'rgba(196,154,60,0.1)', border: '1px solid rgba(196,154,60,0.3)', color: 'var(--accent)' }}>
+                    &#8617; Continue your assessment
+                  </a>
+                )}
+                {hasSession && !hasDraft && (
+                  <a href="/my-cases" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-105"
+                    style={{ background: 'rgba(42,107,74,0.1)', border: '1px solid rgba(42,107,74,0.3)', color: 'var(--green)' }}>
+                    &#8617; View your cases
+                  </a>
+                )}
+              </div>
+            )}
+
             {/* Badge */}
             <div
               className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-8"

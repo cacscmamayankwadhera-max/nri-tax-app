@@ -4,6 +4,7 @@ import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
 import { rateLimit } from '@/lib/rate-limit';
 import { createServerClient as createSupabaseSSR } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { logActivity } from '@/lib/activity-log';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -65,6 +66,8 @@ export async function POST(request) {
     const output = message.content
       .map(block => block.type === 'text' ? block.text : '')
       .join('\n');
+
+    logActivity(null, null, 'ai_module_run', { moduleId }).catch(() => {});
 
     return NextResponse.json({ output, moduleId });
 

@@ -141,12 +141,21 @@ export default function BlogHubClient({ blogs }) {
     return grouped;
   }, [blogs]);
 
-  const handleLeadSubmit = e => {
+  const handleLeadSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
-    leads.push({ email, source: 'blog-hub', ts: new Date().toISOString() });
-    localStorage.setItem('nri-leads', JSON.stringify(leads));
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'blog-hub' }),
+      });
+    } catch (e) {
+      // Fallback to localStorage if API fails
+      const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
+      leads.push({ email, source: 'blog-hub', ts: new Date().toISOString() });
+      localStorage.setItem('nri-leads', JSON.stringify(leads));
+    }
     setLeadSubmitted(true);
     setEmail('');
   };

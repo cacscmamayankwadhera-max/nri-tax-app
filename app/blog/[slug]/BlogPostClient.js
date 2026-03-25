@@ -72,12 +72,21 @@ export default function BlogPostClient({ blog, blogContent }) {
     }
   };
 
-  const handleEmailSave = (e) => {
+  const handleEmailSave = async (e) => {
     e.preventDefault();
     if (!resultEmail) return;
-    const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
-    leads.push({ email: resultEmail, source: `blog-${slug}`, ts: new Date().toISOString() });
-    localStorage.setItem('nri-leads', JSON.stringify(leads));
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: resultEmail, source: `blog-${slug}` }),
+      });
+    } catch (e) {
+      // Fallback to localStorage if API fails
+      const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
+      leads.push({ email: resultEmail, source: `blog-${slug}`, ts: new Date().toISOString() });
+      localStorage.setItem('nri-leads', JSON.stringify(leads));
+    }
     setEmailResult('sent');
     setResultEmail('');
   };

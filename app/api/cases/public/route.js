@@ -3,6 +3,8 @@ import { createServerClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rate-limit';
 import { FY_CONFIG } from '@/lib/compute';
+import { logActivity } from '@/lib/activity-log';
+import { notifyNewIntake } from '@/lib/notifications';
 
 // Fire-and-forget: trigger auto-run of all AI modules for a new case.
 function triggerAutoRun(caseId, formData, fy) {
@@ -81,9 +83,12 @@ export async function POST(request) {
       }, { status: 500 });
     }
 
-    // Case created successfully — fire auto-run in the background
+    // Case created successfully — log activity and fire auto-run in the background
     if (data?.id) {
+      logActivity(data.id, null, 'case_created', { source: 'public_intake', classification }).catch(() => {});
       triggerAutoRun(data.id, formData, fy || '2025-26');
+      // Notify client (fire-and-forget)
+      notifyNewIntake(data).catch(() => {});
     }
 
     return NextResponse.json({
