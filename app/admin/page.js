@@ -625,9 +625,11 @@ export default function AdminPage() {
                         <div className="text-[10px] text-theme-muted">
                           <span className="font-medium">Used for:</span> {integration.description}
                           <br />
-                          <a href={integration.signupUrl} target="_blank" rel="noopener noreferrer" className="text-theme-accent hover:underline inline-flex items-center gap-0.5 mt-0.5">
-                            {integration.signupUrl?.replace('https://', '')} <IconExternalLink />
-                          </a>
+                          {integration.signupUrl && (
+                            <a href={integration.signupUrl} target="_blank" rel="noopener noreferrer" className="text-theme-accent hover:underline inline-flex items-center gap-0.5 mt-0.5">
+                              {integration.signupUrl.replace('https://', '')} <IconExternalLink />
+                            </a>
+                          )}
                         </div>
                         <div className="flex gap-2 flex-shrink-0">
                           <button

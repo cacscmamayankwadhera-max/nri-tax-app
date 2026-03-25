@@ -352,7 +352,7 @@ export default function ClientPortalDashboard() {
                 <div className="mt-6 p-4 rounded-lg" style={{ background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.2)' }}>
                   <p className="text-sm text-theme-secondary">
                     Having trouble? Contact us on{' '}
-                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="text-theme-accent font-semibold hover:underline">
+                    <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="text-theme-accent font-semibold hover:underline">
                       WhatsApp
                     </a>{' '}
                     and we will help you access your cases.
@@ -597,13 +597,13 @@ export default function ClientPortalDashboard() {
                       <div
                         className="h-full rounded-full transition-all duration-700 ease-out"
                         style={{
-                          width: `${caseItem.total_modules > 0 ? Math.round((caseItem.modules_completed / caseItem.total_modules) * 100) : 0}%`,
-                          background: caseItem.modules_completed === caseItem.total_modules ? 'var(--green)' : 'var(--accent)',
+                          width: `${((caseItem.modulesDone || caseItem.modules_completed || 0) / 9) * 100}%`,
+                          background: (caseItem.modulesDone || caseItem.modules_completed || 0) >= 9 ? 'var(--green)' : 'var(--accent)',
                         }}
                       />
                     </div>
                     <span className="text-[10px] text-theme-muted font-medium whitespace-nowrap">
-                      {caseItem.modules_completed}/{caseItem.total_modules} modules
+                      {caseItem.modulesDone || caseItem.modules_completed || 0}/9 modules
                     </span>
                   </div>
                 </button>
@@ -715,7 +715,7 @@ export default function ClientPortalDashboard() {
 
                       {/* View Details Link */}
                       <div className="mt-5 pt-4 border-t flex flex-wrap gap-3" style={{ borderColor: 'var(--border)' }}>
-                        {caseItem.portal_token && (
+                        {caseItem.portal_token ? (
                           <a
                             href={`/portal?ref=${caseItem.portal_token}`}
                             className="btn-primary text-sm py-2.5 px-5 inline-flex items-center gap-2"
@@ -724,6 +724,12 @@ export default function ClientPortalDashboard() {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
+                          </a>
+                        ) : (
+                          <a href="https://wa.me/919667744073?text=Hi%2C%20I%20need%20help%20accessing%20my%20case"
+                            target="_blank" rel="noopener noreferrer"
+                            className="text-xs text-theme-accent hover:underline">
+                            Contact us for case details
                           </a>
                         )}
                       </div>

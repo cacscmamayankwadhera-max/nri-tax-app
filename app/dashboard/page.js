@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
-import { computeCapitalGains, computeHouseProperty, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
+import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
 
 /* ═══ CONSTANTS ═══ */
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
@@ -476,7 +476,7 @@ export default function Dashboard() {
       setAc(p => p ? { ...p, modulesDone: Math.max(p.modulesDone || 1, idx + 1) } : p);
       saveModuleOutput(ac?.dbId || ac?.id, mod.id, output);
     } catch (e) {
-      setOuts(p => ({ ...p, [mod.id]: `Error: ${e.message}. Check your ANTHROPIC_API_KEY in .env.local.` }));
+      setOuts(p => ({ ...p, [mod.id]: `[ERROR] ${e.message}` }));
     }
     setLd(false);
   }, [f, fy, outs, ac]);
@@ -876,7 +876,10 @@ export default function Dashboard() {
         <span className="font-serif text-theme-accent font-bold cursor-pointer text-sm" onClick={()=>setView('home')}>NRI TAX SUITE</span>
         <div className="flex gap-1 items-center">
           <button onClick={()=>setView('home')} className="text-[10px] px-2 py-0.5 rounded text-theme-on-dark" style={{ border:'1px solid var(--border)' }}>Home</button>
-          <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="text-[10px] text-theme-accent px-2 py-0.5 rounded" style={{ border:'1px solid var(--accent)' }}>+ New</button>
+          <button onClick={()=>{
+            if (Object.keys(outs).length > 1 && !confirm('Start a new case? Unsaved module outputs for the current case will remain in the database.')) return;
+            setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');
+          }} className="text-[10px] text-theme-accent px-2 py-0.5 rounded" style={{ border:'1px solid var(--accent)' }}>+ New</button>
           <ThemeToggle />
           {['admin','partner'].includes(userRole) && (
             <a href="/admin" className="w-7 h-7 flex items-center justify-center rounded-md transition-colors" style={{ border:'1px solid var(--border)', color:'var(--text-muted)' }} title="Admin Settings"
@@ -1090,15 +1093,17 @@ export default function Dashboard() {
               </div>
             )}
             <div className="space-y-1">
-              <button className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between"
-                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}>
-                <span className="text-theme-secondary">26AS</span>
-                <span className="text-theme-muted">Coming soon</span>
+              <button disabled className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
+                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
+                title="Coming soon — requires ERI registration">
+                <span>26AS Fetch</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
               </button>
-              <button className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between"
-                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}>
-                <span className="text-theme-secondary">AIS</span>
-                <span className="text-theme-muted">Coming soon</span>
+              <button disabled className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
+                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
+                title="Coming soon — requires ERI registration">
+                <span>AIS Fetch</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
               </button>
             </div>
           </div>
@@ -1190,13 +1195,65 @@ export default function Dashboard() {
                     <h3 className="font-serif font-bold text-sm mt-4 text-theme">Excluded</h3>
                     <ul className="text-xs list-disc pl-5 text-theme-secondary"><li>Notice representation</li><li>Multi-year filing</li><li>Foreign tax return</li></ul>
                   </div>}
-                  {dv === 'total_income' && <div>
-                    <div className="text-sm font-bold text-theme-accent">MKW ADVISORS</div>
-                    <div className="my-3" style={{ borderBottom:'2px solid var(--accent)' }} />
-                    <div className="font-serif text-xl font-bold text-theme">Computation of Total Income</div>
-                    <div className="text-xs text-theme-muted mb-4">{f.name} · FY {fy}</div>
-                    <p className="text-xs text-theme-secondary">Awaiting module outputs to generate formal computation.</p>
-                  </div>}
+                  {dv === 'total_income' && (
+                    <div ref={printRef}>
+                      <div className="text-sm font-bold text-theme-accent tracking-wide mb-1">MKW ADVISORS</div>
+                      <div className="text-xs text-theme-muted italic mb-3">NRI Tax Filing · Advisory · Compliance</div>
+                      <div className="font-serif text-xl font-bold text-theme mb-1">Computation of Total Income</div>
+                      <div className="text-theme-muted text-xs mb-4">FY {fy} | {ac?.name || f.name}</div>
+                      {(() => {
+                        try {
+                          const ti = computeTotalIncome(ac?.formData || f, fy);
+                          return (
+                            <div className="space-y-3 text-xs">
+                              {ti.heads.map((h, i) => (
+                                <div key={i} className="flex justify-between py-1" style={{ borderBottom: '1px solid var(--border)' }}>
+                                  <div>
+                                    <div className="font-medium text-theme">{h.head}</div>
+                                    <div className="text-theme-muted">{h.source} {h.note ? `— ${h.note}` : ''}</div>
+                                  </div>
+                                  <div className="font-bold text-theme">{formatINR(h.amount)}</div>
+                                </div>
+                              ))}
+                              <div className="flex justify-between py-2 font-bold" style={{ borderTop: '2px solid var(--accent)' }}>
+                                <span>Gross Total Income</span><span>{formatINR(ti.grossTotal)}</span>
+                              </div>
+                              <div className="flex justify-between py-1">
+                                <span>Less: Deductions</span><span>{formatINR(ti.deductions)}</span>
+                              </div>
+                              <div className="flex justify-between py-1">
+                                <span>Taxable Income</span><span className="font-bold">{formatINR(ti.taxableIncome)}</span>
+                              </div>
+                              <div className="flex justify-between py-1">
+                                <span>Tax on Income</span><span>{formatINR(ti.totalTax)}</span>
+                              </div>
+                              {ti.surcharge > 0 && <div className="flex justify-between py-1">
+                                <span>Surcharge</span><span>{formatINR(ti.surcharge)}</span>
+                              </div>}
+                              <div className="flex justify-between py-1">
+                                <span>Health & Education Cess (4%)</span><span>{formatINR(ti.cess)}</span>
+                              </div>
+                              <div className="flex justify-between py-2 font-bold text-theme" style={{ borderTop: '2px solid var(--border)' }}>
+                                <span>Total Tax Liability</span><span>{formatINR(ti.totalWithCess)}</span>
+                              </div>
+                              <div className="flex justify-between py-1">
+                                <span>Less: TDS Credit</span><span>{formatINR(ti.tds.total)}</span>
+                              </div>
+                              <div className="flex justify-between py-2 font-bold" style={{ borderTop: '2px solid var(--accent)', color: ti.isRefund ? 'var(--green)' : 'var(--red)' }}>
+                                <span>{ti.isRefund ? 'Refund Due' : 'Tax Payable'}</span>
+                                <span>{formatINR(Math.abs(ti.refundOrPayable))}</span>
+                              </div>
+                              {ti.foreignNote && <div className="p-2 rounded-lg mt-2" style={{ background: 'var(--bg-primary)', borderLeft: '3px solid var(--accent)' }}>
+                                <span className="text-theme-muted">{ti.foreignNote}</span>
+                              </div>}
+                            </div>
+                          );
+                        } catch (e) {
+                          return <p className="text-theme-muted text-sm">Enter property sale or income details to generate computation.</p>;
+                        }
+                      })()}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1218,7 +1275,7 @@ export default function Dashboard() {
                       {ld ? 'Analyzing...' : 'Run ' + mod.l}
                     </button>
                   )}
-                  {modOut && mi < 9 && (
+                  {modOut && mi < 9 && !modOut?.startsWith('[ERROR]') && (
                     <button onClick={()=>{setMi(mi+1);setDv(null);}}
                       className="btn-dark text-xs" style={{ padding:'0.5rem 1rem' }}>Next →</button>
                   )}
@@ -1243,9 +1300,19 @@ export default function Dashboard() {
 
               {/* Output */}
               {modOut && !ld && (
-                <div className="card-theme p-5">
-                  <ModuleOutput text={modOut} />
-                </div>
+                modOut?.startsWith('[ERROR]') ? (
+                  <div className="p-4 rounded-lg" style={{ background: 'rgba(160,72,72,0.08)', border: '1px solid var(--red)' }}>
+                    <p className="text-sm font-bold mb-2" style={{ color: 'var(--red)' }}>Module Failed</p>
+                    <p className="text-xs text-theme-muted mb-3">{modOut.replace('[ERROR] ', '')}</p>
+                    <button onClick={() => runMod(mi)} className="text-xs px-3 py-1.5 rounded-lg" style={{ background: 'var(--accent)', color: 'var(--text-on-cta)' }}>
+                      Retry
+                    </button>
+                  </div>
+                ) : (
+                  <div className="card-theme p-5">
+                    <ModuleOutput text={modOut} />
+                  </div>
+                )
               )}
 
               {/* Empty state */}

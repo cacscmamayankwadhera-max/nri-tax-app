@@ -667,19 +667,22 @@ function ClientPortal() {
           <div className="card-theme p-6 md:p-8 shadow-sm mb-6 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
             <h3 className="font-serif text-lg font-bold text-theme mb-4">Documents</h3>
             {stage >= 6 ? (
-              <div className="space-y-3">
-                {['CG Computation Sheet', 'Client Advisory Memo', 'Tax Position Report', 'ITR Acknowledgement'].map((doc, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-lg px-4 py-3" style={{ background: 'var(--bg-primary)' }}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg">{'\uD83D\uDCC4'}</span>
-                      <span className="text-sm font-medium text-theme">{doc}</span>
+              <div>
+                <p className="text-sm text-theme-muted mb-4">Your tax computation documents are ready. Your advisor will share them via WhatsApp or email.</p>
+                <div className="space-y-2 mb-4">
+                  {['CG Computation Sheet', 'Client Advisory Memo', 'Tax Position Report'].map((doc, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm">
+                      <span style={{ color: 'var(--green)' }}>{'\u2713'}</span>
+                      <span className="text-theme">{doc}</span>
+                      <span className="text-xs text-theme-muted ml-auto">Prepared</span>
                     </div>
-                    <span className="text-xs text-theme-muted">Available</span>
-                  </div>
-                ))}
-                <p className="text-xs text-theme-muted mt-2">
-                  Your advisor will share download links directly via email or WhatsApp.
-                </p>
+                  ))}
+                </div>
+                <a href="https://wa.me/919667744073?text=Hi%2C%20my%20documents%20are%20ready.%20Please%20share%20them."
+                  target="_blank" rel="noopener noreferrer"
+                  className="btn-primary w-full text-center block py-2.5 rounded-lg text-sm">
+                  Request Documents via WhatsApp
+                </a>
               </div>
             ) : (
               <div className="rounded-lg px-5 py-6 text-center" style={{ background: 'var(--bg-primary)' }}>
@@ -725,19 +728,7 @@ function ClientPortal() {
             </div>
           )}
           <div className="flex items-center gap-2 mt-2">
-            <label className="text-xs text-theme-muted cursor-pointer flex items-center gap-1.5">
-              <input type="checkbox" className="accent-[#C49A3C] w-3.5 h-3.5"
-                defaultChecked={false}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    localStorage.setItem('nri-notify-' + (caseData?.id || ''), 'true');
-                  } else {
-                    localStorage.removeItem('nri-notify-' + (caseData?.id || ''));
-                  }
-                }}
-              />
-              Notify me by email when my case updates
-            </label>
+            <p className="text-xs text-theme-muted">This page auto-refreshes every 15 seconds. Bookmark it to check anytime.</p>
           </div>
         </div>
       </div>

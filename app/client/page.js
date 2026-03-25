@@ -334,6 +334,13 @@ export default function ClientIntake() {
               <p className="text-xs text-theme-muted mt-2">Save this code to check your case progress anytime</p>
             </div>
           )}
+          {!portalToken && (
+            <div className="card-theme p-5 mb-6 text-center">
+              <p className="text-sm font-medium text-theme mb-2">Case Submitted</p>
+              <p className="text-xs text-theme-muted">Your case has been received. Our team will contact you at {f.email || f.phone || 'the contact you provided'} within 24 hours.</p>
+              <p className="text-xs text-theme-muted mt-2">To track your case later, visit <a href="/my-cases" className="text-theme-accent underline">My Cases</a> using your email.</p>
+            </div>
+          )}
 
           {/* Hero savings or completion banner */}
           {cgData ? (
@@ -794,21 +801,27 @@ export default function ClientIntake() {
                   />
                 </div>
 
-                {f.nroInterest > 0 && f.country && dtaaData && (
-                  <div className="card-premium p-5 mt-4 animate-fade-in-up">
-                    <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">TDS on your interest</p>
-                    <p className="text-sm text-theme-secondary leading-relaxed">
-                      Bank deducts: <strong className="text-theme">{formatINR(Math.round(f.nroInterest * 0.30))}</strong> (30%).
-                      {dtaaData.hasDTAA ? (
-                        <>
-                          {' '}With DTAA ({f.country}): <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (dtaaData.rate / 100)))}</strong> ({dtaaData.rate}%).
-                          {' '}Potential saving: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (0.30 - dtaaData.rate / 100)))}</strong>
-                        </>
-                      ) : (
-                        <> No DTAA with {f.country} -- domestic 30% rate applies. Section 91 unilateral relief may be available.</>
-                      )}
-                    </p>
-                  </div>
+                {f.nroInterest > 0 && f.country && (
+                  dtaaData ? (
+                    <div className="card-premium p-5 mt-4 animate-fade-in-up">
+                      <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">TDS on your interest</p>
+                      <p className="text-sm text-theme-secondary leading-relaxed">
+                        Bank deducts: <strong className="text-theme">{formatINR(Math.round(f.nroInterest * 0.30))}</strong> (30%).
+                        {dtaaData.hasDTAA ? (
+                          <>
+                            {' '}With DTAA ({f.country}): <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (dtaaData.rate / 100)))}</strong> ({dtaaData.rate}%).
+                            {' '}Potential saving: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (0.30 - dtaaData.rate / 100)))}</strong>
+                          </>
+                        ) : (
+                          <> No DTAA with {f.country} -- domestic 30% rate applies. Section 91 unilateral relief may be available.</>
+                        )}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="card-theme p-4 mt-3">
+                      <p className="text-xs text-theme-muted">No specific DTAA treaty found for {f.country}. Default 30% TDS applies. Our team will check for applicable relief.</p>
+                    </div>
+                  )
                 )}
               </div>
             )}
@@ -923,6 +936,7 @@ export default function ClientIntake() {
                   onChange={v => u('phone', v)}
                   placeholder="+44 7700 123456"
                   type="tel"
+                  tip="Include country code (e.g. +44 7700 123456)"
                 />
               </div>
 
