@@ -75,6 +75,8 @@ export default function ClientPortalDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [vis, setVis] = useState(false);
+  const [noPhone, setNoPhone] = useState(false);
+  const [dobInput, setDobInput] = useState('');
 
   // Restore session from sessionStorage
   useEffect(() => {
@@ -142,11 +144,15 @@ export default function ClientPortalDashboard() {
     setLoading(false);
   };
 
-  // Step 2: Verify phone
+  // Step 2: Verify phone (or DOB fallback)
   const handleVerify = async (e) => {
     e.preventDefault();
-    if (phone4.length !== 4) {
+    if (!noPhone && phone4.length !== 4) {
       setError('Please enter exactly 4 digits.');
+      return;
+    }
+    if (noPhone && !dobInput) {
+      setError('Please enter your date of birth.');
       return;
     }
 
@@ -154,14 +160,22 @@ export default function ClientPortalDashboard() {
     setError('');
 
     try {
+      const payload = { email: email.trim().toLowerCase(), phone4 };
+      if (noPhone) payload.dob = dobInput;
       const res = await fetch('/api/my-cases/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), phone4 }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
 
       if (!res.ok) {
+        if (data.noPhone) {
+          setNoPhone(true);
+          setError('');
+          setLoading(false);
+          return;
+        }
         setError(data.error || 'Verification failed. Please check and try again.');
         setLoading(false);
         return;
@@ -293,78 +307,134 @@ export default function ClientPortalDashboard() {
             <p className="text-sm text-theme-secondary mb-1">
               We found <strong className="text-theme-accent">{caseCount} case{caseCount !== 1 ? 's' : ''}</strong> linked to this email.
             </p>
-            <p className="text-sm text-theme-secondary mb-6">
-              For your security, enter the last 4 digits of your registered phone number.
-            </p>
 
-            <form onSubmit={handleVerify}>
-              <div className="flex justify-center gap-2 mb-4">
-                {[0, 1, 2, 3].map(i => (
+            {noPhone ? (
+              <>
+                <p className="text-sm text-theme-secondary mb-6">
+                  No phone number on file. Please verify using your date of birth, or contact us on WhatsApp.
+                </p>
+                <form onSubmit={handleVerify}>
                   <input
-                    key={i}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    className="input-theme w-14 h-14 text-center text-2xl font-bold tracking-widest"
-                    value={phone4[i] || ''}
-                    autoFocus={i === 0}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, '');
-                      if (val.length <= 1) {
-                        const newPhone = phone4.split('');
-                        newPhone[i] = val;
-                        setPhone4(newPhone.join(''));
-                        // Auto-focus next input
-                        if (val && i < 3) {
-                          const next = e.target.parentElement?.querySelectorAll('input')[i + 1];
-                          next?.focus();
-                        }
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Backspace' && !phone4[i] && i > 0) {
-                        const prev = e.target.parentElement?.querySelectorAll('input')[i - 1];
-                        prev?.focus();
-                      }
-                    }}
-                    onPaste={(e) => {
-                      e.preventDefault();
-                      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
-                      setPhone4(pasted);
-                      // Focus last filled input or the 4th
-                      const inputs = e.target.parentElement?.querySelectorAll('input');
-                      const focusIdx = Math.min(pasted.length, 3);
-                      inputs?.[focusIdx]?.focus();
-                    }}
+                    type="date"
+                    value={dobInput}
+                    onChange={e => setDobInput(e.target.value)}
+                    className="input-theme py-3 px-4 max-w-xs mx-auto text-center text-lg mb-4"
+                    autoFocus
                   />
-                ))}
-              </div>
+                  <p className="text-[10px] text-theme-muted mb-4">Enter your date of birth (YYYY-MM-DD)</p>
 
-              {error && (
-                <div className="mt-4 mb-4 rounded-lg px-4 py-3 text-sm" style={{
-                  background: 'rgba(160,72,72,0.08)',
-                  border: '1px solid rgba(160,72,72,0.2)',
-                  color: 'var(--red)',
-                }}>
-                  {error}
+                  {error && (
+                    <div className="mt-4 mb-4 rounded-lg px-4 py-3 text-sm" style={{
+                      background: 'rgba(160,72,72,0.08)',
+                      border: '1px solid rgba(160,72,72,0.2)',
+                      color: 'var(--red)',
+                    }}>
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading || !dobInput}
+                    className="btn-primary py-3 px-8 mx-auto block flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="inline-block w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(0,0,0,0.2)', borderTopColor: 'currentColor' }} />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify & Access \u2192'
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-6 p-4 rounded-lg" style={{ background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.2)' }}>
+                  <p className="text-sm text-theme-secondary">
+                    Having trouble? Contact us on{' '}
+                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="text-theme-accent font-semibold hover:underline">
+                      WhatsApp
+                    </a>{' '}
+                    and we will help you access your cases.
+                  </p>
                 </div>
-              )}
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-theme-secondary mb-6">
+                  For your security, enter the last 4 digits of your registered phone number.
+                </p>
 
-              <button
-                type="submit"
-                disabled={loading || phone4.length !== 4}
-                className="btn-primary py-3 px-8 mx-auto block flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <span className="inline-block w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(0,0,0,0.2)', borderTopColor: 'currentColor' }} />
-                    Verifying...
-                  </>
-                ) : (
-                  'Verify & Access \u2192'
-                )}
-              </button>
-            </form>
+                <form onSubmit={handleVerify}>
+                  <div className="flex justify-center gap-2 mb-4">
+                    {[0, 1, 2, 3].map(i => (
+                      <input
+                        key={i}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        className="input-theme w-14 h-14 text-center text-2xl font-bold tracking-widest"
+                        value={phone4[i] || ''}
+                        autoFocus={i === 0}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          if (val.length <= 1) {
+                            const newPhone = phone4.split('');
+                            newPhone[i] = val;
+                            setPhone4(newPhone.join(''));
+                            // Auto-focus next input
+                            if (val && i < 3) {
+                              const next = e.target.parentElement?.querySelectorAll('input')[i + 1];
+                              next?.focus();
+                            }
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Backspace' && !phone4[i] && i > 0) {
+                            const prev = e.target.parentElement?.querySelectorAll('input')[i - 1];
+                            prev?.focus();
+                          }
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+                          setPhone4(pasted);
+                          // Focus last filled input or the 4th
+                          const inputs = e.target.parentElement?.querySelectorAll('input');
+                          const focusIdx = Math.min(pasted.length, 3);
+                          inputs?.[focusIdx]?.focus();
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {error && (
+                    <div className="mt-4 mb-4 rounded-lg px-4 py-3 text-sm" style={{
+                      background: 'rgba(160,72,72,0.08)',
+                      border: '1px solid rgba(160,72,72,0.2)',
+                      color: 'var(--red)',
+                    }}>
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading || phone4.length !== 4}
+                    className="btn-primary py-3 px-8 mx-auto block flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <span className="inline-block w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(0,0,0,0.2)', borderTopColor: 'currentColor' }} />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify & Access \u2192'
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
 
             <button
               onClick={() => {

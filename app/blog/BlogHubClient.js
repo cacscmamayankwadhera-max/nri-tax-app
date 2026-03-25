@@ -21,7 +21,7 @@ function useSlider(items, autoMs = 5000) {
 const COUNTRIES = [
   { flag: 'https://flagcdn.com/w40/us.png', name: 'USA', slug: 'us-nri-tax-guide', stat: 'FBAR + FATCA + PFIC' },
   { flag: 'https://flagcdn.com/w40/ae.png', name: 'UAE/Dubai', slug: 'uae-nri-tax-guide', stat: 'Zero-Tax Trap' },
-  { flag: 'https://flagcdn.com/w40/gb.png', name: 'UK', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
+  { flag: 'https://flagcdn.com/w40/gb.png', name: 'UK', slug: 'uk-nri-tax-guide', stat: 'DTAA 15%' },
   { flag: 'https://flagcdn.com/w40/ca.png', name: 'Canada', slug: 'canada-nri-tax-guide', stat: 'T1135 + RRSP' },
   { flag: 'https://flagcdn.com/w40/au.png', name: 'Australia', slug: 'australia-nri-tax-guide', stat: 'Super + CGT 50%' },
   { flag: 'https://flagcdn.com/w40/sg.png', name: 'Singapore', slug: 'singapore-nri-tax-guide', stat: 'DTAA 15%' },
@@ -32,12 +32,7 @@ const COUNTRIES = [
   { flag: 'https://flagcdn.com/w40/kw.png', name: 'Kuwait', slug: 'gulf-gcc-nri-tax-guide', stat: 'No DTAA!' },
 ];
 
-const STATS_BAR = [
-  { value: '97', label: 'Expert Guides' },
-  { value: '576K+', label: 'Words of Content' },
-  { value: '30+', label: 'Countries Covered' },
-  { value: 'FY 2025-26', label: 'All Numbers Verified' },
-];
+/* STATS_BAR is now computed inside the component to use dynamic blog count */
 
 /* ─── Topic accent colors ─────────────────────────────────── */
 const TOPIC_COLORS = {
@@ -106,6 +101,13 @@ export default function BlogHubClient({ blogs }) {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
 
   const isDark = theme === 'dark';
+
+  const STATS_BAR = [
+    { value: String(blogs.length), label: 'Expert Guides' },
+    { value: '576K+', label: 'Words of Content' },
+    { value: '30+', label: 'Countries Covered' },
+    { value: 'FY 2025-26', label: 'All Numbers Verified' },
+  ];
 
   const featured = blogs.filter(b => b.featured);
   const [featIdx, featGo] = useSlider(featured, 6000);

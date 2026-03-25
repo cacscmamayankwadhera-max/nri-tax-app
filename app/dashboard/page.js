@@ -550,14 +550,13 @@ export default function Dashboard() {
                   <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:CLS_COLORS[c.classification]+'18',color:CLS_COLORS[c.classification]}}>{c.classification}</span>
                   <button onClick={(e) => {
                     e.stopPropagation();
-                    const ref = (c.dbId || c.id?.toString() || '').slice(0, 8).toUpperCase();
-                    const url = `${window.location.origin}/portal?ref=${ref}`;
+                    const url = `${window.location.origin}/portal?ref=${c.portal_token || ''}`;
                     navigator.clipboard.writeText(url);
                     setToast({ type: 'success', message: 'Portal link copied to clipboard!' });
                   }} className="text-[9px] text-theme-accent px-1" title="Copy portal link">
                     🔗
                   </button>
-                  <span className="text-xs text-theme-muted">{c.modulesDone || c.modules_completed || 1}/10</span>
+                  <span className="text-xs text-theme-muted">{c.modulesDone || c.modules_completed || 1}/9</span>
                   <span className="text-theme-muted">›</span>
                 </div>
               </div>
@@ -794,11 +793,12 @@ export default function Dashboard() {
             <button onClick={() => {
               const token = ac?.portal_token || ac?.portalToken || '';
               if (!token) {
-                navigator.clipboard.writeText(`${window.location.origin}/portal`);
-              } else {
-                const url = `${window.location.origin}/portal?ref=${token}`;
-                navigator.clipboard.writeText(url);
+                setToast({ type: 'error', message: 'Portal token not available for this case. Save case to DB first.' });
+                return;
               }
+              const url = `${window.location.origin}/portal?ref=${token}`;
+              navigator.clipboard.writeText(url);
+              setToast({ type: 'success', message: 'Portal link copied to clipboard!' });
             }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
               Copy Client Portal Link
             </button>

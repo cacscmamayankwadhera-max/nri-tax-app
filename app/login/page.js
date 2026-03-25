@@ -188,11 +188,10 @@ export default function Login() {
                   </button>
                 </form>
 
-                <div className="mt-5 text-center text-xs text-theme-muted">
-                  New here?{' '}
-                  <a href="/signup" className="text-theme-accent font-semibold hover:underline">
-                    Create an account
-                  </a>
+                <div className="mt-5 text-center">
+                  <p className="text-xs text-theme-muted">
+                    Need team access? <a href="mailto:tax@mkwadvisors.com" className="text-theme-accent hover:underline">Contact your administrator</a>
+                  </p>
                 </div>
                 <div className="mt-2 text-center text-xs text-theme-muted">
                   NRI client?{' '}

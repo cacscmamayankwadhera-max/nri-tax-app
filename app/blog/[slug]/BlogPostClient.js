@@ -233,13 +233,9 @@ export default function BlogPostClient({ blog, blogContent }) {
               </ReactMarkdown>
             </div>
           ) : (
-            <div className="rounded-2xl p-8 text-center" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              <p className="text-3xl mb-4">📖</p>
-              <h3 className="font-serif text-xl mb-2">Guide Coming Soon</h3>
-              <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>This guide is being prepared. Get personalized advice now.</p>
-              <a href="/client" className="inline-block px-6 py-3 rounded-lg text-sm font-bold" style={{ background: 'var(--bg-cta)', color: 'var(--text-on-cta)' }}>
-                Get Free Tax Assessment &rarr;
-              </a>
+            <div className="text-center py-16">
+              <p className="text-lg font-serif mb-2" style={{ color: 'var(--text-muted)' }}>Content coming soon</p>
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>This guide is being written by our tax experts.</p>
             </div>
           )}
         </div>

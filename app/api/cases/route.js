@@ -21,7 +21,7 @@ async function verifyTeamAuth() {
 // GET /api/cases — returns all cases for authenticated team members
 export async function GET(request) {
   const user = await verifyTeamAuth();
-  if (!user && process.env.NODE_ENV === 'production') {
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

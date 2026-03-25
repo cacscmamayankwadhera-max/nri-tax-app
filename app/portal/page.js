@@ -142,8 +142,8 @@ function ClientPortal() {
   }, []);
 
   const fetchCase = useCallback(async (caseRef) => {
-    if (!caseRef || caseRef.length < 6) {
-      setError('Please enter at least 6 characters of your case reference.');
+    if (!caseRef || caseRef.length < 10) {
+      setError('Please enter at least 10 characters of your tracking code.');
       return;
     }
 
@@ -185,7 +185,7 @@ function ClientPortal() {
 
   // Auto-fetch if ref is in URL
   useEffect(() => {
-    if (refFromUrl && refFromUrl.length >= 6) {
+    if (refFromUrl && refFromUrl.length >= 10) {
       setRef(refFromUrl);
       setInputRef(refFromUrl);
       fetchCase(refFromUrl);
@@ -216,12 +216,11 @@ function ClientPortal() {
 
   function handleVerification() {
     const phone = pendingCaseData?.intake_data?.phone || '';
-    const dob = pendingCaseData?.intake_data?.dob || '';
     const last4Phone = phone.replace(/\D/g, '').slice(-4);
 
-    // Verify: last 4 digits of phone OR DOB match
+    // Verify: last 4 digits of phone only
     const input = verificationInput.trim();
-    if (input === last4Phone || input === dob) {
+    if (last4Phone && input === last4Phone) {
       verifiedRef.current = true;
       setCaseData(pendingCaseData.case);
       setModules(pendingCaseData.modules || []);
@@ -251,14 +250,15 @@ function ClientPortal() {
             <div className="text-3xl mb-3">{'\uD83D\uDD12'}</div>
             <h3 className="font-serif text-xl font-bold text-theme mb-2">Verify Your Identity</h3>
             <p className="text-sm text-theme-secondary mb-6">
-              For your security, please enter the last 4 digits of your registered phone number or your date of birth (YYYY-MM-DD).
+              For your security, please enter the last 4 digits of your registered phone number.
             </p>
             <input
               type="text"
+              inputMode="numeric"
               value={verificationInput}
-              onChange={e => setVerificationInput(e.target.value)}
-              placeholder="Last 4 digits of phone or DOB"
-              maxLength={10}
+              onChange={e => setVerificationInput(e.target.value.replace(/\D/g, ''))}
+              placeholder="Last 4 digits of phone"
+              maxLength={4}
               className="input-theme py-3 px-4 max-w-xs mx-auto text-center text-lg tracking-wider"
               autoFocus
             />
@@ -314,13 +314,13 @@ function ClientPortal() {
               type="text"
               value={inputRef}
               onChange={e => setInputRef(e.target.value.toUpperCase())}
-              placeholder="e.g. ABCD1234"
-              maxLength={12}
+              placeholder="e.g. ABCD1234EFGH5678IJKL9012"
+              maxLength={30}
               className="input-theme text-lg font-mono tracking-widest text-center"
               autoFocus
             />
             <p className="text-[10px] text-theme-muted mt-2 text-center">
-              The 8-character code from your intake confirmation
+              Enter your 24-character tracking code
             </p>
 
             {error && (
@@ -340,7 +340,7 @@ function ClientPortal() {
 
             <button
               type="submit"
-              disabled={inputRef.trim().length < 6}
+              disabled={inputRef.trim().length < 10}
               className="btn-primary w-full mt-6 py-3"
             >
               Look Up My Case

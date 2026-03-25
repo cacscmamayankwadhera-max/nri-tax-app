@@ -19,7 +19,9 @@ export async function POST(request) {
       );
     }
 
-    if (!phone4 || phone4.length !== 4 || !/^\d{4}$/.test(phone4)) {
+    const dob = (body.dob || '').trim();
+
+    if ((!phone4 || phone4.length !== 4 || !/^\d{4}$/.test(phone4)) && !dob) {
       return NextResponse.json(
         { error: 'Please enter exactly 4 digits.' },
         { status: 400 }
@@ -50,18 +52,39 @@ export async function POST(request) {
       );
     }
 
-    // Verify: check if the last 4 digits of the phone number on ANY case match
-    const phoneMatch = cases.some(c => {
+    // Check if any case has a phone number
+    const hasPhone = cases.some(c => {
       const phone = (c.client_phone || c.intake_data?.phone || '').replace(/\D/g, '');
-      const last4 = phone.slice(-4);
-      return last4 === phone4;
+      return phone.length >= 4;
     });
 
-    if (!phoneMatch) {
-      return NextResponse.json(
-        { error: 'Verification failed. The digits do not match our records.' },
-        { status: 403 }
-      );
+    if (!hasPhone) {
+      // Fallback: try DOB verification
+      const dobMatch = cases.some(c => {
+        const caseDob = c.intake_data?.dob || '';
+        return caseDob && dob && caseDob === dob;
+      });
+      if (!dob || !dobMatch) {
+        return NextResponse.json({
+          error: 'No phone number on file. Please contact us on WhatsApp to access your cases.',
+          noPhone: true
+        }, { status: 422 });
+      }
+      // DOB verified — fall through to return cases
+    } else {
+      // Verify: check if the last 4 digits of the phone number on ANY case match
+      const phoneMatch = cases.some(c => {
+        const phone = (c.client_phone || c.intake_data?.phone || '').replace(/\D/g, '');
+        const last4 = phone.slice(-4);
+        return last4 === phone4;
+      });
+
+      if (!phoneMatch) {
+        return NextResponse.json(
+          { error: 'Verification failed. The digits do not match our records.' },
+          { status: 403 }
+        );
+      }
     }
 
     // Verification passed — fetch module data for all cases

@@ -95,6 +95,7 @@ export default function ClientIntake() {
   const [fadeDir, setFadeDir] = useState('in');
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showEmailWarning, setShowEmailWarning] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   // Parse Indian-format numbers safely: strip commas before parsing
@@ -119,27 +120,27 @@ export default function ClientIntake() {
   async function doParse() {
     if (!narr.trim()) return;
     setPrs(true);
+    let parsed = null;
     try {
       const res = await fetch('/api/ai/parse', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ narrative: narr }) });
-      const { parsed } = await res.json();
+      const data = await res.json();
+      parsed = data.parsed;
       if (parsed) setF(prev => ({ ...prev, ...Object.fromEntries(Object.entries(parsed).filter(([, v]) => v !== false && v !== '' && v !== 0)) }));
     } catch (e) { /* continue manually */ }
     setPrs(false);
+    const hasMandatory = (parsed?.name || f.name) && (parsed?.country || f.country);
     setParseDone(true);
-    setTimeout(() => {
-      setParseDone(false);
-      // Only advance to next step if mandatory fields are filled
-      setF(prev => {
-        if (prev.name && prev.country) goStep(1);
-        return prev;
-      });
-    }, 1200);
+    if (hasMandatory) {
+      setTimeout(() => { setParseDone(false); goStep(1); }, 1200);
+    }
+    // If fields missing, keep parseDone=true so validation messages stay visible — don't auto-advance
   }
 
   async function handleSubmit() {
     if (submitting) return; // prevent double-submit
     setSubmitting(true);
     let ref = null;
+    let success = false;
     try {
       const res = await fetch('/api/cases/public', {
         method: 'POST',
@@ -150,15 +151,18 @@ export default function ClientIntake() {
       if (data.success) {
         ref = data.caseRef || null;
         if (data.portalToken) setPortalToken(data.portalToken);
+        success = true;
       }
     } catch (e) {
       console.error('Submission error:', e);
     }
     setCaseRef(ref);
-    setSubmitted(true);
     setSubmitting(false);
-    // Clear draft after successful submission
-    localStorage.removeItem('nri-intake-draft');
+    if (success) {
+      localStorage.removeItem('nri-intake-draft');
+      setSubmitted(true);
+    }
+    // If !success, user stays on the form — no false success screen
   }
 
   const stepLabels = ['Details', 'India', 'Income', 'Documents', 'Review'];
@@ -464,11 +468,18 @@ export default function ClientIntake() {
               )}
 
               {/* Parse success flash */}
-              {parseDone && (
+              {parseDone && (f.name && f.country) && (
                 <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center flash-success" style={{ background: 'color-mix(in srgb, var(--green) 8%, var(--bg-card) 95%)' }}>
                   <div className="text-5xl mb-3">{'\u2705'}</div>
                   <div className="font-serif text-lg font-bold" style={{ color: 'var(--green)' }}>Fields auto-filled!</div>
                   <p className="text-sm" style={{ color: 'var(--green)' }}>Taking you to the next step...</p>
+                </div>
+              )}
+              {parseDone && (!f.name || !f.country) && (
+                <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center" style={{ background: 'color-mix(in srgb, var(--amber) 8%, var(--bg-card) 95%)' }}>
+                  <div className="text-5xl mb-3">{'\u26A0\uFE0F'}</div>
+                  <div className="font-serif text-lg font-bold" style={{ color: 'var(--amber)' }}>Some fields need your attention</div>
+                  <p className="text-sm" style={{ color: 'var(--amber)' }}>Please fill in the missing fields below</p>
                 </div>
               )}
 
@@ -505,7 +516,14 @@ export default function ClientIntake() {
               </div>
               <I l="Occupation" v={f.occupation} ch={v => u('occupation', v)} ph="e.g. IT Manager" />
               <I l="Years Abroad" tip="Helps determine residential status history"><S v={f.yearsAbroad} ch={v => u('yearsAbroad', v)} o={['Less than 1 year', '1-3 years', '3-5 years', '5+ years']} /></I>
-              <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />
+              <div>
+                <I l="Email" v={f.email} ch={v => u('email', v)} ph="your@email.com" type="email" />
+                {showEmailWarning && !f.email && (
+                  <p className="text-xs mt-1" style={{ color: 'var(--amber)' }}>
+                    Without email, you won't be able to track your case via "My Cases"
+                  </p>
+                )}
+              </div>
               <I l="Phone" v={f.phone} ch={v => u('phone', v)} ph="+44 / +91..." />
               <I l="PAN Number" v={f.pan} ch={v => u('pan', v)} ph="ABCDE1234F" tip="Required for ITR filing. Unlinked PAN attracts higher TDS rates" />
               <I l="Aadhaar Number (if available)" v={f.aadhaarNumber} ch={v => u('aadhaarNumber', v)} ph="1234 5678 9012" />
@@ -514,7 +532,7 @@ export default function ClientIntake() {
               <I l="Citizenship" tip="OCI/PIO holders have same tax treatment but different FEMA rules"><S v={f.citizenship} ch={v => u('citizenship', v)} o={['Indian Citizen', 'OCI Holder', 'PIO']} /></I>
             </div>
           </div>
-          <button onClick={() => goStep(1)} disabled={!f.name || !f.country}
+          <button onClick={() => { if (!f.email) setShowEmailWarning(true); goStep(1); }} disabled={!f.name || !f.country}
             className="btn-dark w-full mt-5 py-3.5 rounded-xl text-base">Continue {'\u2192'}</button>
         </div>}
 
