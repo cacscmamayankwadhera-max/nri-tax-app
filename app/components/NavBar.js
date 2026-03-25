@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Sun, Moon, BookOpen, FileText, Search, LogIn } from 'lucide-react';
+import { Menu, X, Sun, Moon, BookOpen, FileText, Search, User, LogIn } from 'lucide-react';
 
 export default function NavBar({ variant = 'solid' }) {
   const { theme, toggleTheme } = useTheme();
@@ -75,6 +75,7 @@ export default function NavBar({ variant = 'solid' }) {
               { label: 'Knowledge Hub', href: '/blog', icon: BookOpen },
               { label: 'Start Filing', href: '/client', icon: FileText },
               { label: 'Track Case', href: '/portal', icon: Search },
+              { label: 'My Cases', href: '/my-cases', icon: User },
             ].map((link) => {
               const Icon = link.icon;
               const active = isActive(link.href);
@@ -170,6 +171,7 @@ export default function NavBar({ variant = 'solid' }) {
           {[
             { label: 'Start Filing', href: '/client', icon: FileText, desc: 'Begin your tax assessment' },
             { label: 'Track Your Case', href: '/portal', icon: Search, desc: 'Check case progress' },
+            { label: 'My Cases', href: '/my-cases', icon: User, desc: 'View all your cases' },
             { label: 'Knowledge Hub', href: '/blog', icon: BookOpen, desc: '100+ tax guides' },
           ].map((link) => {
             const Icon = link.icon;
