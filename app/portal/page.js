@@ -157,22 +157,29 @@ function ClientPortal() {
     }
 
     try {
-      const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Case not found. This could happen if: (1) The tracking code is incorrect — please check and try again, (2) Your submission is being processed — please wait a few minutes and try again, (3) If the issue persists, contact us on WhatsApp.');
-        setLoading(false);
-        return;
-      }
-
-      // If already verified (polling for updates), update data directly
+      // If already verified, use GET for status polling; otherwise show verification form
       if (verifiedRef.current) {
-        setCaseData(data.case);
+        const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || 'Unable to refresh case status.');
+          setLoading(false);
+          return;
+        }
+        // Merge status-only data with existing full data for stage/polling
+        setCaseData(prev => prev ? { ...prev, status: data.case?.status, modules_completed: data.case?.modules_completed } : prev);
         setModules(data.modules || []);
         setModulesCompleted(data.modulesCompleted || 0);
       } else {
-        // First load — require identity verification before showing case
+        // First load — check if case exists (GET returns status only, no PII)
+        const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || 'Case not found. This could happen if: (1) The tracking code is incorrect — please check and try again, (2) Your submission is being processed — please wait a few minutes and try again, (3) If the issue persists, contact us on WhatsApp.');
+          setLoading(false);
+          return;
+        }
+        // Case exists — store status info and require verification
         setPendingCaseData(data);
         setNeedsVerification(true);
       }
@@ -214,24 +221,44 @@ function ClientPortal() {
     fetchCase(trimmed);
   };
 
-  function handleVerification() {
-    const phone = pendingCaseData?.intake_data?.phone || '';
-    const last4Phone = phone.replace(/\D/g, '').slice(-4);
-
-    // Verify: last 4 digits of phone only
+  async function handleVerification() {
     const input = verificationInput.trim();
-    if (last4Phone && input === last4Phone) {
+    if (!input || input.length !== 4 || !/^\d{4}$/.test(input)) {
+      setError('Please enter exactly 4 digits.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: ref.trim(), phone4: input }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Verification failed. Please check and try again.');
+        setLoading(false);
+        return;
+      }
+
+      // Verification passed — set full case data
       verifiedRef.current = true;
-      setCaseData(pendingCaseData.case);
-      setModules(pendingCaseData.modules || []);
-      setModulesCompleted(pendingCaseData.modulesCompleted || 0);
+      setCaseData(data.case);
+      setModules(data.modules || []);
+      setModulesCompleted(data.modulesCompleted || 0);
       setNeedsVerification(false);
       setPendingCaseData(null);
       setVerificationInput('');
       setError('');
-    } else {
-      setError('Verification failed. Please check and try again.');
+    } catch (e) {
+      setError('Connection error. Please try again.');
     }
+
+    setLoading(false);
   }
 
   const stage = caseData ? determineStage(caseData, modulesCompleted) : 0;

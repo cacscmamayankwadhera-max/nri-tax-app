@@ -38,7 +38,7 @@ function triggerAutoRun(caseId, formData, fy) {
 
 export async function POST(request) {
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-  const limit = rateLimit(ip, 5, 60000);
+  const limit = await rateLimit(ip, 5, 60000);
   if (!limit.allowed) {
     return NextResponse.json({ error: 'Too many submissions. Please wait.' }, { status: 429 });
   }
@@ -62,11 +62,15 @@ export async function POST(request) {
       }, { status: 503 });
     }
 
+    // Normalize phone — strip to digits, keep last 10
+    const rawPhone = formData.phone || '';
+    const normalizedPhone = rawPhone.replace(/\D/g, '').slice(-10);
+
     const { data, error } = await supabase.from('cases').insert({
       user_id: null, // Will be linked when team claims it
       client_name: formData.name,
       client_email: formData.email || null,
-      client_phone: formData.phone || null,
+      client_phone: normalizedPhone || null,
       country: formData.country,
       fy: fy || '2025-26',
       ay: FY_CONFIG[fy || '2025-26']?.ay || '2026-27',

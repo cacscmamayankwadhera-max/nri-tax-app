@@ -118,3 +118,72 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Failed to update role' }, { status: 500 });
   }
 }
+
+// PUT /api/admin/team -- invite a new team member
+export async function PUT(request) {
+  const admin = await verifyAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { email, role, fullName } = await request.json();
+    if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
+
+    const supabase = createServerClient();
+
+    // Create user via Supabase Admin API
+    const { data, error } = await supabase.auth.admin.createUser({
+      email,
+      email_confirm: true,
+      user_metadata: { full_name: fullName || '', role: role || 'preparer' },
+    });
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+    // Send password reset email so they can set their password
+    await supabase.auth.admin.generateLink({ type: 'magiclink', email });
+
+    return NextResponse.json({ success: true, userId: data.user?.id });
+  } catch (e) {
+    console.error('[admin/team] Invite error:', e);
+    return NextResponse.json({ error: 'Failed to invite member' }, { status: 500 });
+  }
+}
+
+// DELETE /api/admin/team -- deactivate a team member
+export async function DELETE(request) {
+  const admin = await verifyAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { userId } = await request.json();
+    if (!userId) {
+      return NextResponse.json({ error: 'userId required' }, { status: 400 });
+    }
+
+    // Prevent deactivating yourself
+    if (userId === admin.id) {
+      return NextResponse.json({ error: 'Cannot deactivate yourself' }, { status: 400 });
+    }
+
+    const supabase = createServerClient();
+
+    // Update profile to mark as inactive
+    await supabase.from('profiles').update({ role: 'deactivated' }).eq('id', userId);
+
+    // Ban the user from signing in
+    const { error } = await supabase.auth.admin.updateUserById(userId, { banned_until: '2099-12-31T00:00:00Z' });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error('[admin/team] Deactivate error:', e);
+    return NextResponse.json({ error: 'Failed to deactivate member' }, { status: 500 });
+  }
+}

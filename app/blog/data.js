@@ -2,6 +2,10 @@
    BLOG DATA — NRI Tax Knowledge Hub
    ───────────────────────────────────────────────────────────── */
 
+// Blog articles are managed as markdown files in /content/blogs/
+// To add a new article: 1) Create the .md file, 2) Add entry to BLOGS array below
+// Future: migrate to Supabase-backed CMS for non-developer content management
+
 export const CATEGORIES = [
   { id: 'all', label: 'All', icon: '📚' },
   { id: 'guide', label: 'Guides', icon: '📖' },

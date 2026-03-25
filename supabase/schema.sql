@@ -168,3 +168,6 @@ create policy "Users can upload deliverables" on storage.objects
   for insert with check (bucket_id = 'deliverables' and auth.role() = 'authenticated');
 create policy "Users can view own deliverables" on storage.objects
   for select using (bucket_id = 'deliverables' and auth.role() = 'authenticated');
+
+-- NOTE: Consider adding a cleanup cron for module_outputs where case status = 'closed' and age > 1 year
+-- This prevents unbounded storage growth. Run via Supabase pg_cron.

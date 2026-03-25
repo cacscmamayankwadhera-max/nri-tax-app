@@ -7,7 +7,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 export async function POST(request) {
   // Parse endpoint is public (used by client intake) — rate limit is the primary protection
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-  const limit = rateLimit(ip, 10, 60000);
+  const limit = await rateLimit(ip, 10, 60000);
   if (!limit.allowed) {
     return NextResponse.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
   }

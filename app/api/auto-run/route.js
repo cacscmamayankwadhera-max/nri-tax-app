@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import Anthropic from '@anthropic-ai/sdk';
 import { SKILL_PROMPTS, buildCaseContext } from '@/lib/skills';
 import { createServerClient } from '@/lib/supabase-server';
@@ -88,7 +89,7 @@ export async function POST(request) {
   }
 
   try {
-    const { caseId, formData, fy } = await request.json();
+    const { caseId, formData, fy, startModule, moduleOutputs: prevOutputs } = await request.json();
 
     if (!caseId || !formData || !fy) {
       return NextResponse.json(
@@ -97,65 +98,69 @@ export async function POST(request) {
       );
     }
 
-    console.log(`[auto-run] Starting auto-run for case ${caseId} (FY ${fy})`);
+    const currentIndex = startModule || 0;
+
+    console.log(`[auto-run] Running module ${currentIndex + 1}/${MODULE_ORDER.length} for case ${caseId} (FY ${fy})`);
 
     const supabase = createServerClient();
 
-    // Mark case as in_progress
-    await updateCaseStatus(supabase, caseId, 'in_progress', 0);
-
-    // Accumulate module outputs so each subsequent module has full context
-    const moduleOutputs = { intake: 'auto' };
-    let completedCount = 0;
-    const errors = [];
-
-    for (const moduleId of MODULE_ORDER) {
-      const moduleStart = Date.now();
-
-      try {
-        console.log(`[auto-run] Running module: ${moduleId} (${completedCount + 1}/${MODULE_ORDER.length}) for case ${caseId}`);
-
-        const output = await runModule(moduleId, formData, fy, moduleOutputs);
-
-        // Add this module's output to context for subsequent modules
-        moduleOutputs[moduleId] = output;
-        completedCount++;
-
-        // Persist to Supabase (non-blocking for the sequence — errors are logged but don't halt)
-        await saveModuleOutput(supabase, caseId, moduleId, output);
-
-        // Update completed count on the case
-        await updateCaseStatus(supabase, caseId, 'in_progress', completedCount);
-
-        const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
-        logActivity(caseId, null, 'module_completed', { moduleId, elapsed }).catch(() => {});
-        console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${completedCount}/${MODULE_ORDER.length})`);
-
-      } catch (moduleError) {
-        const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
-        console.error(`[auto-run] Module ${moduleId} failed after ${elapsed}s:`, moduleError.message);
-
-        errors.push({ module: moduleId, error: moduleError.message });
-
-        // Save error marker so the team knows this module needs manual re-run
-        await saveModuleOutput(supabase, caseId, moduleId, `[AUTO-RUN ERROR] ${moduleError.message}`);
-
-        // Continue with remaining modules
-      }
+    // On first module, mark case as in_progress
+    if (currentIndex === 0) {
+      await updateCaseStatus(supabase, caseId, 'in_progress', 0);
     }
 
-    // Mark case as ready for review
-    await updateCaseStatus(supabase, caseId, 'review', completedCount);
+    // Accumulate module outputs from previous invocations
+    const moduleOutputs = prevOutputs || { intake: 'auto' };
+
+    // Run current module
+    const moduleId = MODULE_ORDER[currentIndex];
+    const moduleStart = Date.now();
+
+    try {
+      console.log(`[auto-run] Running module: ${moduleId} (${currentIndex + 1}/${MODULE_ORDER.length}) for case ${caseId}`);
+
+      const result = await runModule(moduleId, formData, fy, moduleOutputs);
+      moduleOutputs[moduleId] = result.output;
+      await saveModuleOutput(supabase, caseId, moduleId, result.output);
+      await updateCaseStatus(supabase, caseId, 'in_progress', currentIndex + 1);
+
+      const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
+      logActivity(caseId, null, 'module_completed', { moduleId, elapsed }).catch(() => {});
+      logActivity(caseId, null, 'ai_module_run', { moduleId, inputTokens: result.usage?.input_tokens, outputTokens: result.usage?.output_tokens }).catch(() => {});
+      console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${currentIndex + 1}/${MODULE_ORDER.length})`);
+
+    } catch (moduleError) {
+      const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
+      console.error(`[auto-run] Module ${moduleId} failed after ${elapsed}s:`, moduleError.message);
+
+      // Save error marker so the team knows this module needs manual re-run
+      await saveModuleOutput(supabase, caseId, moduleId, `[AUTO-RUN ERROR] ${moduleError.message}`);
+    }
+
+    // Chain next module (fire-and-forget)
+    if (currentIndex + 1 < MODULE_ORDER.length) {
+      const headersList = headers();
+      const host = headersList.get('host') || 'localhost:3000';
+      const protocol = headersList.get('x-forwarded-proto') || 'http';
+      fetch(`${protocol}://${host}/api/auto-run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-internal-secret': process.env.INTERNAL_SECRET || '' },
+        body: JSON.stringify({ caseId, formData, fy, startModule: currentIndex + 1, moduleOutputs }),
+      }).catch(err => console.error('[auto-run] Chain failed:', err.message));
+    } else {
+      // All modules done — update status to review
+      await updateCaseStatus(supabase, caseId, 'review', MODULE_ORDER.length);
+      console.log(`[auto-run] All modules complete for case ${caseId}`);
+    }
 
     const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    console.log(`[auto-run] Finished case ${caseId}: ${completedCount}/${MODULE_ORDER.length} modules in ${totalElapsed}s`);
 
     return NextResponse.json({
       success: true,
       caseId,
-      modulesCompleted: completedCount,
+      moduleCompleted: moduleId,
+      moduleIndex: currentIndex,
       totalModules: MODULE_ORDER.length,
-      errors: errors.length > 0 ? errors : undefined,
       elapsedSeconds: parseFloat(totalElapsed),
     });
 

@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/portal?ref=ABCD1234
-// Returns sanitized case data + module outputs (no internal pricing details)
+// Returns status-only case data (no PII, no client name, no intake_data).
+// Full data requires POST verification.
 export async function GET(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const limit = await rateLimit(ip + ':portal', 10, 60000);
+    if (!limit.allowed) return NextResponse.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
+
     const { searchParams } = new URL(request.url);
     const ref = searchParams.get('ref');
 
@@ -22,7 +28,7 @@ export async function GET(request) {
     // Find case by portal_token (unguessable hex token)
     const { data: cases, error: caseError } = await supabase
       .from('cases')
-      .select('*')
+      .select('id, status, classification, fy, ay, created_at, modules_completed')
       .eq('portal_token', ref)
       .limit(1);
 
@@ -43,7 +49,7 @@ export async function GET(request) {
 
     const caseData = cases[0];
 
-    // Fetch module outputs for this case
+    // Fetch module outputs — only completion status (no output text)
     const { data: modules, error: moduleError } = await supabase
       .from('module_outputs')
       .select('module_id, completed_at, output_text')
@@ -57,17 +63,92 @@ export async function GET(request) {
     // Filter out pricing module — internal only
     const sanitizedModules = (modules || []).filter(m => m.module_id !== 'pricing');
 
-    // Strip internal output text to just completion status for client view
-    // (keep output only for specific modules the client should see findings from)
     const clientModules = sanitizedModules.map(m => ({
       module_id: m.module_id,
       completed_at: m.completed_at,
-      // Only include output text for modules that produce client-visible findings
       has_output: !!m.output_text && !m.output_text.startsWith('[AUTO-RUN ERROR]'),
       has_error: m.output_text ? m.output_text.startsWith('[AUTO-RUN ERROR]') : false,
     }));
 
-    // Build sanitized case object — exclude internal fields
+    // Status-only case object — NO PII, NO client name, NO intake_data
+    const statusCase = {
+      status: caseData.status,
+      classification: caseData.classification,
+      fy: caseData.fy,
+      ay: caseData.ay,
+      created_at: caseData.created_at,
+      modules_completed: caseData.modules_completed || 0,
+    };
+
+    return NextResponse.json({
+      case: statusCase,
+      modules: clientModules,
+      modulesCompleted: clientModules.filter(m => m.has_output).length,
+      totalModules: 9,
+    });
+
+  } catch (error) {
+    console.error('[portal] Unexpected error:', error);
+    return NextResponse.json(
+      { error: 'Something went wrong. Please try again.' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/portal — verify identity and return full case data
+export async function POST(request) {
+  try {
+    const { ref, phone4 } = await request.json();
+
+    // Rate limit
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const limit = await rateLimit(ip + ':portal-verify', 5, 300000);
+    if (!limit.allowed) return NextResponse.json({ error: 'Too many attempts. Try again in 5 minutes.' }, { status: 429 });
+
+    if (!ref || ref.length < 10) {
+      return NextResponse.json({ error: 'Invalid case reference.' }, { status: 400 });
+    }
+
+    if (!phone4 || phone4.length !== 4 || !/^\d{4}$/.test(phone4)) {
+      return NextResponse.json({ error: 'Please enter exactly 4 digits.' }, { status: 400 });
+    }
+
+    // Lookup case
+    const supabase = createServerClient();
+    const { data: cases } = await supabase.from('cases').select('*').eq('portal_token', ref).limit(1);
+    if (!cases?.length) return NextResponse.json({ error: 'Case not found' }, { status: 404 });
+
+    const caseData = cases[0];
+    const phone = (caseData.client_phone || caseData.intake_data?.phone || '').replace(/\D/g, '');
+    const last4 = phone.slice(-4);
+
+    if (!last4 || phone4 !== last4) {
+      return NextResponse.json({ error: 'Verification failed' }, { status: 401 });
+    }
+
+    // Verified — fetch module outputs
+    const { data: modules, error: moduleError } = await supabase
+      .from('module_outputs')
+      .select('module_id, completed_at, output_text')
+      .eq('case_id', caseData.id)
+      .order('completed_at', { ascending: true });
+
+    if (moduleError) {
+      console.error('[portal] Module outputs lookup error:', moduleError.message);
+    }
+
+    // Filter out pricing module — internal only
+    const sanitizedModules = (modules || []).filter(m => m.module_id !== 'pricing');
+
+    const clientModules = sanitizedModules.map(m => ({
+      module_id: m.module_id,
+      completed_at: m.completed_at,
+      has_output: !!m.output_text && !m.output_text.startsWith('[AUTO-RUN ERROR]'),
+      has_error: m.output_text ? m.output_text.startsWith('[AUTO-RUN ERROR]') : false,
+    }));
+
+    // Build sanitized case object — include non-PII intake fields for CG computations
     const sanitizedCase = {
       id: caseData.id,
       client_name: caseData.client_name,
@@ -79,7 +160,6 @@ export async function GET(request) {
       modules_completed: caseData.modules_completed || 0,
       created_at: caseData.created_at,
       updated_at: caseData.updated_at,
-      // Include only non-PII fields from intake_data for client-side computations
       intake_data: {
         salePrice: caseData.intake_data?.salePrice,
         purchaseCost: caseData.intake_data?.purchaseCost,
@@ -88,28 +168,21 @@ export async function GET(request) {
         rent: caseData.intake_data?.rent,
         rentalMonthly: caseData.intake_data?.rentalMonthly,
         foreignSalary: caseData.intake_data?.foreignSalary,
-        name: caseData.intake_data?.name, // client's own name is fine
+        name: caseData.intake_data?.name,
         country: caseData.intake_data?.country,
-        // Explicitly exclude: email, phone, nroInterest, fdInterest, notes, occupation
       },
     };
 
-    // Include phone + dob for client-side identity verification (stripped after verification on frontend)
-    const verificationData = {
-      phone: caseData.intake_data?.phone || '',
-      dob: caseData.intake_data?.dob || '',
-    };
-
     return NextResponse.json({
+      verified: true,
       case: sanitizedCase,
       modules: clientModules,
       modulesCompleted: clientModules.filter(m => m.has_output).length,
-      totalModules: 9, // total client-visible modules (excluding pricing)
-      intake_data: verificationData, // for identity verification only
+      totalModules: 9,
     });
 
   } catch (error) {
-    console.error('[portal] Unexpected error:', error);
+    console.error('[portal] POST unexpected error:', error);
     return NextResponse.json(
       { error: 'Something went wrong. Please try again.' },
       { status: 500 }

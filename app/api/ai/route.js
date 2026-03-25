@@ -32,7 +32,7 @@ export async function POST(request) {
   }
 
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-  const limit = rateLimit(ip, 20, 60000);
+  const limit = await rateLimit(ip, 20, 60000);
   if (!limit.allowed) {
     return NextResponse.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
   }
@@ -67,7 +67,8 @@ export async function POST(request) {
       .map(block => block.type === 'text' ? block.text : '')
       .join('\n');
 
-    logActivity(null, null, 'ai_module_run', { moduleId }).catch(() => {});
+    const usage = message.usage; // { input_tokens, output_tokens }
+    logActivity(null, null, 'ai_module_run', { moduleId, inputTokens: usage?.input_tokens, outputTokens: usage?.output_tokens }).catch(() => {});
 
     return NextResponse.json({ output, moduleId });
 

@@ -52,23 +52,33 @@ async function parseNarrative(text) {
   return data.parsed;
 }
 
-async function downloadDocx(type, caseData, fy, moduleOutputs) {
-  const res = await fetch('/api/deliverables', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type, caseData, fy, moduleOutputs })
-  });
-  if (!res.ok) throw new Error('DOCX generation failed');
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  const name = (caseData.name || 'client').toLowerCase().replace(/[^a-z0-9]/g, '-');
-  a.download = `${name}-${type}.docx`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+async function downloadDocx(type, caseData, fy, moduleOutputs, retries = 2) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch('/api/deliverables', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, caseData, fy, moduleOutputs })
+      });
+      if (!res.ok) {
+        if (attempt < retries) continue; // retry
+        throw new Error('DOCX generation failed after retries');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const name = (caseData.name || 'client').toLowerCase().replace(/[^a-z0-9]/g, '-');
+      a.download = `${name}-${type}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return;
+    } catch (e) {
+      if (attempt === retries) throw e;
+    }
+  }
 }
 
 /* ═══ MARKDOWN RENDERER ═══ */
@@ -318,6 +328,9 @@ export default function Dashboard() {
   const [userRole, setUserRole] = useState(null);
   const [panResult, setPanResult] = useState(null);
   const [panLoading, setPanLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
@@ -399,11 +412,14 @@ export default function Dashboard() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return caseObj; // not logged in, local only
+      // Normalize phone — strip to digits, keep last 10
+      const rawPhone = f.phone || '';
+      const normalizedPhone = rawPhone.replace(/\D/g, '').slice(-10);
       const { data } = await supabase.from('cases').insert({
         user_id: user.id,
         client_name: caseObj.name,
         client_email: f.email,
-        client_phone: f.phone,
+        client_phone: normalizedPhone || null,
         country: caseObj.country,
         fy, ay: cfg.ay,
         classification: caseObj.classification,
@@ -433,6 +449,20 @@ export default function Dashboard() {
     setMi(0);
     setView('case');
     setDv(null);
+  }
+
+  // ── Re-classify when intake data changes ──
+  function reclassifyCase(formData) {
+    const newClassification = classifyCase(formData || f);
+    if (ac && newClassification !== ac.classification) {
+      setAc(prev => ({ ...prev, classification: newClassification }));
+      setCases(prev => prev.map(c => (c.dbId || c.id) === (ac.dbId || ac.id) ? { ...c, classification: newClassification } : c));
+      if (ac.dbId) {
+        supabase.from('cases').update({ classification: newClassification, intake_data: formData || f }).eq('id', ac.dbId).catch(() => {});
+      }
+      setToast({ type: 'success', message: `Classification updated to ${newClassification}` });
+    }
+    return newClassification;
   }
 
   // ── Run AI module ──
@@ -482,6 +512,21 @@ export default function Dashboard() {
     w.document.close();
     setTimeout(() => w.print(), 300);
   }
+
+  // ── Filtered + sorted cases for home view ──
+  const filteredCases = cases.filter(c => {
+    const matchSearch = !searchQuery ||
+      (c.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.client_email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.client_phone || '').includes(searchQuery) ||
+      (c.pan || c.formData?.pan || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchStatus = statusFilter === 'all' || c.status === statusFilter;
+    return matchSearch && matchStatus;
+  }).sort((a, b) => {
+    if (sortBy === 'newest') return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    if (sortBy === 'oldest') return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+    return 0;
+  });
 
   /* ═══ RENDER: HOME ═══ */
   if (view === 'home') return (
@@ -538,6 +583,31 @@ export default function Dashboard() {
             <option value="2024-25">FY 2024-25</option>
           </select>
         </div>
+        {/* Search, filter, sort bar */}
+        {cases.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-4">
+            <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by name, email, phone, PAN..."
+              className="input-theme text-xs py-2 px-3 flex-1 min-w-[200px]" />
+            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+              className="input-theme text-xs py-2 px-3 w-40">
+              <option value="all">All Status</option>
+              <option value="intake">Intake</option>
+              <option value="in_progress">In Progress</option>
+              <option value="review">Review</option>
+              <option value="findings_ready">Findings Ready</option>
+              <option value="filing">Filing</option>
+              <option value="filed">Filed</option>
+              <option value="closed">Closed</option>
+            </select>
+            <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+              className="input-theme text-xs py-2 px-3 w-32">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </div>
+        )}
+
         {cases.length === 0 ? (
           <div className="text-center py-16 text-theme-muted">
             <div className="card-theme p-4 mb-4 text-center" style={{ borderColor: 'var(--amber)', borderWidth: '1px' }}>
@@ -550,7 +620,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="stagger-children">
-            {cases.map(c => (
+            {filteredCases.map(c => (
               <div key={c.id || c.dbId} onClick={async ()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);
                 // Load module outputs from DB
                 if (c.dbId || c.id) {
@@ -572,6 +642,7 @@ export default function Dashboard() {
                 onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-card)'}>
                 <div>
                   <div className="font-semibold text-sm text-theme">{c.name || c.client_name}
+                    {c.formData?.priority === 'urgent' && <span className="text-[8px] ml-1">{'\uD83D\uDD34'}</span>}
                     {c.client_email && (
                       <span className="text-xs text-theme-muted ml-2">{c.client_email}</span>
                     )}
@@ -861,7 +932,16 @@ export default function Dashboard() {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ caseId: ac.dbId || ac.id, newStatus }),
-                      }).catch(() => {}); // Don't block UI on notification failure
+                      })
+                        .then(async res => {
+                          const data = await res.json();
+                          if (data.notification && !data.notification.sent) {
+                            setToast({ type: 'error', message: `Status updated but WhatsApp notification failed: ${data.notification.reason || 'API not configured'}` });
+                          }
+                        })
+                        .catch(() => {
+                          setToast({ type: 'error', message: 'Status updated but notification could not be sent' });
+                        });
                     } catch(e) {}
                   }
                 }}
@@ -887,6 +967,58 @@ export default function Dashboard() {
             }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
               Copy Client Portal Link
             </button>
+            {/* Priority toggle (GAP 23) */}
+            {(() => { const curPriority = ac?.priority || ac?.formData?.priority; return (
+            <div className="flex items-center gap-2 mt-2">
+              <button onClick={async () => {
+                const newPriority = curPriority === 'urgent' ? 'normal' : 'urgent';
+                setAc(prev => ({ ...prev, priority: newPriority, formData: { ...prev.formData, priority: newPriority } }));
+                if (ac.dbId) {
+                  await supabase.from('cases').update({
+                    intake_data: { ...ac.formData, priority: newPriority }
+                  }).eq('id', ac.dbId).catch(() => {});
+                }
+              }} className="text-[9px] px-2 py-1 rounded-md flex items-center gap-1"
+                style={{
+                  background: curPriority === 'urgent' ? 'rgba(160,72,72,0.1)' : 'var(--bg-primary)',
+                  border: `1px solid ${curPriority === 'urgent' ? 'var(--red)' : 'var(--border)'}`,
+                  color: curPriority === 'urgent' ? 'var(--red)' : 'var(--text-muted)',
+                }}>
+                {curPriority === 'urgent' ? '\uD83D\uDD34 Urgent' : '\u25CB Mark Urgent'}
+              </button>
+            </div>
+            ); })()}
+            {/* Reclassify button (GAP 18) */}
+            <button onClick={() => reclassifyCase(ac.formData || f)}
+              className="w-full text-[9px] py-1.5 rounded-md mt-2 transition-all"
+              style={{ color: 'var(--accent)', border: '1px solid var(--accent)', opacity: 0.7 }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '0.7'}>
+              Reclassify Case
+            </button>
+            {/* Delete Case button (GAP 19) — admin/partner only */}
+            {userRole && ['admin', 'partner'].includes(userRole) && (
+              <button onClick={async () => {
+                if (!confirm('Permanently delete this case and all its data? This cannot be undone.')) return;
+                try {
+                  await fetch('/api/admin/delete-case', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ caseId: ac.dbId || ac.id }),
+                  });
+                  setCases(prev => prev.filter(c => (c.dbId || c.id) !== (ac.dbId || ac.id)));
+                  setView('home');
+                  setToast({ type: 'success', message: 'Case deleted' });
+                } catch (e) {
+                  setToast({ type: 'error', message: 'Failed to delete case' });
+                }
+              }} className="w-full text-[9px] py-1.5 rounded-md mt-2 transition-all"
+                style={{ color: 'var(--red)', border: '1px solid var(--red)', opacity: 0.6 }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>
+                Delete Case
+              </button>
+            )}
           </div>
 
           <div className="py-1">
@@ -953,7 +1085,7 @@ export default function Dashboard() {
                     <div className="text-theme-muted text-[10px]">Aadhaar: {panResult.data.aadhaarLinked ? 'Linked \u2713' : 'Not linked \u26A0'}</div>
                   </>
                 )}
-                {panResult.data?.valid === false && panResult.error && <div style={{ color: 'var(--red)' }} className="text-[10px]">{panResult.error}</div>}
+                {panResult.data?.valid === false && <div style={{ color: 'var(--red)' }} className="text-[10px]">PAN verification failed. Please check the number and try again.</div>}
                 {!panResult.available && <div className="text-theme-muted text-[10px]">{panResult.message}</div>}
               </div>
             )}
@@ -969,6 +1101,29 @@ export default function Dashboard() {
                 <span className="text-theme-muted">Coming soon</span>
               </button>
             </div>
+          </div>
+
+          {/* Team Notes (GAP 24) */}
+          <div className="px-3 py-2 border-t border-theme">
+            <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider mb-1">Team Notes</div>
+            <textarea
+              value={ac?.formData?.teamNotes || ''}
+              onChange={e => {
+                const notes = e.target.value;
+                setAc(prev => ({ ...prev, formData: { ...prev.formData, teamNotes: notes } }));
+              }}
+              onBlur={async () => {
+                if (ac?.dbId) {
+                  await supabase.from('cases').update({
+                    intake_data: { ...ac.formData, teamNotes: ac.formData?.teamNotes }
+                  }).eq('id', ac.dbId).catch(() => {});
+                }
+              }}
+              placeholder="Internal notes — not visible to client"
+              rows={3}
+              className="input-theme text-xs py-2 px-2 w-full"
+              style={{ resize: 'vertical', fontSize: '11px' }}
+            />
           </div>
         </div>
 

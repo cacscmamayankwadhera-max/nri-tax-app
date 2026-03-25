@@ -4,8 +4,8 @@ import { createServerClient } from '@supabase/ssr';
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /dashboard routes
-  if (!pathname.startsWith('/dashboard')) {
+  // Only protect /dashboard and /admin routes
+  if (!pathname.startsWith('/dashboard') && !pathname.startsWith('/admin')) {
     return NextResponse.next();
   }
 
@@ -43,5 +43,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*'],
 };

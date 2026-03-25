@@ -22,6 +22,7 @@ const ROLE_LABELS = {
   senior: 'Senior Associate',
   preparer: 'Preparer',
   client: 'Client',
+  deactivated: 'Deactivated',
 };
 
 const ROLE_COLORS = {
@@ -30,6 +31,7 @@ const ROLE_COLORS = {
   senior: '#5670A8',
   preparer: '#6b6256',
   client: '#9ca3af',
+  deactivated: '#a04848',
 };
 
 /* ================================================================
@@ -218,6 +220,11 @@ export default function AdminPage() {
   const [testResults, setTestResults] = useState({});
   const [testing, setTesting] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteName, setInviteName] = useState('');
+  const [inviteRole, setInviteRole] = useState('preparer');
+  const [inviting, setInviting] = useState(false);
+  const [inviteMsg, setInviteMsg] = useState(null);
   const { theme } = useTheme();
   const supabase = createClient();
 
@@ -330,6 +337,38 @@ export default function AdminPage() {
       setToast({ type: 'error', message: 'Failed to update role' });
     }
   }, []);
+
+  // Invite new team member
+  const handleInvite = useCallback(async () => {
+    if (!inviteEmail) return;
+    setInviting(true);
+    setInviteMsg(null);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: inviteEmail, fullName: inviteName, role: inviteRole }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setInviteMsg({ type: 'success', text: `Invite sent to ${inviteEmail}` });
+        setInviteEmail('');
+        setInviteName('');
+        setInviteRole('preparer');
+        // Reload team list
+        const teamRes = await fetch('/api/admin/team');
+        if (teamRes.ok) {
+          const teamData = await teamRes.json();
+          setTeam(teamData.members || []);
+        }
+      } else {
+        setInviteMsg({ type: 'error', text: data.error || 'Failed to invite member' });
+      }
+    } catch (e) {
+      setInviteMsg({ type: 'error', text: 'Failed to invite member' });
+    }
+    setInviting(false);
+  }, [inviteEmail, inviteName, inviteRole]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -630,6 +669,34 @@ export default function AdminPage() {
                   <p className="text-xs text-theme-muted mt-1">Manage team members and their roles. {team.length} member{team.length !== 1 ? 's' : ''} total.</p>
                 </div>
 
+                {/* Invite Team Member form */}
+                <div className="card-theme p-5 mb-6">
+                  <div className="text-sm font-semibold text-theme mb-3">Invite Team Member</div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <input type="email" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}
+                      placeholder="Email address *"
+                      className="input-theme text-xs py-2 px-3" />
+                    <input type="text" value={inviteName} onChange={e => setInviteName(e.target.value)}
+                      placeholder="Full name"
+                      className="input-theme text-xs py-2 px-3" />
+                    <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
+                      className="input-theme text-xs py-2 px-3">
+                      <option value="preparer">Preparer</option>
+                      <option value="senior">Senior Associate</option>
+                      <option value="partner">Partner</option>
+                    </select>
+                    <button onClick={handleInvite} disabled={inviting || !inviteEmail}
+                      className="btn-primary text-xs py-2 disabled:opacity-40">
+                      {inviting ? 'Sending...' : 'Send Invite'}
+                    </button>
+                  </div>
+                  {inviteMsg && (
+                    <div className={`mt-3 text-xs font-medium ${inviteMsg.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                      {inviteMsg.text}
+                    </div>
+                  )}
+                </div>
+
                 {team.length === 0 ? (
                   <div className="card-theme p-12 text-center">
                     <div className="text-3xl opacity-20 mb-2"><IconUsers size={48} /></div>
@@ -699,11 +766,39 @@ export default function AdminPage() {
                             </span>
                           </div>
 
-                          {/* Joined */}
-                          <div className="col-span-2">
+                          {/* Joined + Actions */}
+                          <div className="col-span-2 flex items-center gap-2">
                             <span className="text-[10px] text-theme-muted">
                               {member.createdAt ? new Date(member.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '--'}
                             </span>
+                            {member.id !== user?.id && member.role !== 'deactivated' && (
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`Deactivate ${member.name}? They will no longer be able to sign in.`)) return;
+                                  try {
+                                    const res = await fetch('/api/admin/team', {
+                                      method: 'DELETE',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ userId: member.id }),
+                                    });
+                                    if (res.ok) {
+                                      setTeam(prev => prev.map(m => m.id === member.id ? { ...m, role: 'deactivated', status: 'inactive' } : m));
+                                      setToast({ type: 'success', message: `${member.name} has been deactivated` });
+                                    } else {
+                                      const data = await res.json();
+                                      setToast({ type: 'error', message: data.error || 'Failed to deactivate' });
+                                    }
+                                  } catch (e) {
+                                    setToast({ type: 'error', message: 'Failed to deactivate member' });
+                                  }
+                                }}
+                                className="text-[9px] px-2 py-0.5 rounded"
+                                style={{ color: 'var(--red)', border: '1px solid color-mix(in srgb, var(--red) 30%, transparent)' }}
+                                title="Deactivate this team member"
+                              >
+                                Deactivate
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -795,6 +890,9 @@ export default function AdminPage() {
                         <option value="claude-haiku-4-20250514">Claude Haiku 4 (Faster, cheaper)</option>
                         <option value="claude-opus-4-20250514">Claude Opus 4 (Most capable)</option>
                       </select>
+                      <p className="text-[10px] text-theme-muted mt-1.5 leading-relaxed">
+                        To change the AI model, update <code className="font-mono" style={{ color: 'var(--accent)' }}>ANTHROPIC_MODEL</code> in your Vercel Environment Variables and redeploy. The selection above is for reference only.
+                      </p>
                     </div>
                   </div>
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,9 @@ export const dynamic = 'force-dynamic';
 // Returns full case data after phone verification
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const limit = await rateLimit(ip + ':verify', 5, 300000);
+    if (!limit.allowed) return NextResponse.json({ error: 'Too many attempts. Try again in 5 minutes.' }, { status: 429 });
     const body = await request.json();
     const email = (body.email || '').trim().toLowerCase();
     const phone4 = (body.phone4 || '').trim();

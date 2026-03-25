@@ -87,6 +87,7 @@ function disclaimer(){
   return [gap(), rule(),
     p("Disclaimer",{b:true,c:"6B6256",sz:20}),
     p("This document is based on information available as of the date above. The advisory position may change if additional facts, documents, or regulatory developments emerge. This is not a formal legal opinion.",{i:true,c:"6B6256",sz:18}),
+    new Paragraph({ children: [new TextRun({ text: 'Disclaimer: This document is generated using AI-assisted analysis and is for reference purposes only. All computations are subject to review and verification by a qualified Chartered Accountant. This does not constitute professional tax advice.', size: 16, color: '999999', italics: true })], spacing: { before: 400 } }),
     p("© "+new Date().getFullYear()+" "+FIRM+". Confidential.",{c:"6B6256",sz:18}),
   ];
 }

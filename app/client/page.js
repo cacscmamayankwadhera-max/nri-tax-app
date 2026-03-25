@@ -309,6 +309,13 @@ export default function ClientIntake() {
             <p className="text-theme-muted text-sm">Your case has been submitted to our tax desk</p>
           </div>
 
+          {/* AI Analysis in Progress notice */}
+          <div className="card-theme p-4 mb-6 text-center" style={{ borderColor: 'var(--accent)', borderWidth: '1px' }}>
+            <p className="text-sm font-medium text-theme mb-1">AI Analysis in Progress</p>
+            <p className="text-xs text-theme-muted">Our 9 specialist modules are analyzing your case. This typically takes 2-5 minutes.</p>
+            <p className="text-xs text-theme-muted mt-2">You will receive a WhatsApp notification when your findings are ready.</p>
+          </div>
+
           {/* Case reference link for portal tracking */}
           {portalToken && (
             <div className="card-theme p-6 mb-6 text-center" style={{ borderColor: 'var(--accent)', borderWidth: '1px' }}>
@@ -947,10 +954,22 @@ export default function ClientIntake() {
                 </div>
               )}
 
+              {/* Legal consent */}
+              <label className="flex items-start gap-2.5 text-xs cursor-pointer mt-4">
+                <input type="checkbox" checked={!!f.consent} onChange={e => u('consent', e.target.checked)}
+                  className="accent-[#C49A3C] w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span style={{ color: 'var(--text-secondary)' }}>
+                  I understand this is an AI-assisted preliminary assessment, not professional tax advice.
+                  Final computations will be reviewed by a qualified Chartered Accountant.
+                  I agree to the <a href="/terms" className="text-theme-accent underline">Terms</a> and
+                  <a href="/privacy" className="text-theme-accent underline">Privacy Policy</a>.
+                </span>
+              </label>
+
               {/* Submit */}
               <button
                 onClick={handleSubmit}
-                disabled={submitting || !f.name || !f.email || !f.phone}
+                disabled={submitting || !f.name || !f.email || !f.phone || !f.consent}
                 className="btn-premium w-full mt-6 py-4 rounded-xl text-base disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {submitting ? 'Submitting...' : getContextualCTA(f)}
