@@ -1387,8 +1387,8 @@ export default function Dashboard() {
               {modOut && !ld && (
                 modOut?.startsWith('[ERROR]') ? (
                   <div className="p-4 rounded-lg" style={{ background: 'rgba(160,72,72,0.08)', border: '1px solid var(--red)' }}>
-                    <p className="text-sm font-bold mb-2" style={{ color: 'var(--red)' }}>Module Failed</p>
-                    <p className="text-xs text-theme-muted mb-3">{modOut.replace('[ERROR] ', '')}</p>
+                    <p className="text-sm font-bold mb-2" style={{ color: 'var(--red)' }}>This module needs a retry</p>
+                    <p className="text-xs text-theme-muted mb-3">This can happen due to high demand &mdash; try again in a few seconds. {modOut.replace('[ERROR] ', '')}</p>
                     <button onClick={() => runMod(mi)} className="text-xs px-3 py-1.5 rounded-lg" style={{ background: 'var(--accent)', color: 'var(--text-on-cta)' }}>
                       Retry
                     </button>

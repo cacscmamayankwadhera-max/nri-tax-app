@@ -270,7 +270,7 @@ export default function ClientIntake() {
     return getDTAARate(f.country);
   }, [f.country]);
 
-  const stepLabels = ['Where are you?', "What's happening?", 'Your preview', 'Get your diagnostic'];
+  const stepLabels = ['Where are you?', "What's happening?", 'Your preview', 'Get Your Personalized Diagnostic'];
 
   // ---- SUBMITTED VIEW ----
   if (submitted) {
@@ -336,8 +336,8 @@ export default function ClientIntake() {
           )}
           {!portalToken && (
             <div className="card-theme p-5 mb-6 text-center">
-              <p className="text-sm font-medium text-theme mb-2">Case Submitted</p>
-              <p className="text-xs text-theme-muted">Your case has been received. Our team will contact you at {f.email || f.phone || 'the contact you provided'} within 24 hours.</p>
+              <p className="text-sm font-medium text-theme mb-2">We've Received Your Details</p>
+              <p className="text-xs text-theme-muted">Our team will reach out to you at {f.email || f.phone || 'the contact you provided'} within 24 hours to get started.</p>
               <p className="text-xs text-theme-muted mt-2">To track your case later, visit <a href="/my-cases" className="text-theme-accent underline">My Cases</a> using your email.</p>
             </div>
           )}
@@ -607,11 +607,11 @@ export default function ClientIntake() {
           </div>
         )}
 
-        {/* ====== STEP 1: What's happening with your India finances? ====== */}
+        {/* ====== STEP 1: What's happening with your India finances this year? ====== */}
         {step === 1 && (
           <div>
             <div className="text-center mb-8">
-              <h2 className="font-serif text-2xl font-bold text-theme mb-2">What's happening with your India finances?</h2>
+              <h2 className="font-serif text-2xl font-bold text-theme mb-2">What's happening with your India finances this year?</h2>
               <p className="text-sm text-theme-secondary">Select everything that applies. We will show you exactly what you can save.</p>
             </div>
 
@@ -651,7 +651,7 @@ export default function ClientIntake() {
             {/* AI narrative textarea -- shown when "not sure" is selected */}
             {f.notSure && (
               <div className="card-theme p-6 mb-6 animate-fade-in-up relative overflow-hidden">
-                <p className="text-sm font-semibold text-theme mb-2">Describe your situation</p>
+                <p className="text-sm font-semibold text-theme mb-2 typing-cursor">Describe your situation</p>
                 <p className="text-xs text-theme-muted mb-4">Our AI will read your description and figure out which scenarios apply.</p>
                 <textarea
                   value={narr}
@@ -734,15 +734,21 @@ export default function ClientIntake() {
 
                 {/* Live computation preview */}
                 {f.salePrice && f.purchaseCost && cgData && (
-                  <div className="card-premium p-6 mt-4 animate-fade-in-up overflow-x-auto">
+                  <div className="card-premium border-glow p-6 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Live Tax Preview</p>
-                    <div className="text-2xl font-serif font-bold" style={{ color: 'var(--green)' }}>
+                    <div className="text-2xl font-serif font-bold text-gradient-gold">
                       You could save {formatINR(cgData.savings)}
                     </div>
                     <p className="text-sm text-theme-secondary mt-2">
                       Without expert filing: {formatINR(cgData.optionA.total)} tax.
                       With dual computation: {formatINR(Math.min(cgData.optionA.total, cgData.optionB.total))}.
                       <strong> That's {formatINR(cgData.savings)} saved.</strong>
+                    </p>
+                    <p className="text-xs text-theme-secondary mt-3 leading-relaxed">
+                      Without expert filing, you'd pay {formatINR(cgData.optionA.total)} in tax.{' '}
+                      Our dual-computation analysis brings this down to {formatINR(cgData[cgData.better === 'A' ? 'optionA' : 'optionB'].total)}.{' '}
+                      That's <strong style={{ color: 'var(--green)' }}>{formatINR(cgData.savings)} saved</strong> &mdash;{' '}
+                      money that stays in your pocket, not the government's.
                     </p>
                     {/* TDS warning */}
                     <div className="mt-4 p-3 rounded-lg" style={{ background: 'rgba(160,72,72,0.08)', borderLeft: '3px solid var(--red)' }}>
@@ -753,6 +759,9 @@ export default function ClientIntake() {
                         you may face a department notice. We catch this.
                       </p>
                     </div>
+                    <p className="text-xs text-theme-secondary mt-3 italic" style={{ color: 'var(--text-muted)' }}>
+                      This is just a preview. The full diagnostic analyzes 9 additional dimensions.
+                    </p>
                   </div>
                 )}
               </div>
@@ -912,8 +921,8 @@ export default function ClientIntake() {
           <div>
             <div className="max-w-md mx-auto">
               <div className="text-center mb-8">
-                <h2 className="font-serif text-2xl font-bold text-theme mb-2">Almost there</h2>
-                <p className="text-sm text-theme-secondary">Our team will review your case and call you within 24 hours</p>
+                <h2 className="font-serif text-2xl font-bold text-theme mb-2">Get Your Personalized Diagnostic</h2>
+                <p className="text-sm text-theme-secondary">Our team will review your case and call you within 24 hours &mdash; no obligation.</p>
               </div>
 
               <div className="space-y-4 mb-6">

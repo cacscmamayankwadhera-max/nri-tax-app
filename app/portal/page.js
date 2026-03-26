@@ -175,7 +175,7 @@ function ClientPortal() {
         const res = await fetch(`/api/portal?ref=${encodeURIComponent(caseRef.trim())}`);
         const data = await res.json();
         if (!res.ok) {
-          setError(data.error || 'Case not found. This could happen if: (1) The tracking code is incorrect — please check and try again, (2) Your submission is being processed — please wait a few minutes and try again, (3) If the issue persists, contact us on WhatsApp.');
+          setError(data.error || "We couldn't find a case with this code. Double-check the code from your confirmation message, or use My Cases to look up by email.");
           setLoading(false);
           return;
         }

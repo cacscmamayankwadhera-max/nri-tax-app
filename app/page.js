@@ -23,22 +23,22 @@ const STATS = [
 
 const PAIN_POINTS = [
   {
-    headline: 'Wrong TDS Deducted by Buyer',
+    headline: 'Buyer Deducted Wrong TDS',
     detail: 'Buyer deducted 1% TDS instead of the mandatory 20% + surcharge for NRI sellers. Now you face a shortfall notice from the department.',
-    stat: '78% of NRI property sellers face this',
+    stat: 'This happens in 4 out of 5 NRI property sales',
   },
   {
-    headline: 'Filed as Resident by Mistake',
-    detail: 'Your CA filed you as a Resident Indian. Now your worldwide income is taxable in India \u2014 and the notice demands explanation.',
+    headline: 'Filed as Resident — Global Tax Triggered',
+    detail: 'Your CA filed you as a Resident Indian. Now your worldwide income is taxable in India \u2014 and the notice demands explanation. This turns a ₹0 India tax liability into ₹15L+ overnight.',
     stat: 'Most common NRI filing error',
   },
   {
-    headline: '\u20B915L+ Locked in Excess TDS',
+    headline: '\u20B915L+ Stuck in Excess TDS',
     detail: 'Excess TDS was deducted on your property sale but no refund was filed. Your money sits with the government, earning nothing.',
-    stat: 'Average excess: \u20B912\u201318 lakhs',
+    stat: 'Average refund recovered: \u20B914 lakhs',
   },
   {
-    headline: 'Missed Section 54 Deadline',
+    headline: 'Missed the Section 54 Window',
     detail: 'You sold property but didn\u2019t reinvest within the window. Now the entire long-term capital gain is taxable without exemption.',
     stat: 'Deadline: 2 years (purchase) / 3 years (construct)',
   },
@@ -195,15 +195,11 @@ export default function Home() {
               : 'var(--bg-primary)',
           }}
         />
-        {/* Subtle cross-hatch texture for light theme */}
-        {!isDark && (
-          <div
-            className="absolute inset-0 pointer-events-none opacity-[0.018]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zM20 0h1v40h-1z'/%3E%3Cpath d='M0 0h40v1H0zM0 20h40v1H0z'/%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        )}
+        {/* Subtle diamond/rhombus geometric pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23C49A3C' stroke-width='0.5'/%3E%3C/svg%3E")`,
+          backgroundSize: '80px 80px',
+        }} />
 
         <div className="max-w-6xl mx-auto px-6 md:px-12 pt-28 pb-20 md:pt-36 md:pb-24 relative z-10">
           <div
@@ -244,7 +240,7 @@ export default function Home() {
             <h1 className="text-display font-serif text-3xl sm:text-4xl md:text-6xl mb-6 leading-tight">
               NRI Tax Filing, Advisory
               <br />
-              <span style={{ color: 'var(--accent)' }}>
+              <span className="text-gradient-gold">
                 &amp; Compliance &mdash; Done Right
               </span>
             </h1>
@@ -262,14 +258,15 @@ export default function Home() {
               className="text-lg max-w-xl mx-auto mb-10 leading-relaxed"
               style={{ color: 'var(--text-secondary)', fontWeight: 300 }}
             >
-              Expert-led, AI-assisted tax filing for Non-Resident Indians &mdash;
-              because your cross-border finances deserve more than a generalist CA.
+              Your cross-border finances deserve more than a generalist CA.
+              Expert-led, AI-powered tax advisory &mdash; from residency review
+              to &nbsp;&#8377;1.5L+ savings on property transactions.
             </p>
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
               <a href="/client" className="btn-premium">
-                Start Your Tax Filing &rarr;
+                Get Your Free Assessment &rarr;
               </a>
               <a
                 href="#how"
@@ -286,7 +283,7 @@ export default function Home() {
                   e.currentTarget.style.background = 'transparent';
                 }}
               >
-                How It Works
+                See How It Works
               </a>
             </div>
 
@@ -639,7 +636,7 @@ export default function Home() {
           transition: 'background-color 0.3s ease',
         }}
       >
-        <div className="divider-gold" />
+        <div className="divider-diamond my-8"><span>&#9670;</span></div>
 
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
@@ -724,7 +721,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="divider-gold" />
+        <div className="divider-diamond my-8"><span>&#9670;</span></div>
       </section>
 
 
@@ -769,7 +766,7 @@ export default function Home() {
                 key={i}
                 className={
                   tier.featured
-                    ? 'card-featured p-6 md:p-7'
+                    ? 'card-featured glow-gold p-6 md:p-7'
                     : 'card-premium p-6 md:p-7'
                 }
               >
