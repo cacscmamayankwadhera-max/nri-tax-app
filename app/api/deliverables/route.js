@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, HeadingLevel, BorderStyle, WidthType, ShadingType,
   LevelFormat } from 'docx';
-import { computeCapitalGains, computeHouseProperty, computeTotalIncome, computeAdvanceTax, formatINR, FY_CONFIG, CII } from '@/lib/compute';
+import { computeCapitalGains, computeHouseProperty, computeTotalIncome, computeAdvanceTax, computeSurcharge, formatINR, FY_CONFIG, CII } from '@/lib/compute';
 import { logActivity } from '@/lib/activity-log';
 
 const FIRM = process.env.FIRM_NAME || 'MKW Advisors';
@@ -95,13 +95,17 @@ function disclaimer(){
 // ══════ GENERATORS ══════
 function generateCGSheet(caseData, fy){
   const fd = caseData.formData || caseData;
-  const cg = computeCapitalGains(fd.salePrice||0, fd.purchaseCost||0, fd.propertyAcqFY||"2020-21", fy);
+  const cg = computeCapitalGains(fd.salePrice||0, fd.purchaseCost||0, fd.propertyAcqFY||"2020-21", fy, fd.improvementCost||0, fd.stampDutyValue||0, fd.transferExpenses||fd.registrationExpenses||0);
   const cw3=[4000,2824,2824], cw2=[5400,TW-5400];
   
   const children = [
     ...header("Capital Gains Computation Sheet", `Property Sale — FY ${fy}`, caseData, fy),
     h2("1. Transaction Details"),
-    dataTable(["Particulars","Details"],[["Asset",fd.propertyType||"Residential Plot"],["Location",fd.propertyLocation||"—"],["Acquired","FY "+(fd.propertyAcqFY||"2020-21")],["Sold","FY "+fy],["Holding",((parseInt(fy)-parseInt(fd.propertyAcqFY||"2020"))||7)+" years (Long-Term)"],["Pre July 2024?","Yes — Dual computation"]],cw2), gap(),
+    (() => {
+      const acqYear = parseInt(fd.propertyAcqFY) || 2020;
+      const preJuly2024 = acqYear < 2024 || (acqYear === 2024 && !fd.postJuly2024);
+      return dataTable(["Particulars","Details"],[["Asset",fd.propertyType||"Residential Plot"],["Location",fd.propertyLocation||"—"],["Acquired","FY "+(fd.propertyAcqFY||"2020-21")],["Sold","FY "+fy],["Holding",((parseInt(fy)-parseInt(fd.propertyAcqFY||"2020"))||7)+" years (Long-Term)"],["Pre July 2024?",preJuly2024 ? "Yes — Dual computation available" : "No — 12.5% flat rate only"]],cw2);
+    })(), gap(),
     h2("2. Key Amounts"),
     dataTable(["Particulars","Amount"],[["Sale Consideration",formatINR(fd.salePrice||0)],["Cost of Acquisition",formatINR(fd.purchaseCost||0)],["Cost of Improvement",formatINR(0)]],cw2), gap(),
     h2("3. Dual Tax Computation"),
@@ -125,11 +129,23 @@ function generateCGSheet(caseData, fy){
     ],cw3), gap(),
     h2("4. Comparison & Recommendation"),
     alertBox(`RECOMMENDED: Option ${cg.better} (${cg.better==="B"?"12.5% flat":"20% indexed"}) — saves ${formatINR(cg.savings)} in tax`,"green"), gap(80),
-    dataTable(["","Option A (20% Indexed)","Option B (12.5% Flat)"],[
-      ["Capital Gain",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],
-      ["Tax + Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)],
-      ["","",cg.better==="B"?"Saves "+formatINR(cg.savings):""]
-    ],[3200,3224,3224]), gap(),
+    (() => {
+      // Compute surcharge on LTCG tax if applicable
+      const surchargeA = computeSurcharge(cg.optionA.tax, cg.optionA.ltcg, true);
+      const surchargeB = computeSurcharge(cg.optionB.tax, cg.optionB.ltcg, true);
+      const totalA = cg.optionA.total + surchargeA.surcharge;
+      const totalB = cg.optionB.total + surchargeB.surcharge;
+      const compRows = [
+        ["Capital Gain",formatINR(cg.optionA.ltcg),formatINR(cg.optionB.ltcg)],
+        ["Tax + Cess",formatINR(cg.optionA.total),formatINR(cg.optionB.total)],
+      ];
+      if (surchargeA.surcharge > 0 || surchargeB.surcharge > 0) {
+        compRows.push(["Surcharge",formatINR(surchargeA.surcharge),formatINR(surchargeB.surcharge)]);
+        compRows.push(["Total (incl. Surcharge)",formatINR(totalA),formatINR(totalB)]);
+      }
+      compRows.push(["","",cg.better==="B"?"Saves "+formatINR(cg.savings):""]);
+      return dataTable(["","Option A (20% Indexed)","Option B (12.5% Flat)"], compRows, [3200,3224,3224]);
+    })(), gap(),
     h2("5. Exemption Planning"),
     alertBox("ACTION REQUIRED: Discuss exemptions with client BEFORE filing.","red"), gap(80),
     h3("Section 54 — New Residential Property"),
@@ -158,7 +174,7 @@ function generateCGSheet(caseData, fy){
 
 function generateMemo(caseData, fy, moduleOutputs){
   const fd = caseData.formData || caseData;
-  const cg = (fd.salePrice&&fd.purchaseCost)?computeCapitalGains(fd.salePrice,fd.purchaseCost,fd.propertyAcqFY||"2020-21",fy):null;
+  const cg = (fd.salePrice&&fd.purchaseCost)?computeCapitalGains(fd.salePrice,fd.purchaseCost,fd.propertyAcqFY||"2020-21",fy,fd.improvementCost||0,fd.stampDutyValue||0,fd.transferExpenses||fd.registrationExpenses||0):null;
   const hp = fd.rentalMonthly ? computeHouseProperty(fd.rentalMonthly*12) : null;
   const cw2=[5400,TW-5400];
   
@@ -223,7 +239,12 @@ function generateMemo(caseData, fy, moduleOutputs){
 function generateQuote(caseData, fy){
   const fd = caseData.formData || caseData;
   const c = caseData.classification || "Amber";
-  const tier = c==="Green"?"Tier 2 — Advisory Filing (₹18,000–30,000)":"Tier 3 — Premium Compliance (₹35,000–75,000)";
+  const tierMap = {
+    Green: "Tier 1 — Basic Filing (₹8,000–15,000)",
+    Amber: "Tier 2 — Advisory Filing (₹18,000–30,000)",
+    Red: "Tier 3 — Premium Compliance (₹35,000–75,000)",
+  };
+  const tier = tierMap[c] || tierMap.Amber;
   const cw2=[3200,TW-3200];
   
   const inclusions = [
@@ -281,7 +302,15 @@ function generatePositionReport(caseData, fy){
   const children = [
     ...header("NRI Tax Position Report", `Diagnostic Assessment — FY ${fy}`, caseData, fy),
     h2("1. Residential Status"),
-    p("Preliminary View: Non-Resident (High Confidence)",{b:true}),
+    (() => {
+      const stayDays = parseInt(fd.stayDays) || 0;
+      const residencyView = stayDays >= 182
+        ? "Resident — stay days >= 182. VERIFY — this changes the entire tax position."
+        : stayDays >= 120 && (fd.indianIncome || 0) > 1500000
+          ? "Potentially Deemed Resident — 120+ days with Indian income > Rs 15L. VERIFY."
+          : `Preliminary Non-Resident (${stayDays > 0 ? 'Stay: ' + stayDays + ' days' : 'Stay days not provided'})`;
+      return p("Preliminary View: " + residencyView, {b:true});
+    })(),
     p(`Based on ~${fd.stayDays||"?"} days stay and continuous overseas employment.`),
     alertBox("The ₹12 lakh tax-free benefit (Section 87A) does NOT apply to NRIs.","red"),
     gap(),

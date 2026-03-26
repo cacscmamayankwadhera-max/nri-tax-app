@@ -30,9 +30,9 @@ const COUNTRY_INSIGHTS = {
     'DTAA rate: 15% on interest and dividends',
   ],
   'UAE': [
-    'No income tax in UAE -- but DTAA credit mechanism has limited application',
-    'Tax Residency Certificate (TRC) from UAE confirms non-residency for India',
-    'NRO interest still taxed at 30% in India -- no UAE offset available',
+    'India-UAE DTAA: interest rate reduced to 12.5% (from default 30%) -- submit Form 10F + TRC',
+    'No income tax in UAE -- DTAA credit mechanism has limited application',
+    'Tax Residency Certificate (TRC) from UAE is essential to claim treaty benefits',
   ],
   'Singapore': [
     'No capital gains tax in Singapore -- no FTC needed for most NRIs',
@@ -55,9 +55,9 @@ const COUNTRY_INSIGHTS = {
     'Progressionsvorbehalt: Indian income can affect your German tax bracket',
   ],
   'Saudi Arabia': [
-    'No personal income tax in Saudi Arabia -- similar to UAE position',
-    'No DTAA with India -- Section 91 unilateral relief may apply',
-    'NRO interest taxed at full 30% in India -- no treaty benefit available',
+    'India-Saudi Arabia DTAA (2010): interest at 10%, dividends at 5%',
+    'No personal income tax in Saudi Arabia -- DTAA primarily confirms non-residency',
+    'End of Service Benefits (EOSB) are not taxable in India if received as NRI',
   ],
   'Qatar': [
     'No personal income tax in Qatar -- no FTC offset for Indian tax',

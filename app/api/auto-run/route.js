@@ -119,14 +119,14 @@ export async function POST(request) {
     try {
       console.log(`[auto-run] Running module: ${moduleId} (${currentIndex + 1}/${MODULE_ORDER.length}) for case ${caseId}`);
 
-      const result = await runModule(moduleId, formData, fy, moduleOutputs);
-      moduleOutputs[moduleId] = result.output;
-      await saveModuleOutput(supabase, caseId, moduleId, result.output);
+      const output = await runModule(moduleId, formData, fy, moduleOutputs);
+      moduleOutputs[moduleId] = output;
+      await saveModuleOutput(supabase, caseId, moduleId, output);
       await updateCaseStatus(supabase, caseId, 'in_progress', currentIndex + 1);
 
       const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
       logActivity(caseId, null, 'module_completed', { moduleId, elapsed }).catch(() => {});
-      logActivity(caseId, null, 'ai_module_run', { moduleId, inputTokens: result.usage?.input_tokens, outputTokens: result.usage?.output_tokens }).catch(() => {});
+      logActivity(caseId, null, 'ai_module_run', { moduleId }).catch(() => {});
       console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${currentIndex + 1}/${MODULE_ORDER.length})`);
 
     } catch (moduleError) {
