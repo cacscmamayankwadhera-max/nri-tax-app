@@ -83,7 +83,7 @@ function computeFindings(intakeData, fy) {
       const cg = computeCapitalGains(
         Number(f.salePrice),
         Number(f.purchaseCost),
-        f.propertyAcqFY || '2017-18',
+        f.propertyAcqFY || '2020-21',
         fy || '2025-26'
       );
       if (cg.savings > 0) {

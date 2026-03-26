@@ -380,7 +380,7 @@ export default function Dashboard() {
 
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   const cfg = FY_CONFIG[fy];
-  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
+  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2020-21', fy) : null;
 
   // ── Load cases via API (bypasses RLS — team sees ALL cases including public intake) ──
   useEffect(() => {
@@ -756,7 +756,7 @@ export default function Dashboard() {
           {step===0 && <div className="animate-fade-in-up">
             <div className="card-theme p-4 mb-4" style={{ borderLeftColor:'var(--accent)', borderLeftWidth:'3px' }}>
               <div className="flex items-center gap-2 mb-2"><span className="text-theme-accent">✨</span><span className="text-xs font-semibold text-theme-accent">Describe the situation (AI auto-fill)</span></div>
-              <textarea value={narr} onChange={e=>setNarr(e.target.value)} rows={3} placeholder="e.g. UK client, 38 days stay, sold Nashik plot ₹68L (bought 2017 ₹22L), Pune flat ₹25K/mo rent, NRO ₹1.4L, FD ₹85K, UK salary GBP 72K, tax paid..."
+              <textarea value={narr} onChange={e=>setNarr(e.target.value)} rows={3} placeholder="e.g. UK client, 38 days stay, sold Pune flat ₹85L (bought 2020 ₹35L), rental ₹30K/mo, NRO ₹1.8L, FD ₹90K, UK salary GBP 75K, tax paid..."
                 className="input-theme" style={{ resize:'vertical' }} />
               <button onClick={doParse} disabled={prs||!narr.trim()}
                 className="btn-primary mt-2" style={{ padding:'0.5rem 1rem' }}>

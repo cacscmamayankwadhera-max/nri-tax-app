@@ -180,7 +180,7 @@ export default function ClientIntake() {
   };
 
   const cfg = FY_CONFIG[fy];
-  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2017-18', fy) : null;
+  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2020-21', fy) : null;
 
   // Selected scenarios as a Set for quick lookup
   const selectedScenarios = useMemo(() => {
@@ -667,7 +667,7 @@ export default function ClientIntake() {
                   value={narr}
                   onChange={e => setNarr(e.target.value)}
                   rows={5}
-                  placeholder={"Example: I work in London since 2021, came to India for about 38 days. I sold a plot in Nashik for \u20B968 lakhs (bought in 2017 for \u20B922 lakhs). I also have a flat in Pune rented at \u20B925,000/month. NRO interest around \u20B91.4 lakhs."}
+                  placeholder={"Example: I work in London since 2022, came to India for about 38 days this year. I sold a flat in Pune for \u20B985 lakhs (bought in 2020 for \u20B935 lakhs). I also have a flat rented at \u20B930,000/month. NRO interest around \u20B91.8 lakhs, FD interest \u20B990,000. UK salary GBP 75,000, UK tax paid."}
                   className="input-theme p-4 resize-y text-sm w-full"
                   disabled={prs}
                 />

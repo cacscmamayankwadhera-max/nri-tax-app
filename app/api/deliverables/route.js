@@ -95,20 +95,20 @@ function disclaimer(){
 // ══════ GENERATORS ══════
 function generateCGSheet(caseData, fy){
   const fd = caseData.formData || caseData;
-  const cg = computeCapitalGains(fd.salePrice||0, fd.purchaseCost||0, fd.propertyAcqFY||"2017-18", fy);
+  const cg = computeCapitalGains(fd.salePrice||0, fd.purchaseCost||0, fd.propertyAcqFY||"2020-21", fy);
   const cw3=[4000,2824,2824], cw2=[5400,TW-5400];
   
   const children = [
     ...header("Capital Gains Computation Sheet", `Property Sale — FY ${fy}`, caseData, fy),
     h2("1. Transaction Details"),
-    dataTable(["Particulars","Details"],[["Asset",fd.propertyType||"Residential Plot"],["Location",fd.propertyLocation||"—"],["Acquired","FY "+(fd.propertyAcqFY||"2017-18")],["Sold","FY "+fy],["Holding",((parseInt(fy)-parseInt(fd.propertyAcqFY||"2017"))||7)+" years (Long-Term)"],["Pre July 2024?","Yes — Dual computation"]],cw2), gap(),
+    dataTable(["Particulars","Details"],[["Asset",fd.propertyType||"Residential Plot"],["Location",fd.propertyLocation||"—"],["Acquired","FY "+(fd.propertyAcqFY||"2020-21")],["Sold","FY "+fy],["Holding",((parseInt(fy)-parseInt(fd.propertyAcqFY||"2020"))||7)+" years (Long-Term)"],["Pre July 2024?","Yes — Dual computation"]],cw2), gap(),
     h2("2. Key Amounts"),
     dataTable(["Particulars","Amount"],[["Sale Consideration",formatINR(fd.salePrice||0)],["Cost of Acquisition",formatINR(fd.purchaseCost||0)],["Cost of Improvement",formatINR(0)]],cw2), gap(),
     h2("3. Dual Tax Computation"),
     p("For property acquired before July 23, 2024, the taxpayer may choose the lower-tax option:",{b:true}),
     h3("Option A — 20% LTCG with Indexation"),
     dataTable(["Particulars","Working","Amount"],[
-      ["CII — Acquisition ("+(fd.propertyAcqFY||"2017-18")+")","",String(cg.ciiAcq)],["CII — Sale ("+fy+")","",String(cg.ciiSale)],
+      ["CII — Acquisition ("+(fd.propertyAcqFY||"2020-21")+")","",String(cg.ciiAcq)],["CII — Sale ("+fy+")","",String(cg.ciiSale)],
       ["Cost of Acquisition","",formatINR(fd.purchaseCost||0)],
       ["Indexed Cost",formatINR(fd.purchaseCost||0)+" × "+cg.ciiSale+"/"+cg.ciiAcq,formatINR(cg.indexedCost)],
       ["Sale Consideration","",formatINR(fd.salePrice||0)],
@@ -158,7 +158,7 @@ function generateCGSheet(caseData, fy){
 
 function generateMemo(caseData, fy, moduleOutputs){
   const fd = caseData.formData || caseData;
-  const cg = (fd.salePrice&&fd.purchaseCost)?computeCapitalGains(fd.salePrice,fd.purchaseCost,fd.propertyAcqFY||"2017-18",fy):null;
+  const cg = (fd.salePrice&&fd.purchaseCost)?computeCapitalGains(fd.salePrice,fd.purchaseCost,fd.propertyAcqFY||"2020-21",fy):null;
   const hp = fd.rentalMonthly ? computeHouseProperty(fd.rentalMonthly*12) : null;
   const cw2=[5400,TW-5400];
   
