@@ -461,7 +461,7 @@ export default function ClientPortalDashboard() {
       <div className="gold-gradient-line" />
       <NavBar />
 
-      <div className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 page-enter transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">

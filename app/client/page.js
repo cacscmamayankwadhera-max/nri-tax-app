@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { computeCapitalGains, formatINR, classifyCase, FY_CONFIG, CII, getDTAARate } from '@/lib/compute';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, User, Mail, Phone } from 'lucide-react';
 import NavBar from '@/app/components/NavBar';
 import Footer from '@/app/components/Footer';
 
@@ -300,7 +300,7 @@ export default function ClientIntake() {
 
         <div className="max-w-2xl mx-auto py-10 px-5 md:px-6 animate-fade-in-up">
           {/* Celebration animation */}
-          <div className="text-center mb-6 animate-fade-in-up">
+          <div className="text-center mb-6 p-4 md:p-6 animate-fade-in-up">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
               style={{ background: 'color-mix(in srgb, var(--green) 15%, var(--bg-primary))', animation: 'pulse-gold 2s ease-in-out' }}>
               <CheckCircle size={40} style={{ color: 'var(--green)' }} />
@@ -521,7 +521,7 @@ export default function ClientIntake() {
 
       <NavBar />
 
-      <div className="max-w-2xl mx-auto py-8 px-5 md:px-6">
+      <div className="max-w-2xl mx-auto py-8 px-5 md:px-6 page-enter">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6 animate-fade-in">
           <button
@@ -556,7 +556,7 @@ export default function ClientIntake() {
             </div>
 
             {/* Country grid */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-6">
               {COUNTRIES.map(country => {
                 const isSelected = f.country === country;
                 return (
@@ -616,7 +616,7 @@ export default function ClientIntake() {
             </div>
 
             {/* Scenario cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
               {SCENARIOS.map(scenario => {
                 const isSelected = !!f[scenario.id];
                 return (
@@ -734,7 +734,7 @@ export default function ClientIntake() {
 
                 {/* Live computation preview */}
                 {f.salePrice && f.purchaseCost && cgData && (
-                  <div className="card-premium p-6 mt-4 animate-fade-in-up">
+                  <div className="card-premium p-6 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Live Tax Preview</p>
                     <div className="text-2xl font-serif font-bold" style={{ color: 'var(--green)' }}>
                       You could save {formatINR(cgData.savings)}
@@ -774,7 +774,7 @@ export default function ClientIntake() {
                 </div>
 
                 {f.rentalMonthly > 0 && (
-                  <div className="card-premium p-5 mt-4 animate-fade-in-up">
+                  <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Your rental tax position</p>
                     <p className="text-sm text-theme-secondary leading-relaxed">
                       Annual rent: <strong className="text-theme">{formatINR(f.rentalMonthly * 12)}</strong>
@@ -803,7 +803,7 @@ export default function ClientIntake() {
 
                 {f.nroInterest > 0 && f.country && (
                   dtaaData ? (
-                    <div className="card-premium p-5 mt-4 animate-fade-in-up">
+                    <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                       <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">TDS on your interest</p>
                       <p className="text-sm text-theme-secondary leading-relaxed">
                         Bank deducts: <strong className="text-theme">{formatINR(Math.round(f.nroInterest * 0.30))}</strong> (30%).
@@ -853,7 +853,7 @@ export default function ClientIntake() {
                 </div>
 
                 {(f.esopPerquisite > 0 || f.esopSaleGain > 0) && (
-                  <div className="card-premium p-5 mt-4 animate-fade-in-up">
+                  <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">ESOP tax overview</p>
                     <p className="text-sm text-theme-secondary leading-relaxed">
                       {f.esopPerquisite > 0 && (
@@ -917,27 +917,52 @@ export default function ClientIntake() {
               </div>
 
               <div className="space-y-4 mb-6">
-                <Input
-                  label="Your full name *"
-                  value={f.name}
-                  onChange={v => u('name', v)}
-                  placeholder="Rajesh Mehta"
-                />
-                <Input
-                  label="Email *"
-                  value={f.email}
-                  onChange={v => u('email', v)}
-                  placeholder="rajesh@email.com"
-                  type="email"
-                />
-                <Input
-                  label="Phone *"
-                  value={f.phone}
-                  onChange={v => u('phone', v)}
-                  placeholder="+44 7700 123456"
-                  type="tel"
-                  tip="Include country code (e.g. +44 7700 123456)"
-                />
+                <div>
+                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Your full name *</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={f.name || ''}
+                      onChange={e => u('name', e.target.value)}
+                      placeholder="Rajesh Mehta"
+                      className="input-theme py-3 px-4 pl-10 w-full"
+                    />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
+                      <User size={16} />
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Email *</label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      value={f.email || ''}
+                      onChange={e => u('email', e.target.value)}
+                      placeholder="rajesh@email.com"
+                      className="input-theme py-3 px-4 pl-10 w-full"
+                    />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
+                      <Mail size={16} />
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Phone *</label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      value={f.phone || ''}
+                      onChange={e => u('phone', e.target.value)}
+                      placeholder="+44 7700 123456"
+                      className="input-theme py-3 px-4 pl-10 w-full"
+                    />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
+                      <Phone size={16} />
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-theme-muted mt-1">Include country code (e.g. +44 7700 123456)</p>
+                </div>
               </div>
 
               {/* Classification preview */}

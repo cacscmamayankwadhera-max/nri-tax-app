@@ -141,13 +141,14 @@ h1, h2, h3, .font-serif {
   border-radius: 0.75rem;
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
   outline: none;
   width: 100%;
 }
 .input-theme:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(196, 154, 60, 0.15);
+  box-shadow: 0 0 0 4px rgba(196,154,60,0.12), 0 2px 8px rgba(196,154,60,0.08);
+  transform: translateY(-1px);
 }
 .input-theme::placeholder {
   color: var(--text-muted);
@@ -161,13 +162,21 @@ h1, h2, h3, .font-serif {
   padding: 0.75rem 2rem;
   border-radius: 0.75rem;
   font-size: 0.875rem;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: none;
   cursor: pointer;
 }
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(196,154,60,0.3);
+}
+.btn-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(196,154,60,0.2);
+  transition-duration: 0.1s;
+}
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .btn-secondary {
   background: transparent;
@@ -280,11 +289,16 @@ h1, h2, h3, .font-serif {
   width: 100%;
 }
 
-/* ═══ SCROLLBAR ═══ */
+/* ═══ SCROLLBAR — Premium gold-tinted ═══ */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; border: 2px solid var(--bg-primary); }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(196,154,60,0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(196,154,60,0.4);
+}
 
 /* ═══ SELECTION ═══ */
 ::selection { background: rgba(196, 154, 60, 0.2); color: var(--text-primary); }
@@ -337,8 +351,8 @@ h1, h2, h3, .font-serif {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-premium:hover {
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-4px);
+  box-shadow: 0 24px 64px -12px rgba(0,0,0,0.12), 0 0 0 1px rgba(196,154,60,0.1);
+  transform: translateY(-6px);
   border-color: var(--accent);
 }
 
@@ -373,15 +387,26 @@ h1, h2, h3, .font-serif {
   inset: 0;
   background: var(--grain);
   pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: overlay;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 
-/* Gradient mesh background */
+[data-theme="dark"] .bg-grain::after {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+/* Gradient mesh background — visible soft gold/teal ambient light */
 .bg-mesh-gold {
   background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(196,154,60,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(27,77,92,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(196,154,60,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(27,77,92,0.03) 0%, transparent 50%);
+}
+
+[data-theme="dark"] .bg-mesh-gold {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(196,154,60,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(27,77,92,0.06) 0%, transparent 50%);
 }
 
 /* Section divider — gold gradient line */
@@ -433,13 +458,14 @@ h1, h2, h3, .font-serif {
   box-shadow: 0 4px 16px rgba(196,154,60,0.25);
 }
 .btn-premium:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(196,154,60,0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(196,154,60,0.3);
   filter: brightness(1.05);
 }
 .btn-premium:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(196,154,60,0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(196,154,60,0.2);
+  transition-duration: 0.1s;
 }
 
 /* Stagger with more steps */
@@ -449,3 +475,128 @@ h1, h2, h3, .font-serif {
 .stagger-premium > *:nth-child(4) { animation-delay: 240ms; }
 .stagger-premium > *:nth-child(5) { animation-delay: 320ms; }
 .stagger-premium > *:nth-child(6) { animation-delay: 400ms; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   PREMIUM DEPTH & ANIMATION SYSTEM
+   Scroll reveals, micro-interactions, validation, page transitions,
+   tooltips, and enhanced visual feedback for a ₹75K premium feel.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══ SCROLL-TRIGGERED REVEAL ═══ */
+/* Usage: add class="reveal" to any element */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered reveal for children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══ LINK UNDERLINE ANIMATION ═══ */
+.link-animated {
+  position: relative;
+  text-decoration: none;
+}
+.link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-animated:hover::after {
+  width: 100%;
+}
+
+/* ═══ FORM VALIDATION STATES ═══ */
+/* Valid input — subtle green confirmation */
+.input-valid {
+  border-color: var(--green) !important;
+  box-shadow: 0 0 0 3px rgba(42,107,74,0.1);
+}
+
+/* Invalid input — red border with shake */
+.input-invalid {
+  border-color: var(--red) !important;
+  box-shadow: 0 0 0 3px rgba(160,72,72,0.1);
+  animation: shake 0.4s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+/* ═══ PAGE TRANSITION ═══ */
+/* Smooth page content reveal on mount */
+.page-enter {
+  animation: pageReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══ TOOLTIP COMPONENT ═══ */
+/* Usage: wrap element in .tooltip-wrapper, add .tooltip-text as a child */
+.tooltip-wrapper {
+  position: relative;
+}
+.tooltip-wrapper .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  white-space: normal;
+  max-width: 280px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 100;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tooltip-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ═══ NUMBER COUNTING ANIMATION ═══ */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-count {
+  animation: countUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

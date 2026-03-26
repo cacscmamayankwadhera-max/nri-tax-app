@@ -331,6 +331,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [sidebarTab, setSidebarTab] = useState('modules');
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = createClient();
@@ -609,14 +610,30 @@ export default function Dashboard() {
         )}
 
         {cases.length === 0 ? (
-          <div className="text-center py-16 text-theme-muted">
-            <div className="card-theme p-4 mb-4 text-center" style={{ borderColor: 'var(--amber)', borderWidth: '1px' }}>
-              <p className="text-sm font-medium" style={{ color: 'var(--amber)' }}>No cases found</p>
-              <p className="text-xs text-theme-muted mt-1">Cases submitted through the intake form will appear here once connected to Supabase. Check your .env.local configuration.</p>
-            </div>
-            <div className="text-4xl mb-3 opacity-30">📋</div>
-            <p className="font-semibold">No cases yet</p>
-            <p className="text-xs mt-1">Click "New NRI Case" to start</p>
+          <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <div className="text-5xl mb-4 opacity-30">📋</div>
+            <h3 className="font-serif text-xl mb-2 text-theme">No cases yet</h3>
+            <p className="text-sm text-theme-muted mb-6 max-w-sm mx-auto">
+              Cases submitted through the intake form or created by your team will appear here.
+            </p>
+            <button onClick={() => { setF({}); setOuts({}); setView('wizard'); setStep(0); }}
+              className="btn-primary text-sm">
+              + Create First Case
+            </button>
+          </div>
+        ) : filteredCases.length === 0 ? (
+          <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <div className="text-5xl mb-4 opacity-30">📋</div>
+            <h3 className="font-serif text-xl mb-2 text-theme">No cases yet</h3>
+            <p className="text-sm text-theme-muted mb-6 max-w-sm mx-auto">
+              {searchQuery || statusFilter !== 'all'
+                ? 'No cases match your search. Try different filters.'
+                : 'Cases submitted through the intake form or created by your team will appear here.'}
+            </p>
+            <button onClick={() => { setF({}); setOuts({}); setView('wizard'); setStep(0); }}
+              className="btn-primary text-sm">
+              + Create First Case
+            </button>
           </div>
         ) : (
           <div className="stagger-children">
@@ -907,258 +924,296 @@ export default function Dashboard() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* SIDEBAR */}
-        <div className="w-52 border-r border-theme overflow-y-auto flex-shrink-0" style={{ background:'var(--bg-secondary)' }}>
+        <div className="w-56 flex-shrink-0 flex flex-col h-full" style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border)' }}>
+          {/* Client info header — always visible */}
           <div className="p-3 border-b border-theme">
-            <div className="font-bold text-xs text-theme">{ac?.name}</div>
-            <div className="text-[10px] text-theme-muted">{ac?.country} · FY {fy}</div>
-            <span className="inline-block mt-1 text-[9px] font-bold px-2 py-0.5 rounded-full" style={{background:CLS_COLORS[ac?.classification]+'20',color:CLS_COLORS[ac?.classification]}}>{ac?.classification}</span>
-            {ac?.client_email && (
-              <div className="text-xs text-theme-muted mt-1 truncate" title={ac.client_email}>
-                📧 {ac.client_email}
+            <div className="font-serif font-bold text-sm text-theme truncate">{ac?.name}</div>
+            <div className="text-[10px] text-theme-muted truncate">{ac?.client_email}</div>
+            {ac?.client_phone && <div className="text-[10px] text-theme-muted">{ac?.client_phone}</div>}
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-[9px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${CLS_COLORS[ac?.classification]}15`, color: CLS_COLORS[ac?.classification] }}>
+                {ac?.classification}
+              </span>
+              <span className="text-[9px] text-theme-muted">{ac?.fy || fy}</span>
+              {ac?.country && <span className="text-[9px] text-theme-muted">{ac.country}</span>}
+              {(ac?.priority === 'urgent' || ac?.formData?.priority === 'urgent') && <span className="text-[8px]">&#x1F534;</span>}
+            </div>
+            {/* Status dropdown */}
+            <select value={ac?.status || 'intake'}
+              onChange={async (e) => {
+                const newStatus = e.target.value;
+                setAc(prev => ({...prev, status: newStatus}));
+                if (ac?.dbId) {
+                  try {
+                    await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                    fetch('/api/notify', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ caseId: ac.dbId || ac.id, newStatus }),
+                    })
+                      .then(async res => {
+                        const data = await res.json();
+                        if (data.notification && !data.notification.sent) {
+                          setToast({ type: 'error', message: `Status updated but WhatsApp notification failed: ${data.notification.reason || 'API not configured'}` });
+                        }
+                      })
+                      .catch(() => {
+                        setToast({ type: 'error', message: 'Status updated but notification could not be sent' });
+                      });
+                  } catch(e) {}
+                }
+              }}
+              className="input-theme text-[10px] py-1 mt-2 w-full">
+              <option value="intake">1. Intake Received</option>
+              <option value="in_progress">2. Analysis Running</option>
+              <option value="review">3. Under Review</option>
+              <option value="findings_ready">4. Findings Ready</option>
+              <option value="filing">5. Filing in Progress</option>
+              <option value="filed">6. Filed</option>
+              <option value="closed">7. Closed</option>
+            </select>
+          </div>
+
+          {/* Tab buttons */}
+          <div className="flex border-b border-theme" style={{ background: 'var(--bg-secondary)' }}>
+            {['modules', 'deliverables', 'details'].map(tab => (
+              <button key={tab} onClick={() => setSidebarTab(tab)}
+                className="flex-1 text-[9px] font-bold py-2 min-h-[44px] flex items-center justify-center uppercase tracking-wider transition-all"
+                style={{
+                  color: sidebarTab === tab ? 'var(--accent)' : 'var(--text-muted)',
+                  borderBottom: sidebarTab === tab ? '2px solid var(--accent)' : '2px solid transparent',
+                  background: sidebarTab === tab ? 'var(--bg-card)' : 'transparent',
+                }}>
+                {tab === 'modules' ? 'Modules' : tab === 'deliverables' ? 'Docs' : 'Details'}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab content — scrollable */}
+          <div className="flex-1 overflow-y-auto">
+            {/* ── Modules tab ── */}
+            {sidebarTab === 'modules' && (
+              <div className="py-1">
+                {MODS.map((m, i) => {
+                  const done = !!outs[m.id];
+                  const active = i === mi && !dv;
+                  return (
+                    <div key={m.id} onClick={()=>{setMi(i);setDv(null);}}
+                      className={`flex items-center gap-2 px-3 py-2 min-h-[44px] cursor-pointer text-xs transition ${active ? 'font-semibold' : ''}`}
+                      style={{
+                        borderLeft: active ? `3px solid ${m.c}` : '3px solid transparent',
+                        background: active ? 'var(--bg-card)' : 'transparent',
+                        color: active ? 'var(--text-primary)' : 'var(--text-muted)'
+                      }}>
+                      <span className={done ? 'animate-complete-pulse' : 'opacity-30'}>{done ? '\u2713' : m.ic}</span>
+                      <span>{m.l}</span>
+                      {m.cp && !done && <span className="text-theme-accent text-[8px]">\u26A0</span>}
+                    </div>
+                  );
+                })}
               </div>
             )}
-            {ac?.client_phone && (
-              <div className="text-xs text-theme-muted mt-0.5">
-                📱 {ac.client_phone}
+
+            {/* ── Deliverables tab ── */}
+            {sidebarTab === 'deliverables' && (
+              <div className="py-1">
+                {DELS.map(d => {
+                  const ready = d.n.every(n => !!outs[n]);
+                  const active = dv === d.id;
+                  return (
+                    <div key={d.id} onClick={()=>ready && setDv(d.id)}
+                      className={`px-3 py-2 min-h-[44px] flex flex-col justify-center text-xs transition ${!ready ? 'cursor-default' : 'cursor-pointer'}`}
+                      style={{
+                        borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
+                        background: active ? 'var(--bg-card)' : 'transparent',
+                      }}>
+                      <div className="flex items-center gap-2" style={{
+                        color: active ? 'var(--text-primary)' : ready ? 'var(--text-muted)' : 'var(--border)',
+                        fontWeight: active ? 600 : 400
+                      }}>
+                        <span>{ready ? '\uD83D\uDCC4' : '\u25CB'}</span>
+                        <span>{d.l}</span>
+                      </div>
+                      <div className="text-[9px] mt-0.5 pl-5" style={{ color: ready ? 'var(--text-muted)' : 'var(--border)' }}>
+                        {ready ? d.d : `Needs: ${d.n.filter(n => !outs[n]).map(n => MODS.find(m => m.id === n)?.l).join(', ')}`}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
-            <div className="mt-2">
-              <select value={ac?.status || 'intake'}
-                onChange={async (e) => {
-                  const newStatus = e.target.value;
-                  setAc(prev => ({...prev, status: newStatus}));
-                  if (ac?.dbId) {
+
+            {/* ── Details tab ── */}
+            {sidebarTab === 'details' && (
+              <div className="p-3 space-y-3">
+                {/* Portal + Payment links */}
+                <div className="space-y-1.5">
+                  <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider">Quick Actions</div>
+                  <button onClick={() => {
+                    const token = ac?.portal_token || ac?.portalToken || '';
+                    if (!token) {
+                      setToast({ type: 'error', message: 'Portal token not available for this case. Save case to DB first.' });
+                      return;
+                    }
+                    const url = `${window.location.origin}/portal?ref=${token}`;
+                    navigator.clipboard.writeText(url);
+                    setToast({ type: 'success', message: 'Portal link copied to clipboard!' });
+                  }} className="btn-secondary w-full text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
+                    Copy Client Portal Link
+                  </button>
+                  <button onClick={async () => {
+                    const amount = prompt('Enter amount in \u20B9 (e.g. 35000):');
+                    if (!amount) return;
                     try {
-                      await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
-                      // Fire notification (fire-and-forget)
-                      fetch('/api/notify', {
+                      const res = await fetch('/api/payment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ caseId: ac.dbId || ac.id, newStatus }),
-                      })
-                        .then(async res => {
-                          const data = await res.json();
-                          if (data.notification && !data.notification.sent) {
-                            setToast({ type: 'error', message: `Status updated but WhatsApp notification failed: ${data.notification.reason || 'API not configured'}` });
-                          }
-                        })
-                        .catch(() => {
-                          setToast({ type: 'error', message: 'Status updated but notification could not be sent' });
+                        body: JSON.stringify({
+                          amount: parseInt(amount),
+                          clientName: ac?.name || ac?.client_name,
+                          clientEmail: ac?.client_email || ac?.formData?.email,
+                          clientPhone: ac?.client_phone || ac?.formData?.phone,
+                          caseRef: (ac?.dbId || ac?.id)?.toString().slice(0, 8),
+                          caseId: ac?.dbId || ac?.id,
+                        }),
+                      });
+                      const data = await res.json();
+                      if (data.available && data.data?.shortUrl) {
+                        navigator.clipboard.writeText(data.data.shortUrl);
+                        setToast({ type: 'success', message: `Payment link copied! \u20B9${amount} \u2014 share with client` });
+                      } else {
+                        setToast({ type: 'error', message: data.message || data.error || 'Payment not configured' });
+                      }
+                    } catch (e) {
+                      setToast({ type: 'error', message: 'Failed to create payment link' });
+                    }
+                  }} className="btn-secondary w-full text-[9px] min-h-[44px]" style={{ padding:'0.5rem 0.5rem', borderRadius:'0.5rem' }}>
+                    Send Payment Link
+                  </button>
+                </div>
+
+                {/* Case Enrichment — PAN verify, 26AS, AIS */}
+                <div className="space-y-2">
+                  <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider">Enrich Case</div>
+                  <div className="flex gap-2">
+                    <input type="text" value={ac?.pan || ''} onChange={e => setAc(prev => ({...prev, pan: e.target.value}))}
+                      placeholder="Enter PAN" className="input-theme text-xs py-1.5 px-2 flex-1" maxLength={10}
+                      style={{ textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '0.05em' }} />
+                    <button onClick={() => handleVerifyPAN()} disabled={panLoading || !(ac?.pan)}
+                      className="text-[9px] px-3 py-2 min-h-[44px] rounded-md flex-shrink-0 transition-all"
+                      style={{ background: 'var(--accent)', color: 'var(--text-on-cta)', opacity: panLoading || !(ac?.pan) ? 0.5 : 1 }}>
+                      {panLoading ? '...' : 'Verify'}
+                    </button>
+                  </div>
+                  {panResult && (
+                    <div className="text-xs space-y-1">
+                      {panResult.data?.valid && (
+                        <>
+                          <div style={{ color: 'var(--green)' }} className="font-medium">&#10003; {panResult.data.name}</div>
+                          {panResult.data.category && <div className="text-theme-muted text-[10px]">Category: {panResult.data.category}</div>}
+                          <div className="text-theme-muted text-[10px]">Aadhaar: {panResult.data.aadhaarLinked ? 'Linked \u2713' : 'Not linked \u26A0'}</div>
+                        </>
+                      )}
+                      {panResult.data?.valid === false && <div style={{ color: 'var(--red)' }} className="text-[10px]">PAN verification failed. Please check the number and try again.</div>}
+                      {!panResult.available && <div className="text-theme-muted text-[10px]">{panResult.message}</div>}
+                    </div>
+                  )}
+                  <div className="space-y-1">
+                    <button disabled className="w-full text-left text-[9px] px-2 py-2 min-h-[44px] rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
+                      style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
+                      title="Coming soon — requires ERI registration">
+                      <span>26AS Fetch</span>
+                      <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
+                    </button>
+                    <button disabled className="w-full text-left text-[9px] px-2 py-2 min-h-[44px] rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
+                      style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
+                      title="Coming soon — requires ERI registration">
+                      <span>AIS Fetch</span>
+                      <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Team Notes */}
+                <div className="space-y-1">
+                  <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider">Team Notes</div>
+                  <textarea
+                    value={ac?.formData?.teamNotes || ''}
+                    onChange={e => {
+                      const notes = e.target.value;
+                      setAc(prev => ({ ...prev, formData: { ...prev.formData, teamNotes: notes } }));
+                    }}
+                    onBlur={async () => {
+                      if (ac?.dbId) {
+                        await supabase.from('cases').update({
+                          intake_data: { ...ac.formData, teamNotes: ac.formData?.teamNotes }
+                        }).eq('id', ac.dbId).catch(() => {});
+                      }
+                    }}
+                    placeholder="Internal notes — not visible to client"
+                    rows={3}
+                    className="input-theme text-xs py-2 px-2 w-full"
+                    style={{ resize: 'vertical', fontSize: '11px' }}
+                  />
+                </div>
+
+                {/* Priority toggle */}
+                {(() => { const curPriority = ac?.priority || ac?.formData?.priority; return (
+                <div className="space-y-1">
+                  <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider">Priority</div>
+                  <button onClick={async () => {
+                    const newPriority = curPriority === 'urgent' ? 'normal' : 'urgent';
+                    setAc(prev => ({ ...prev, priority: newPriority, formData: { ...prev.formData, priority: newPriority } }));
+                    if (ac.dbId) {
+                      await supabase.from('cases').update({
+                        intake_data: { ...ac.formData, priority: newPriority }
+                      }).eq('id', ac.dbId).catch(() => {});
+                    }
+                  }} className="text-[9px] px-2 py-2 min-h-[44px] rounded-md flex items-center gap-1 w-full justify-center"
+                    style={{
+                      background: curPriority === 'urgent' ? 'rgba(160,72,72,0.1)' : 'var(--bg-primary)',
+                      border: `1px solid ${curPriority === 'urgent' ? 'var(--red)' : 'var(--border)'}`,
+                      color: curPriority === 'urgent' ? 'var(--red)' : 'var(--text-muted)',
+                    }}>
+                    {curPriority === 'urgent' ? '\uD83D\uDD34 Urgent' : '\u25CB Mark Urgent'}
+                  </button>
+                </div>
+                ); })()}
+
+                {/* Reclassify + Delete */}
+                <div className="space-y-1.5 pt-2" style={{ borderTop: '1px solid var(--border)' }}>
+                  <button onClick={() => reclassifyCase(ac.formData || f)}
+                    className="w-full text-[9px] py-2 min-h-[44px] rounded-md transition-all"
+                    style={{ color: 'var(--accent)', border: '1px solid var(--accent)', opacity: 0.7 }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                    onMouseLeave={e => e.currentTarget.style.opacity = '0.7'}>
+                    Reclassify Case
+                  </button>
+                  {userRole && ['admin', 'partner'].includes(userRole) && (
+                    <button onClick={async () => {
+                      if (!confirm('Permanently delete this case and all its data? This cannot be undone.')) return;
+                      try {
+                        await fetch('/api/admin/delete-case', {
+                          method: 'DELETE',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ caseId: ac.dbId || ac.id }),
                         });
-                    } catch(e) {}
-                  }
-                }}
-                className="input-theme text-xs py-1">
-                <option value="intake">1. Intake Received</option>
-                <option value="in_progress">2. Analysis Running</option>
-                <option value="review">3. Under Review</option>
-                <option value="findings_ready">4. Findings Ready</option>
-                <option value="filing">5. Filing in Progress</option>
-                <option value="filed">6. Filed</option>
-                <option value="closed">7. Closed</option>
-              </select>
-            </div>
-            <button onClick={() => {
-              const token = ac?.portal_token || ac?.portalToken || '';
-              if (!token) {
-                setToast({ type: 'error', message: 'Portal token not available for this case. Save case to DB first.' });
-                return;
-              }
-              const url = `${window.location.origin}/portal?ref=${token}`;
-              navigator.clipboard.writeText(url);
-              setToast({ type: 'success', message: 'Portal link copied to clipboard!' });
-            }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
-              Copy Client Portal Link
-            </button>
-            {/* Payment Link */}
-            <button onClick={async () => {
-              const amount = prompt('Enter amount in \u20B9 (e.g. 35000):');
-              if (!amount) return;
-              try {
-                const res = await fetch('/api/payment', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    amount: parseInt(amount),
-                    clientName: ac?.name || ac?.client_name,
-                    clientEmail: ac?.client_email || ac?.formData?.email,
-                    clientPhone: ac?.client_phone || ac?.formData?.phone,
-                    caseRef: (ac?.dbId || ac?.id)?.toString().slice(0, 8),
-                    caseId: ac?.dbId || ac?.id,
-                  }),
-                });
-                const data = await res.json();
-                if (data.available && data.data?.shortUrl) {
-                  navigator.clipboard.writeText(data.data.shortUrl);
-                  setToast({ type: 'success', message: `Payment link copied! \u20B9${amount} \u2014 share with client` });
-                } else {
-                  setToast({ type: 'error', message: data.message || data.error || 'Payment not configured' });
-                }
-              } catch (e) {
-                setToast({ type: 'error', message: 'Failed to create payment link' });
-              }
-            }} className="btn-secondary w-full mt-1 text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
-              Send Payment Link
-            </button>
-            {/* Priority toggle (GAP 23) */}
-            {(() => { const curPriority = ac?.priority || ac?.formData?.priority; return (
-            <div className="flex items-center gap-2 mt-2">
-              <button onClick={async () => {
-                const newPriority = curPriority === 'urgent' ? 'normal' : 'urgent';
-                setAc(prev => ({ ...prev, priority: newPriority, formData: { ...prev.formData, priority: newPriority } }));
-                if (ac.dbId) {
-                  await supabase.from('cases').update({
-                    intake_data: { ...ac.formData, priority: newPriority }
-                  }).eq('id', ac.dbId).catch(() => {});
-                }
-              }} className="text-[9px] px-2 py-1 rounded-md flex items-center gap-1"
-                style={{
-                  background: curPriority === 'urgent' ? 'rgba(160,72,72,0.1)' : 'var(--bg-primary)',
-                  border: `1px solid ${curPriority === 'urgent' ? 'var(--red)' : 'var(--border)'}`,
-                  color: curPriority === 'urgent' ? 'var(--red)' : 'var(--text-muted)',
-                }}>
-                {curPriority === 'urgent' ? '\uD83D\uDD34 Urgent' : '\u25CB Mark Urgent'}
-              </button>
-            </div>
-            ); })()}
-            {/* Reclassify button (GAP 18) */}
-            <button onClick={() => reclassifyCase(ac.formData || f)}
-              className="w-full text-[9px] py-1.5 rounded-md mt-2 transition-all"
-              style={{ color: 'var(--accent)', border: '1px solid var(--accent)', opacity: 0.7 }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '0.7'}>
-              Reclassify Case
-            </button>
-            {/* Delete Case button (GAP 19) — admin/partner only */}
-            {userRole && ['admin', 'partner'].includes(userRole) && (
-              <button onClick={async () => {
-                if (!confirm('Permanently delete this case and all its data? This cannot be undone.')) return;
-                try {
-                  await fetch('/api/admin/delete-case', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ caseId: ac.dbId || ac.id }),
-                  });
-                  setCases(prev => prev.filter(c => (c.dbId || c.id) !== (ac.dbId || ac.id)));
-                  setView('home');
-                  setToast({ type: 'success', message: 'Case deleted' });
-                } catch (e) {
-                  setToast({ type: 'error', message: 'Failed to delete case' });
-                }
-              }} className="w-full text-[9px] py-1.5 rounded-md mt-2 transition-all"
-                style={{ color: 'var(--red)', border: '1px solid var(--red)', opacity: 0.6 }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>
-                Delete Case
-              </button>
-            )}
-          </div>
-
-          <div className="py-1">
-            <div className="px-3 py-1 text-[9px] font-bold text-theme-muted uppercase tracking-wider">Modules</div>
-            {MODS.map((m, i) => {
-              const done = !!outs[m.id];
-              const active = i === mi && !dv;
-              return (
-                <div key={m.id} onClick={()=>{setMi(i);setDv(null);}}
-                  className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-xs transition ${active ? 'font-semibold' : ''}`}
-                  style={{
-                    borderLeft: active ? `3px solid ${m.c}` : '3px solid transparent',
-                    background: active ? 'var(--bg-card)' : 'transparent',
-                    color: active ? 'var(--text-primary)' : 'var(--text-muted)'
-                  }}>
-                  <span className={done ? 'animate-complete-pulse' : 'opacity-30'}>{done ? '✓' : m.ic}</span>
-                  <span>{m.l}</span>
-                  {m.cp && !done && <span className="text-theme-accent text-[8px]">⚠</span>}
+                        setCases(prev => prev.filter(c => (c.dbId || c.id) !== (ac.dbId || ac.id)));
+                        setView('home');
+                        setToast({ type: 'success', message: 'Case deleted' });
+                      } catch (e) {
+                        setToast({ type: 'error', message: 'Failed to delete case' });
+                      }
+                    }} className="w-full text-[9px] py-2 min-h-[44px] rounded-md transition-all"
+                      style={{ color: 'var(--red)', border: '1px solid var(--red)', opacity: 0.6 }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                      onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>
+                      Delete Case
+                    </button>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="py-1 border-t border-theme">
-            <div className="px-3 py-1 text-[9px] font-bold text-theme-accent uppercase tracking-wider">Deliverables</div>
-            {DELS.map(d => {
-              const ready = d.n.every(n => !!outs[n]);
-              const active = dv === d.id;
-              return (
-                <div key={d.id} onClick={()=>ready && setDv(d.id)}
-                  className={`flex items-center gap-2 px-3 py-1.5 text-xs transition ${!ready ? 'cursor-default' : 'cursor-pointer'}`}
-                  style={{
-                    borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
-                    background: active ? 'var(--bg-card)' : 'transparent',
-                    color: active ? 'var(--text-primary)' : ready ? 'var(--text-muted)' : 'var(--border)',
-                    fontWeight: active ? 600 : 400
-                  }}>
-                  <span>{ready ? '📄' : '○'}</span>
-                  <span>{d.l}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Case Enrichment */}
-          <div className="px-3 py-2 border-t border-theme">
-            <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider mb-2">Enrich Case</div>
-            <div className="flex gap-2 mb-2">
-              <input type="text" value={ac?.pan || ''} onChange={e => setAc(prev => ({...prev, pan: e.target.value}))}
-                placeholder="Enter PAN" className="input-theme text-xs py-1.5 px-2 flex-1" maxLength={10}
-                style={{ textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '0.05em' }} />
-              <button onClick={() => handleVerifyPAN()} disabled={panLoading || !(ac?.pan)}
-                className="text-[9px] px-2 py-1 rounded-md flex-shrink-0 transition-all"
-                style={{ background: 'var(--accent)', color: 'var(--text-on-cta)', opacity: panLoading || !(ac?.pan) ? 0.5 : 1 }}>
-                {panLoading ? '...' : 'Verify'}
-              </button>
-            </div>
-            {panResult && (
-              <div className="text-xs space-y-1 mb-2">
-                {panResult.data?.valid && (
-                  <>
-                    <div style={{ color: 'var(--green)' }} className="font-medium">&#10003; {panResult.data.name}</div>
-                    {panResult.data.category && <div className="text-theme-muted text-[10px]">Category: {panResult.data.category}</div>}
-                    <div className="text-theme-muted text-[10px]">Aadhaar: {panResult.data.aadhaarLinked ? 'Linked \u2713' : 'Not linked \u26A0'}</div>
-                  </>
-                )}
-                {panResult.data?.valid === false && <div style={{ color: 'var(--red)' }} className="text-[10px]">PAN verification failed. Please check the number and try again.</div>}
-                {!panResult.available && <div className="text-theme-muted text-[10px]">{panResult.message}</div>}
               </div>
             )}
-            <div className="space-y-1">
-              <button disabled className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
-                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
-                title="Coming soon — requires ERI registration">
-                <span>26AS Fetch</span>
-                <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
-              </button>
-              <button disabled className="w-full text-left text-[9px] px-2 py-1.5 rounded-md flex items-center justify-between opacity-50 cursor-not-allowed"
-                style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)' }}
-                title="Coming soon — requires ERI registration">
-                <span>AIS Fetch</span>
-                <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>ERI Required</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Team Notes (GAP 24) */}
-          <div className="px-3 py-2 border-t border-theme">
-            <div className="text-[9px] font-bold text-theme-muted uppercase tracking-wider mb-1">Team Notes</div>
-            <textarea
-              value={ac?.formData?.teamNotes || ''}
-              onChange={e => {
-                const notes = e.target.value;
-                setAc(prev => ({ ...prev, formData: { ...prev.formData, teamNotes: notes } }));
-              }}
-              onBlur={async () => {
-                if (ac?.dbId) {
-                  await supabase.from('cases').update({
-                    intake_data: { ...ac.formData, teamNotes: ac.formData?.teamNotes }
-                  }).eq('id', ac.dbId).catch(() => {});
-                }
-              }}
-              placeholder="Internal notes — not visible to client"
-              rows={3}
-              className="input-theme text-xs py-2 px-2 w-full"
-              style={{ resize: 'vertical', fontSize: '11px' }}
-            />
           </div>
         </div>
 

@@ -496,6 +496,16 @@ export default function AdminPage() {
         <main className="flex-1 overflow-y-auto p-5 md:p-8 md:pt-8 pt-20">
           <div className="max-w-4xl mx-auto">
 
+            {/* Firm name header */}
+            {settings?.firmName && (
+              <div className="mb-6 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
+                <h2 className="font-serif text-2xl font-bold text-theme">{settings.firmName}</h2>
+                {settings?.firmTagline && (
+                  <p className="text-xs text-theme-muted mt-1">{settings.firmTagline}</p>
+                )}
+              </div>
+            )}
+
             {/* ============== TAB: API KEYS ============== */}
             {tab === 'api-keys' && (
               <div className="animate-fade-in">
@@ -512,7 +522,7 @@ export default function AdminPage() {
 
                 <div className="space-y-4 stagger-premium">
                   {Object.entries(integrations).map(([id, integration]) => (
-                    <div key={id} className="card-premium p-5 animate-fade-in-up">
+                    <div key={id} className="card-premium p-5 animate-fade-in-up" style={{ borderLeft: `4px solid ${integration.configured ? 'var(--green)' : 'var(--border)'}` }}>
                       {/* Header */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
@@ -970,7 +980,10 @@ export default function AdminPage() {
                       const status = stats?.integrations?.[svc.key];
                       return (
                         <div key={svc.key} className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--border)' }}>
-                          <span className="text-xs text-theme-secondary">{svc.label}</span>
+                          <span className="text-xs text-theme-secondary flex items-center gap-2">
+                            <StatusDot configured={status?.ok} />
+                            {svc.label}
+                          </span>
                           <div className="flex items-center gap-2">
                             {status?.ok ? (
                               <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--green)' }}>

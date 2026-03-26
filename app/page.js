@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import NavBar from '@/app/components/NavBar';
 import Footer from '@/app/components/Footer';
+import { useScrollReveal } from '@/app/hooks/useScrollReveal';
 
 /* -----------------------------------------------------------------
    SHARED DATA
@@ -151,6 +152,7 @@ export default function Home() {
   const [hasDraft, setHasDraft] = useState(false);
   const [hasSession, setHasSession] = useState(false);
   const { theme } = useTheme();
+  useScrollReveal();
 
   useEffect(() => {
     setVis(true);
@@ -239,7 +241,7 @@ export default function Home() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-display font-serif text-4xl md:text-6xl mb-6 leading-tight">
+            <h1 className="text-display font-serif text-3xl sm:text-4xl md:text-6xl mb-6 leading-tight">
               NRI Tax Filing, Advisory
               <br />
               <span style={{ color: 'var(--accent)' }}>
@@ -303,6 +305,7 @@ export default function Home() {
           S2 — STATS STRIP: Clean 4-Stat Row
           ============================================================ */}
       <section
+        className="reveal"
         style={{
           background: 'var(--bg-secondary)',
           transition: 'background-color 0.3s ease',
@@ -314,7 +317,7 @@ export default function Home() {
         />
 
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-12 md:py-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-6 md:gap-10 reveal-stagger">
             {STATS.map((s, i) => (
               <div key={i} className="text-center">
                 <div
@@ -344,7 +347,7 @@ export default function Home() {
       {/* ============================================================
           S3 — PAIN POINTS: Dark Section, 2x2 Card Grid
           ============================================================ */}
-      <section style={{ background: '#0f0f0f' }}>
+      <section className="reveal" style={{ background: '#0f0f0f' }}>
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-14">
@@ -373,7 +376,7 @@ export default function Home() {
           </div>
 
           {/* 2x2 Card Grid */}
-          <div className="grid md:grid-cols-2 gap-5 mb-14">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-14 reveal-stagger">
             {PAIN_POINTS.map((p, i) => (
               <div
                 key={i}
@@ -455,6 +458,7 @@ export default function Home() {
           ============================================================ */}
       <section
         id="how"
+        className="reveal"
         style={{
           background: 'var(--bg-primary)',
           transition: 'background-color 0.3s ease',
@@ -478,7 +482,7 @@ export default function Home() {
           </div>
 
           {/* 4-column card grid */}
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 stagger-premium">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 stagger-premium reveal-stagger">
             {STEPS.map((s, i) => {
               const Icon = STEP_ICONS[i];
               return (
@@ -531,6 +535,7 @@ export default function Home() {
           S5 — WHAT WE HANDLE: Asymmetric Feature Grid
           ============================================================ */}
       <section
+        className="reveal"
         style={{
           background: 'var(--bg-secondary)',
           transition: 'background-color 0.3s ease',
@@ -554,7 +559,7 @@ export default function Home() {
           </div>
 
           {/* Asymmetric grid: 2 large on top, 4 small below */}
-          <div className="grid md:grid-cols-2 gap-5 mb-5">
+          <div className="grid md:grid-cols-2 gap-5 mb-5 reveal-stagger">
             {FEATURES.slice(0, 2).map((f, i) => {
               const Icon = FEATURE_ICONS[i];
               return (
@@ -591,7 +596,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5 reveal-stagger">
             {FEATURES.slice(2).map((f, i) => {
               const Icon = FEATURE_ICONS[i + 2];
               return (
@@ -628,6 +633,7 @@ export default function Home() {
           S6 — TESTIMONIALS + AUTHORITY: Combined Clean Section
           ============================================================ */}
       <section
+        className="reveal"
         style={{
           background: 'var(--bg-elevated)',
           transition: 'background-color 0.3s ease',
@@ -653,7 +659,7 @@ export default function Home() {
           </div>
 
           {/* Country flags row */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12 overflow-x-auto">
             {COUNTRIES.map((c, i) => (
               <span
                 key={i}
@@ -672,7 +678,7 @@ export default function Home() {
           </div>
 
           {/* 3 testimonial cards in a clean grid */}
-          <div className="grid md:grid-cols-3 gap-5 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12 reveal-stagger">
             {TESTIMONIALS.map((t, i) => (
               <div key={i} className="card-premium p-7">
                 <Quote
@@ -726,6 +732,7 @@ export default function Home() {
           S7 — PRICING: Premium Tier Dominates (3-Column)
           ============================================================ */}
       <section
+        className="reveal"
         style={{
           background: 'var(--bg-primary)',
           transition: 'background-color 0.3s ease',
@@ -756,7 +763,7 @@ export default function Home() {
           </div>
 
           {/* 3-column pricing */}
-          <div className="grid md:grid-cols-3 gap-5 md:gap-6 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-6 items-start reveal-stagger">
             {PRICING_TIERS.map((tier, i) => (
               <div
                 key={i}

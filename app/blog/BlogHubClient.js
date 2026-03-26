@@ -164,7 +164,7 @@ export default function BlogHubClient({ blogs }) {
   const currentTopic = TOPICS.find(t => t.id === activeTopic);
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <div className="min-h-screen page-enter" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
 
       {/* ══ NAV ══ */}
       <NavBar />
@@ -380,13 +380,13 @@ export default function BlogHubClient({ blogs }) {
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg opacity-40">&#x1F50D;</span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
             {TOPICS.map(topic => (
               <button
                 key={topic.id}
                 onClick={() => setActiveTopic(topic.id)}
                 title={topic.desc || ''}
-                className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105"
+                className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 flex-shrink-0"
                 style={{
                   background: activeTopic === topic.id ? 'var(--accent)' : 'var(--bg-card)',
                   color: activeTopic === topic.id ? 'var(--text-on-cta)' : 'var(--text-secondary)',
@@ -415,7 +415,7 @@ export default function BlogHubClient({ blogs }) {
                   <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Try a different search term or browse by topic.</p>
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filtered.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
                 </div>
               )}
@@ -443,7 +443,7 @@ export default function BlogHubClient({ blogs }) {
                   <p className="text-lg mb-2" style={{ color: 'var(--text-muted)' }}>No guides found in this topic.</p>
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filtered.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
                 </div>
               )}
@@ -473,7 +473,7 @@ export default function BlogHubClient({ blogs }) {
                           View all {topicCounts[section.topicId] || 0} &rarr;
                         </button>
                       </div>
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {topicBlogs.map(blog => <BlogCard key={blog.slug} blog={blog} />)}
                       </div>
                     </div>
