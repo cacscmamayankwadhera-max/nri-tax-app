@@ -81,7 +81,7 @@ export default function BlogPostClient({ blog, blogContent }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: resultEmail, source: `blog-${slug}` }),
       });
-    } catch (e) {
+    } catch (err) {
       // Fallback to localStorage if API fails
       const leads = JSON.parse(localStorage.getItem('nri-leads') || '[]');
       leads.push({ email: resultEmail, source: `blog-${slug}`, ts: new Date().toISOString() });

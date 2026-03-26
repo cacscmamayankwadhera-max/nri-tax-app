@@ -84,7 +84,7 @@ export async function GET(request) {
       case: statusCase,
       modules: clientModules,
       modulesCompleted: clientModules.filter(m => m.has_output).length,
-      totalModules: 9,
+      totalModules: 8,
     });
 
   } catch (error) {
@@ -178,7 +178,7 @@ export async function POST(request) {
       case: sanitizedCase,
       modules: clientModules,
       modulesCompleted: clientModules.filter(m => m.has_output).length,
-      totalModules: 9,
+      totalModules: 8,
     });
 
   } catch (error) {

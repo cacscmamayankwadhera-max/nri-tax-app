@@ -55,7 +55,7 @@ function formatDateTime(dateStr) {
   if (!dateStr) return '';
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
   } catch { return ''; }
 }
 
@@ -461,7 +461,7 @@ export default function ClientPortalDashboard() {
       <div className="gold-gradient-line" />
       <NavBar />
 
-      <div className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 page-enter transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div id="main-content" className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 page-enter transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">

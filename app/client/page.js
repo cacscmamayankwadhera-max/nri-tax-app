@@ -138,7 +138,15 @@ function getClassificationDesc(cls) {
 export default function ClientIntake() {
   const [step, setStep] = useState(0);
   const [f, setF] = useState({});
-  const [fy] = useState('2025-26');
+  const [fy] = useState(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+    // Indian FY starts April (month 3)
+    return month >= 3
+      ? `${year}-${String(year + 1).slice(-2)}`
+      : `${year - 1}-${String(year).slice(-2)}`;
+  });
 
   // Restore draft from localStorage on mount
   useEffect(() => {
@@ -167,6 +175,7 @@ export default function ClientIntake() {
   const [parseDone, setParseDone] = useState(false);
   const [fadeDir, setFadeDir] = useState('in');
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
 
@@ -180,7 +189,7 @@ export default function ClientIntake() {
   };
 
   const cfg = FY_CONFIG[fy];
-  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2020-21', fy) : null;
+  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(Number(f.salePrice) || 0, Number(f.purchaseCost) || 0, f.propertyAcqFY || '2020-21', fy) : null;
 
   // Selected scenarios as a Set for quick lookup
   const selectedScenarios = useMemo(() => {
@@ -259,6 +268,7 @@ export default function ClientIntake() {
       }
     } catch (e) {
       console.error('Submission error:', e);
+      setSubmitError('Submission failed. Please try again or contact us on WhatsApp.');
     }
     setCaseRef(ref);
     setSubmitting(false);
@@ -1043,6 +1053,7 @@ export default function ClientIntake() {
               >
                 {submitting ? 'Submitting...' : getContextualCTA(f)}
               </button>
+              {submitError && <p className="text-xs text-center mt-3" style={{ color: 'var(--red)' }}>{submitError}</p>}
 
               <p className="text-xs text-theme-muted text-center mt-4">
                 Free &middot; No obligation &middot; Your data is encrypted and confidential

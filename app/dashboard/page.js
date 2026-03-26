@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/app/theme-provider';
@@ -336,7 +336,7 @@ export default function Dashboard() {
   const [sidebarTab, setSidebarTab] = useState('modules');
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     async function getUser() {
@@ -348,7 +348,7 @@ export default function Dashboard() {
           const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
           if (profile) setUserRole(profile.role);
         }
-      } catch (e) {}
+      } catch (e) { console.error('Auth check failed:', e); }
     }
     getUser();
   }, []);
@@ -392,11 +392,12 @@ export default function Dashboard() {
           if (data) setCases(data.map(c => ({ ...c, status: c.status || 'intake', name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
         }
       } catch (e) {
+        console.error('Cases API fetch failed, trying Supabase fallback:', e);
         // Fallback: try direct Supabase (works for own cases via RLS)
         try {
           const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
           if (data) setCases(data.map(c => ({ ...c, status: c.status || 'intake', name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
-        } catch (e2) { /* Supabase not configured */ }
+        } catch (e2) { console.error('Supabase fallback also failed:', e2); }
       }
       setCasesLoading(false);
       if (!localStorage.getItem('nri-dashboard-toured')) {
@@ -669,7 +670,7 @@ export default function Dashboard() {
         ) : !casesLoading && filteredCases.length === 0 ? (
           <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="text-5xl mb-4 opacity-30">📋</div>
-            <h3 className="font-serif text-xl mb-2 text-theme">No cases yet</h3>
+            <h3 className="font-serif text-xl mb-2 text-theme">{searchQuery || statusFilter !== 'all' ? 'No matches found' : 'No cases yet'}</h3>
             <p className="text-sm text-theme-muted mb-6 max-w-sm mx-auto">
               {searchQuery || statusFilter !== 'all'
                 ? 'No cases match your search. Try different filters.'

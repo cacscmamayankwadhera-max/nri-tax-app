@@ -84,7 +84,8 @@ export async function POST(request) {
 
   // Internal secret check — protect auto-run from external calls
   const secret = request.headers.get('x-internal-secret');
-  if (!process.env.INTERNAL_SECRET || secret !== process.env.INTERNAL_SECRET) {
+  const envSecret = process.env.INTERNAL_SECRET;
+  if (!envSecret || envSecret.length < 8 || !secret || secret !== envSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -100,7 +101,7 @@ export async function POST(request) {
 
     const currentIndex = startModule || 0;
 
-    console.log(`[auto-run] Running module ${currentIndex + 1}/${MODULE_ORDER.length} for case ${caseId} (FY ${fy})`);
+    // console.log(`[auto-run] Running module ${currentIndex + 1}/${MODULE_ORDER.length} for case ${caseId} (FY ${fy})`);
 
     const supabase = createServerClient();
 
@@ -117,7 +118,7 @@ export async function POST(request) {
     const moduleStart = Date.now();
 
     try {
-      console.log(`[auto-run] Running module: ${moduleId} (${currentIndex + 1}/${MODULE_ORDER.length}) for case ${caseId}`);
+      // console.log(`[auto-run] Running module: ${moduleId} (${currentIndex + 1}/${MODULE_ORDER.length}) for case ${caseId}`);
 
       const output = await runModule(moduleId, formData, fy, moduleOutputs);
       moduleOutputs[moduleId] = output;
@@ -126,8 +127,7 @@ export async function POST(request) {
 
       const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
       logActivity(caseId, null, 'module_completed', { moduleId, elapsed }).catch(() => {});
-      logActivity(caseId, null, 'ai_module_run', { moduleId }).catch(() => {});
-      console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${currentIndex + 1}/${MODULE_ORDER.length})`);
+      // console.log(`[auto-run] Completed ${moduleId} in ${elapsed}s (${currentIndex + 1}/${MODULE_ORDER.length})`);
 
     } catch (moduleError) {
       const elapsed = ((Date.now() - moduleStart) / 1000).toFixed(1);
@@ -150,7 +150,7 @@ export async function POST(request) {
     } else {
       // All modules done — update status to review
       await updateCaseStatus(supabase, caseId, 'review', MODULE_ORDER.length);
-      console.log(`[auto-run] All modules complete for case ${caseId}`);
+      // console.log(`[auto-run] All modules complete for case ${caseId}`);
     }
 
     const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);

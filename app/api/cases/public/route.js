@@ -14,7 +14,7 @@ function triggerAutoRun(caseId, formData, fy) {
     const protocol = headersList.get('x-forwarded-proto') || 'http';
     const baseUrl = `${protocol}://${host}`;
 
-    console.log(`[public-intake] Triggering auto-run for case ${caseId}`);
+    // console.log(`[public-intake] Triggering auto-run for case ${caseId}`);
 
     fetch(`${baseUrl}/api/auto-run`, {
       method: 'POST',
@@ -25,7 +25,7 @@ function triggerAutoRun(caseId, formData, fy) {
         if (!res.ok) {
           console.error(`[public-intake] Auto-run request failed with status ${res.status}`);
         } else {
-          console.log(`[public-intake] Auto-run triggered successfully for case ${caseId}`);
+          // console.log(`[public-intake] Auto-run triggered successfully for case ${caseId}`);
         }
       })
       .catch(err => {

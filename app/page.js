@@ -95,13 +95,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const PRICING = [
-  { t: 'Basic Filing', p: '\u20B98,000\u201315,000', d: 'Simple profile, 1-2 income sources', tag: 'Green', c: 'var(--green)' },
-  { t: 'Advisory Filing', p: '\u20B918,000\u201330,000', d: 'Residency review, multiple income heads', tag: 'Amber', c: 'var(--amber)' },
-  { t: 'Premium', p: '\u20B935,000\u201375,000', d: 'Property sale, ESOP, dual CG, DTAA', tag: 'Popular', c: 'var(--red)', pop: true },
-  { t: 'Retainer', p: '\u20B91,00,000+/yr', d: 'HNI, ongoing planning, priority', tag: 'Premium', c: 'var(--text-primary)' },
-];
-
 /* Consolidated pricing for 3-tier display */
 const PRICING_TIERS = [
   {

@@ -16,8 +16,8 @@ export async function GET(req) {
     const content = await fs.readFile(filePath, 'utf-8');
 
     // Strip frontmatter (between --- markers)
-    const fmEnd = content.indexOf('---', 4);
-    const body = fmEnd > 0 ? content.slice(fmEnd + 3).trim() : content;
+    const match = content.match(/^---[\s\S]*?---\s*/);
+    const body = match ? content.slice(match[0].length).trim() : content.trim();
 
     return NextResponse.json(
       { content: body },

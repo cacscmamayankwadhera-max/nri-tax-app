@@ -4,6 +4,10 @@ import path from 'path';
 import { BLOGS } from '../data';
 import BlogPostClient from './BlogPostClient';
 
+export async function generateStaticParams() {
+  return BLOGS.map(b => ({ slug: b.slug }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = params;
   const blog = BLOGS.find(b => b.slug === slug);

@@ -86,8 +86,8 @@ export default function NavBar({ variant = 'solid' }) {
                     color: active ? 'var(--accent)' : 'rgba(255,255,255,0.65)',
                     background: active ? 'rgba(196,154,60,0.1)' : 'transparent',
                   }}
-                  onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-                  onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = active ? 'rgba(196,154,60,0.1)' : 'transparent'; }}
+                  onMouseEnter={(e) => { if (!active) { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; } }}
+                  onMouseLeave={(e) => { if (!active) { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'transparent'; } }}
                 >
                   <Icon size={15} style={{ opacity: 0.7 }} />
                   {link.label}

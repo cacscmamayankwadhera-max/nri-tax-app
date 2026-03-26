@@ -1,7 +1,7 @@
 import { BLOGS } from './blog/data';
 
 export default function sitemap() {
-  const baseUrl = 'https://nri-tax-app-cacscmamayankwadhera-maxs-projects.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://nri-tax-app-cacscmamayankwadhera-maxs-projects.vercel.app';
 
   const staticPages = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },

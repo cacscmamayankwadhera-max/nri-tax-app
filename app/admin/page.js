@@ -426,7 +426,7 @@ export default function AdminPage() {
         </div>
       </nav>
 
-      <div className="flex min-h-[calc(100vh-3rem)]">
+      <div id="main-content" className="flex min-h-[calc(100vh-3rem)]">
         {/* SIDEBAR — Desktop */}
         <aside className="hidden md:flex w-56 flex-col flex-shrink-0 border-r border-theme" style={{ background: 'var(--bg-secondary)' }}>
           <div className="p-4 border-b border-theme">

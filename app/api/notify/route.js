@@ -1,9 +1,24 @@
 import { NextResponse } from 'next/server';
+import { createServerClient as createSSR } from '@supabase/ssr';
 import { createServerClient } from '@/lib/supabase-server';
 import { notifyStatusChange } from '@/lib/notifications';
+import { cookies } from 'next/headers';
 
 export async function POST(request) {
   try {
+    // Auth check
+    const cookieStore = cookies();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseKey) {
+      const authSupabase = createSSR(supabaseUrl, supabaseKey, {
+        cookies: { get(name) { return cookieStore.get(name)?.value; } },
+      });
+      const { data: { user } } = await authSupabase.auth.getUser();
+      if (!user && process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
     const { caseId, newStatus } = await request.json();
     if (!caseId || !newStatus) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
 

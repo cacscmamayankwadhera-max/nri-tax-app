@@ -58,7 +58,7 @@ export default function Login() {
       <NavBar />
 
       {/* Form area */}
-      <div className="flex-1 flex items-center justify-center px-6 pb-12">
+      <div id="main-content" className="flex-1 flex items-center justify-center px-6 pb-12">
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="text-center mb-8 animate-fade-in-up">
@@ -83,9 +83,9 @@ export default function Login() {
               resetSent ? (
                 <div className="text-center">
                   <div className="mb-4 rounded-lg px-4 py-3 text-sm font-medium" style={{
-                    background: 'rgba(72,160,72,0.08)',
-                    border: '1px solid rgba(72,160,72,0.2)',
-                    color: 'var(--accent)',
+                    background: 'rgba(42,107,74,0.08)',
+                    border: '1px solid rgba(42,107,74,0.2)',
+                    color: 'var(--green)',
                   }}>
                     Password reset email sent. Check your inbox.
                   </div>

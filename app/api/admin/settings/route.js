@@ -162,7 +162,10 @@ export async function GET(request) {
     const supabase = createServerClient();
     const { data } = await supabase.from('admin_settings').select('key, value');
     if (data) {
-      data.forEach(row => { savedSettings[row.key] = row.value; });
+      data.forEach(row => {
+        try { savedSettings[row.key] = JSON.parse(row.value); }
+        catch { savedSettings[row.key] = row.value; }
+      });
     }
   } catch (e) {
     // Table may not exist yet

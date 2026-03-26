@@ -48,7 +48,7 @@ const CLS_MEANINGS = {
 };
 
 const NEXT_STEPS = [
-  '', // placeholder for 0-index
+  'Enter your tracking code above to check your case status.', // default for stage 0
   'Our AI is analyzing your case across 9 specialist modules. You will see results here within minutes.',
   'Our AI is analyzing your case across 9 specialist modules. You will see results here within minutes.',
   'A senior tax advisor is reviewing the AI analysis. Expect findings within 1 business day.',
@@ -406,7 +406,7 @@ function ClientPortal() {
       <div className="gold-gradient-line" />
       <NavBar />
 
-      <div className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 page-enter transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div id="main-content" className={`max-w-3xl mx-auto px-5 md:px-8 pt-8 pb-16 page-enter transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
 
         {/* Case ref header */}
         <div className="flex items-center justify-between mb-6">

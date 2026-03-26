@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
 import { createServerClient as createSSR } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { BLOGS } from '@/app/blog/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,7 +53,7 @@ export async function GET() {
     return NextResponse.json({
       cases: casesRes.count || 0,
       team: teamRes.count || 0,
-      blogs: 97,
+      blogs: BLOGS.length,
       latestCase: latestCaseRes.data?.[0]?.created_at || null,
       version: '1.0.0',
       integrations,
@@ -63,7 +64,7 @@ export async function GET() {
     return NextResponse.json({
       cases: 0,
       team: 0,
-      blogs: 97,
+      blogs: BLOGS.length,
       latestCase: null,
       version: '1.0.0',
       integrations: {},

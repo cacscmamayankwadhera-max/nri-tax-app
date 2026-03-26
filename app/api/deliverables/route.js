@@ -60,8 +60,8 @@ function dataTable(headers, rows, colWidths){
 }
 
 function alertBox(text, type="green"){
-  const bg = type==="green"?"E8F5E9":type==="red"?"FFEBEE":"FFF8E1";
-  const c = type==="green"?"2E7D32":type==="red"?"C62828":"F57F17";
+  const bg = type==="green"?"E8F5E9":type==="red"?"FFEBEE":type==="blue"?"E3F2FD":"FFF8E1";
+  const c = type==="green"?"2E7D32":type==="red"?"C62828":type==="blue"?"1565C0":"F57F17";
   return new Table({ width:{size:TW,type:WidthType.DXA}, columnWidths:[TW], rows:[
     new TableRow({ children:[new TableCell({ borders:bdrs, width:{size:TW,type:WidthType.DXA}, margins:{top:120,bottom:120,left:160,right:160},
       shading:{fill:bg,type:ShadingType.CLEAR}, children:[new Paragraph({ children:[new TextRun({ text, size:22, bold:true, color:c })] })] })] })

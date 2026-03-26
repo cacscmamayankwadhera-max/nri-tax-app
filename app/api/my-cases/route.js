@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,10 @@ export const dynamic = 'force-dynamic';
 // Returns case count only (not full data) — requires verification first
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const limit = await rateLimit(ip + ':mycases-lookup', 10, 60000);
+    if (!limit.allowed) return NextResponse.json({ error: 'Too many attempts' }, { status: 429 });
+
     const body = await request.json();
     const email = (body.email || '').trim().toLowerCase();
 

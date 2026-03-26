@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(request) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const limit = await rateLimit(ip + ':leads', 10, 60000);
+  if (!limit.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+
   try {
     const { email, source } = await request.json();
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
