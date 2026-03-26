@@ -603,10 +603,17 @@ export default function Dashboard() {
         </div>
         <div className="flex justify-center gap-3 mb-6">
           <button onClick={()=>{setF({});setStep(0);setNarr('');setOuts({});setDv(null);setView('wizard');}} className="btn-primary">+ New NRI Case</button>
-          <select value={fy} onChange={e=>setFy(e.target.value)} className="input-theme" style={{ width:'auto', padding:'0.625rem 1rem' }}>
-            <option value="2025-26">FY 2025-26</option>
-            <option value="2024-25">FY 2024-25</option>
-          </select>
+          <div>
+            <select value={fy} onChange={e=>setFy(e.target.value)} className="input-theme" style={{ width:'auto', padding:'0.625rem 1rem' }}>
+              <option value="2025-26">FY 2025-26</option>
+              <option value="2024-25">FY 2024-25</option>
+            </select>
+            {fy === '2024-25' && (
+              <div className="text-[9px] p-2 rounded-lg mt-1" style={{ background: 'rgba(160,72,72,0.08)', border: '1px solid rgba(160,72,72,0.2)', color: 'var(--red)' }}>
+                FY 2024-25 due date was 31 Jul 2025. Filing now is a <strong>belated return</strong> under Section 139(4). Section 234F penalty ({'\u20B9'}5,000) and Section 234A interest apply.
+              </div>
+            )}
+          </div>
         </div>
         {/* Search, filter, sort bar */}
         {cases.length > 0 && (
@@ -792,6 +799,7 @@ export default function Dashboard() {
                 <Inp l="Property sold?"><Sel v={f.propertySale?'Yes':'No'} ch={v=>{u('propertySale',v==='Yes');u('cgProperty',v==='Yes');}} o={['No','Yes']} /></Inp>
                 {f.propertySale && <>
                   <Inp l="Acquisition FY" tip="Pre/post Jul 2024 changes tax"><Sel v={f.propertyAcqFY} ch={v=>u('propertyAcqFY',v)} o={Object.keys(CII).filter(k=>parseInt(k)>=2005).map(k=>({v:k,l:'FY '+k}))} /></Inp>
+                  <Inp l="Sale date" v={f.saleDate} ch={v=>u('saleDate',v)} type="date" tip="For holding period calculation" />
                   <Inp l="Sale price ₹" v={f.salePrice} ch={v=>u('salePrice',parseInt(v)||0)} ph="6800000" type="number" />
                   <Inp l="Purchase cost ₹" v={f.purchaseCost} ch={v=>u('purchaseCost',parseInt(v)||0)} ph="2200000" type="number" />
                   <Inp l="Location" v={f.propertyLocation} ch={v=>u('propertyLocation',v)} ph="Nashik" />

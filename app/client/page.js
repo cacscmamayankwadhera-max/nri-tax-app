@@ -342,6 +342,9 @@ export default function ClientIntake() {
               </div>
               <a href={`/portal?ref=${portalToken}`} className="text-theme-accent text-sm underline">Track your case status {'\u2192'}</a>
               <p className="text-xs text-theme-muted mt-2">Save this code to check your case progress anytime</p>
+              <p className="text-xs text-theme-muted text-center mt-2">
+                Our team will collect your PAN and documents during the consultation call.
+              </p>
             </div>
           )}
           {!portalToken && (
@@ -349,6 +352,9 @@ export default function ClientIntake() {
               <p className="text-sm font-medium text-theme mb-2">We've Received Your Details</p>
               <p className="text-xs text-theme-muted">Our team will reach out to you at {f.email || f.phone || 'the contact you provided'} within 24 hours to get started.</p>
               <p className="text-xs text-theme-muted mt-2">To track your case later, visit <a href="/my-cases" className="text-theme-accent underline">My Cases</a> using your email.</p>
+              <p className="text-xs text-theme-muted text-center mt-2">
+                Our team will collect your PAN and documents during the consultation call.
+              </p>
             </div>
           )}
 

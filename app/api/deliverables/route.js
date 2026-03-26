@@ -158,6 +158,7 @@ function generateCGSheet(caseData, fy){
     bullet("Invest in NHAI/REC bonds within 6 months of sale"),
     bullet("Maximum: ₹50,00,000. Lock-in: 5 years"),
     bullet("Tax saved: "+formatINR(cg.sec54ecSaved)),
+    p("Note: If the property was sold in Q3/Q4 (October\u2013March), the \u20B950L limit applies per financial year. By investing \u20B950L in the sale FY and \u20B950L in the next FY (within 6 months of sale), a total exemption of \u20B91 Crore is possible.", { i: true, sz: 18, color: "666666" }),
     gap(),
     h2("6. TDS Position (Section 195 — NRI)"),
     dataTable(["","Details"],[["Section","195 (NRI seller — 20% + cess on sale price)"],["Est. TDS deducted by buyer",formatINR(cg.tds195)],["Actual tax liability",formatINR(cg.netTax)],["Est. TDS refund",formatINR(cg.tdsRefund)],["Form 16B / 27Q","Required from buyer"]],cw2), gap(),
@@ -230,9 +231,19 @@ function generateMemo(caseData, fy, moduleOutputs){
     bullet("TDS credits must be verified against 26AS."),
     gap(),
     h2("Recommended Actions"), ...actions.map(a=>num(a)),
+    ...(fd.propertySale ? [
+      gap(),
+      h2("Repatriation — Form 15CA/15CB"),
+      p("For remitting property sale proceeds outside India, the following steps are mandatory:"),
+      num("Obtain CA certificate in Form 15CB — assessing TDS adequacy and DTAA applicability"),
+      num("File Form 15CA online at incometax.gov.in (Part C for amounts exceeding \u20B95 lakhs)"),
+      num("Submit Form 15CA acknowledgement to your bank with the remittance request"),
+      num("Bank processes remittance after verification of 15CA/15CB and FIRS certificate"),
+      p("Note: Form 15CA/15CB must be filed BEFORE the remittance. Banks will not process without it.", { i: true }),
+    ] : []),
     ...disclaimer(),
   ].filter(Boolean);
-  
+
   return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
 }
 
@@ -289,6 +300,8 @@ function generateQuote(caseData, fy){
 
 function generatePositionReport(caseData, fy){
   const fd = caseData.formData || caseData;
+  const ti = computeTotalIncome(fd, fy);
+  const scheduleALRequired = ti.grossTotal > 5000000;
   const cw4=[2200,2600,2600,TW-7400];
   
   const incomeRows = [
@@ -320,21 +333,38 @@ function generatePositionReport(caseData, fy){
     h2("3. Key Issues"),
     fd.propertySale?num("Capital gains from property sale — dual computation needed. See CG Computation Sheet."):null,
     fd.foreignTaxPaid?num("FTC query — not applicable under NR status for foreign salary."):null,
-    fd.indianAssets==="Above ₹1 Crore"?num("Asset disclosure ₹1Cr+ required in ITR-2."):null,
+    scheduleALRequired?num(`Schedule AL mandatory — total income ${formatINR(ti.grossTotal)} exceeds ₹50L. Must disclose immovable property, movable property, bank balances, shares, cash in hand.`):null,
     gap(),
     h2("4. Recommended Approach"),
     bullet("Return Form: ITR-2"),
     bullet("Tax Regime: New (default)"),
-    bullet(`Key Schedules: CG, HP, OS, TDS${fd.indianAssets==="Above ₹1 Crore"?", Asset Disclosure":""}`),
+    bullet(`Key Schedules: CG, HP, OS, TDS${scheduleALRequired?", Schedule AL (Assets & Liabilities)":""}`),
     gap(),
     h2("5. Action Items"),
     fd.propertySale?num("Provide sale deed, purchase deed, Form 16B."):null,
     fd.propertySale?num("Confirm Section 54/54F/54EC status."):null,
     num("Share passport travel pages."),
     num("Review Engagement Quote and confirm."),
+    gap(),
+    h2("6. Required Documents"),
+    p("Based on this client's income profile, the following documents are needed:"),
+    bullet("PAN card copy"),
+    bullet("Passport (first + last page, visa stamps for stay days)"),
+    fd.salary ? bullet("Form 16 from Indian employer") : null,
+    fd.propertySale ? bullet("Sale deed + registration documents") : null,
+    fd.propertySale ? bullet("Purchase deed (original acquisition)") : null,
+    fd.propertySale ? bullet("Form 16B (TDS certificate from buyer)") : null,
+    fd.rent ? bullet("Rent agreement + tenant details") : null,
+    (fd.nroInterest || fd.fdInterest) ? bullet("NRO/FD bank statements + interest certificates") : null,
+    fd.cgShares || fd.cgMF ? bullet("Demat/broker capital gains statement") : null,
+    fd.cgESOPRSU ? bullet("ESOP/RSU vesting and exercise statements") : null,
+    fd.foreignTaxPaid ? bullet("Foreign tax return + TRC (Tax Residency Certificate)") : null,
+    bullet("26AS / AIS download from incometax.gov.in"),
+    fd.propertySale ? bullet("Form 15CA/15CB (for repatriation)") : null,
+    bullet("Prior year ITR acknowledgements (if any)"),
     ...disclaimer(),
   ].filter(Boolean);
-  
+
   return new Document({ numbering, styles, sections:[{ properties:pageProps, children }] });
 }
 
@@ -481,7 +511,8 @@ function generateTotalIncome(caseData, fy){
     dataTable(["Section","Source","TDS Rate","Amount"],[
       ...(ti.tds.property > 0 ? [["195","Property sale (NRI)","20.8% of sale price",formatINR(ti.tds.property)]] : []),
       ...(ti.tds.interest > 0 ? [["194A / 195","NRO / FD interest","30%",formatINR(ti.tds.interest)]] : []),
-      ["","TOTAL TDS","",formatINR(ti.tds.total)],
+      ...(ti.tds.tcsLRS > 0 ? [["206C(1G)","TCS on LRS remittances","20% above \u20B97L",formatINR(ti.tds.tcsLRS)]] : []),
+      ["","TOTAL TDS / TCS CREDIT","",formatINR(ti.tds.total)],
     ], [1600,3200,1600,TW-6400]), gap(),
 
     // ─── 5. Net Tax Position ───
