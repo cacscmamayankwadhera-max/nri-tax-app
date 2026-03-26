@@ -1,13 +1,24 @@
 import './globals.css';
 import { ThemeProvider } from './theme-provider';
+import CookieConsent from './components/CookieConsent';
 
 export const metadata = {
   title: 'NRI Tax Suite — MKW Advisors',
   description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance for Non-Resident Indians. Expert CA team powered by AI for FY 2025-26.',
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: 'NRI Tax Suite — MKW Advisors',
     description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance',
     type: 'website',
+    images: [{ url: '/og-image.svg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NRI Tax Suite — MKW Advisors',
+    description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance',
+    images: ['/og-image.svg'],
   },
 };
 
@@ -52,7 +63,13 @@ export default function RootLayout({ children }) {
 }) }} />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-bold" style={{ background: 'var(--accent)', color: 'var(--text-on-cta)' }}>
+          Skip to main content
+        </a>
+        <ThemeProvider>
+          {children}
+          <CookieConsent />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -185,7 +185,7 @@ export default function Home() {
       {/* ============================================================
           S1 — HERO: Centered with Premium Polish
           ============================================================ */}
-      <section className="relative overflow-hidden">
+      <section id="main-content" className="relative overflow-hidden">
         {/* Background layer */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -293,6 +293,14 @@ export default function Home() {
             >
               Free diagnostic &middot; No obligation &middot; Results in minutes
             </p>
+
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full animate-pulse"
+              style={{ background: 'rgba(160,72,72,0.08)', border: '1px solid rgba(160,72,72,0.2)' }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: 'var(--red)' }} />
+              <span className="text-xs font-medium" style={{ color: 'var(--red)' }}>
+                ITR deadline: 31 July 2026 — {Math.max(0, Math.ceil((new Date('2026-07-31') - new Date()) / (1000 * 60 * 60 * 24)))} days remaining
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -719,6 +727,24 @@ export default function Home() {
               Trusted by software engineers, investment bankers, business owners &amp; HNIs worldwide
             </p>
           </div>
+
+          {/* About the Founder */}
+          <div className="mt-16 max-w-2xl mx-auto text-center reveal">
+            <div className="divider-diamond mb-8"><span>&#9670;</span></div>
+            <h3 className="font-serif text-2xl mb-3" style={{ color: 'var(--text-primary)' }}>Led by CA Mayank Wadhera</h3>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Chartered Accountant, Company Secretary, Cost &amp; Management Accountant, and IBBI Registered Valuer.
+              Specializing in NRI taxation since 2015, with expertise in cross-border compliance across 18+ countries.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['CA', 'CS', 'CMA', 'IBBI RV'].map((badge, i) => (
+                <span key={i} className="px-3 py-1 rounded-full text-xs font-bold"
+                  style={{ background: 'rgba(196,154,60,0.08)', color: 'var(--accent)', border: '1px solid rgba(196,154,60,0.2)' }}>
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="divider-diamond my-8"><span>&#9670;</span></div>
@@ -849,6 +875,43 @@ export default function Home() {
                 </a>
               </div>
             ))}
+          </div>
+
+          {/* Feature comparison */}
+          <div className="mt-12 overflow-x-auto reveal">
+            <table className="w-full text-xs border-collapse" style={{ minWidth: '500px' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                  <th className="text-left py-3 pr-4 font-medium" style={{ color: 'var(--text-muted)' }}>What's Included</th>
+                  <th className="text-center py-3 px-2 font-medium" style={{ color: 'var(--text-muted)' }}>Standard</th>
+                  <th className="text-center py-3 px-2 font-bold" style={{ color: 'var(--accent)' }}>Premium</th>
+                  <th className="text-center py-3 px-2 font-medium" style={{ color: 'var(--text-muted)' }}>Retainer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['ITR preparation & e-filing', true, true, true],
+                  ['Residential status determination', true, true, true],
+                  ['Up to 3 income heads', true, true, true],
+                  ['Property sale dual CG computation', false, true, true],
+                  ['DTAA treaty benefit analysis', false, true, true],
+                  ['ESOP/RSU two-stage taxation', false, true, true],
+                  ['Section 54/54EC planning', false, true, true],
+                  ['Branded advisory memo', false, true, true],
+                  ['Dedicated advisor', false, true, true],
+                  ['Year-round tax planning', false, false, true],
+                  ['Quarterly portfolio reviews', false, false, true],
+                  ['Priority response (4 hours)', false, false, true],
+                ].map(([feature, std, prem, ret], i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td className="py-2.5 pr-4" style={{ color: 'var(--text-secondary)' }}>{feature}</td>
+                    <td className="text-center py-2.5">{std ? <span style={{ color: 'var(--green)' }}>&#10003;</span> : <span style={{ color: 'var(--text-muted)', opacity: 0.3 }}>&mdash;</span>}</td>
+                    <td className="text-center py-2.5 font-medium">{prem ? <span style={{ color: 'var(--accent)' }}>&#10003;</span> : <span style={{ color: 'var(--text-muted)', opacity: 0.3 }}>&mdash;</span>}</td>
+                    <td className="text-center py-2.5">{ret ? <span style={{ color: 'var(--green)' }}>&#10003;</span> : <span style={{ color: 'var(--text-muted)', opacity: 0.3 }}>&mdash;</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           {/* "Which plan" link */}

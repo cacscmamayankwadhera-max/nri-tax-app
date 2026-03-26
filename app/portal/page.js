@@ -695,6 +695,34 @@ function ClientPortal() {
           </div>
         )}
 
+        {/* Pending Actions — what the team needs from the client */}
+        {caseData?.status === 'review' || caseData?.status === 'findings_ready' ? (
+          <div className="card-theme p-5 mb-6" style={{ borderLeft: '4px solid var(--amber)' }}>
+            <h3 className="font-serif text-base font-bold mb-3" style={{ color: 'var(--amber)' }}>Action Needed From You</h3>
+            <div className="space-y-2 text-sm">
+              {!caseData?.intake_data?.pan && (
+                <div className="flex items-start gap-2">
+                  <span style={{ color: 'var(--amber)' }}>{'\u25CB'}</span>
+                  <span className="text-theme-secondary">Share your PAN number with our team</span>
+                </div>
+              )}
+              <div className="flex items-start gap-2">
+                <span style={{ color: 'var(--amber)' }}>{'\u25CB'}</span>
+                <span className="text-theme-secondary">Upload Form 16 (if salaried in India) — share via WhatsApp</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span style={{ color: 'var(--amber)' }}>{'\u25CB'}</span>
+                <span className="text-theme-secondary">Download AIS from incometax.gov.in and share with us</span>
+              </div>
+            </div>
+            <a href="https://wa.me/919667744073?text=Hi%2C%20I%20have%20documents%20to%20share%20for%20my%20NRI%20tax%20case"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-block mt-3 text-xs px-4 py-2 rounded-lg font-bold" style={{ background: '#25D366', color: '#fff' }}>
+              Share Documents via WhatsApp
+            </a>
+          </div>
+        ) : null}
+
         {/* While You Wait — Suggested Reading */}
         <div className="card-theme p-5 mb-6 animate-fade-in-up" style={{ animationDelay: '280ms' }}>
           <h3 className="font-serif text-base font-bold text-theme mb-3">While You Wait — Learn More</h3>

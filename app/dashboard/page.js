@@ -331,6 +331,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [casesLoading, setCasesLoading] = useState(true);
   const [sidebarTab, setSidebarTab] = useState('modules');
   const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
@@ -395,6 +397,10 @@ export default function Dashboard() {
           const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
           if (data) setCases(data.map(c => ({ ...c, status: c.status || 'intake', name: c.client_name, formData: c.intake_data, modulesDone: c.modules_completed })));
         } catch (e2) { /* Supabase not configured */ }
+      }
+      setCasesLoading(false);
+      if (!localStorage.getItem('nri-dashboard-toured')) {
+        setShowWelcome(true);
       }
     }
     loadCases();
@@ -532,6 +538,24 @@ export default function Dashboard() {
   /* ═══ RENDER: HOME ═══ */
   if (view === 'home') return (
     <div className="min-h-screen bg-theme animate-fade-in">
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="card-premium p-8 max-w-md text-center animate-scale-in">
+            <div className="text-4xl mb-4">{'\uD83D\uDC4B'}</div>
+            <h2 className="font-serif text-2xl mb-3 text-theme">Welcome to NRI Tax Suite</h2>
+            <div className="text-sm text-theme-secondary space-y-3 text-left mb-6">
+              <p><strong style={{ color: 'var(--accent)' }}>1. Cases appear here</strong> — from client intake or created by your team</p>
+              <p><strong style={{ color: 'var(--accent)' }}>2. Open a case</strong> — run AI modules, review outputs, generate deliverables</p>
+              <p><strong style={{ color: 'var(--accent)' }}>3. Update status</strong> — client gets notified automatically via WhatsApp/email</p>
+              <p><strong style={{ color: 'var(--accent)' }}>4. Enrich with PAN</strong> — auto-verify client details from the sidebar</p>
+            </div>
+            <button onClick={() => { setShowWelcome(false); localStorage.setItem('nri-dashboard-toured', 'true'); }}
+              className="btn-premium">
+              Get Started &rarr;
+            </button>
+          </div>
+        </div>
+      )}
       <nav className="bg-theme-nav px-6 h-12 flex items-center justify-between">
         <span className="font-serif text-theme-accent font-bold tracking-wide text-sm">NRI TAX SUITE</span>
         <div className="flex items-center gap-3">
@@ -609,7 +633,21 @@ export default function Dashboard() {
           </div>
         )}
 
-        {cases.length === 0 ? (
+        {casesLoading && (
+          <div className="space-y-3">
+            {[1,2,3].map(i => (
+              <div key={i} className="rounded-xl p-4" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                <div className="flex items-center gap-3">
+                  <div className="skeleton-gold w-32 h-4" />
+                  <div className="skeleton-gold w-20 h-4 ml-auto" />
+                </div>
+                <div className="skeleton-gold w-48 h-3 mt-2" />
+                <div className="skeleton-gold w-full h-2 mt-3 rounded-full" />
+              </div>
+            ))}
+          </div>
+        )}
+        {!casesLoading && cases.length === 0 ? (
           <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="text-5xl mb-4 opacity-30">📋</div>
             <h3 className="font-serif text-xl mb-2 text-theme">No cases yet</h3>
@@ -621,7 +659,7 @@ export default function Dashboard() {
               + Create First Case
             </button>
           </div>
-        ) : filteredCases.length === 0 ? (
+        ) : !casesLoading && filteredCases.length === 0 ? (
           <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="text-5xl mb-4 opacity-30">📋</div>
             <h3 className="font-serif text-xl mb-2 text-theme">No cases yet</h3>
@@ -635,7 +673,7 @@ export default function Dashboard() {
               + Create First Case
             </button>
           </div>
-        ) : (
+        ) : !casesLoading ? (
           <div className="stagger-children">
             {filteredCases.map(c => (
               <div key={c.id || c.dbId} onClick={async ()=>{setAc(c);setF(c.formData||c.intake_data||{});setFy(c.fy);setOuts({intake:'auto'});setView('case');setDv(null);
@@ -685,7 +723,7 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
       {toast && (
         <div className="fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate-fade-in-up"

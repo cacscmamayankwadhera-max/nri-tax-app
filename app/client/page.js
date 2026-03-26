@@ -8,6 +8,16 @@ import Footer from '@/app/components/Footer';
 
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
 
+const FX_RATES = {
+  'United Kingdom': { symbol: '\u00A3', rate: 0.0094 },
+  'United States': { symbol: '$', rate: 0.012 },
+  'UAE': { symbol: 'AED', rate: 0.044 },
+  'Singapore': { symbol: 'S$', rate: 0.016 },
+  'Canada': { symbol: 'C$', rate: 0.016 },
+  'Australia': { symbol: 'A$', rate: 0.018 },
+  'Germany': { symbol: '\u20AC', rate: 0.011 },
+};
+
 const COUNTRY_INSIGHTS = {
   'United Kingdom': [
     'DTAA rate: 15% on interest (vs 30% default) -- you may be overpaying TDS',
@@ -521,7 +531,7 @@ export default function ClientIntake() {
 
       <NavBar />
 
-      <div className="max-w-2xl mx-auto py-8 px-5 md:px-6 page-enter">
+      <div id="main-content" className="max-w-2xl mx-auto py-8 px-5 md:px-6 page-enter">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6 animate-fade-in">
           <button
@@ -738,6 +748,11 @@ export default function ClientIntake() {
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Live Tax Preview</p>
                     <div className="text-2xl font-serif font-bold text-gradient-gold">
                       You could save {formatINR(cgData.savings)}
+                      {f.country && FX_RATES[f.country] && (
+                        <span className="text-xs text-theme-muted ml-2">
+                          (~{FX_RATES[f.country].symbol}{Math.round(cgData.savings * FX_RATES[f.country].rate).toLocaleString()})
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-theme-secondary mt-2">
                       Without expert filing: {formatINR(cgData.optionA.total)} tax.

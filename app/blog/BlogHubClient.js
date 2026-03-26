@@ -170,7 +170,7 @@ export default function BlogHubClient({ blogs }) {
       <NavBar />
 
       {/* ══ HERO ══ */}
-      <section className="relative overflow-hidden">
+      <section id="main-content" className="relative overflow-hidden">
         {isDark && <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.08) 0%, transparent 70%)' }} />}
         <div className="max-w-6xl mx-auto px-6 md:px-12 pt-16 pb-10 relative z-10">
           <div className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-6" style={{ background: 'var(--bg-badge)', color: 'var(--text-badge)' }}>
