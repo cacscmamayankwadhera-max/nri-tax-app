@@ -814,6 +814,23 @@ export default function Dashboard() {
                   <Inp l="Pre-2001?"><Sel v={f.preApril2001} ch={v=>u('preApril2001',v)} o={['No','Yes — FMV as cost']} /></Inp>
                   <Inp l="Co-owner" v={f.coOwnerName} ch={v=>u('coOwnerName',v)} ph="If joint" />
                   <Inp l="Co-owner PAN" v={f.coOwnerPAN} ch={v=>u('coOwnerPAN',v.toUpperCase())} ph="FGHIJ5678K" />
+                  {f.cgProperty && (
+                    <div className="col-span-2 mt-2">
+                      <div className="text-[10px] font-semibold text-theme-muted uppercase tracking-wide mb-1">Repatriation Compliance</div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Inp l="Repatriation needed?"><Sel v={String(f.repatriationNeeded||'')} ch={v=>u('repatriationNeeded',v==='true')} o={[{v:'true',l:'Yes — need to remit'},{v:'false',l:'No'}]} ph="Remit funds abroad?" /></Inp>
+                        {(f.repatriationNeeded === true || f.repatriationNeeded === 'true') && <>
+                          <Inp l="Form 15CB (CA cert)"><Sel v={f.form15CBStatus} ch={v=>u('form15CBStatus',v)} o={['Obtained','In progress','Not started']} ph="Form 15CB" /></Inp>
+                          <Inp l="Form 15CA (portal)"><Sel v={f.form15CAStatus} ch={v=>u('form15CAStatus',v)} o={['Filed','Not yet filed']} ph="Form 15CA" /></Inp>
+                        </>}
+                      </div>
+                      {(f.repatriationNeeded === true || f.repatriationNeeded === 'true') && (f.form15CAStatus === 'Not yet filed' || !f.form15CAStatus) && (
+                        <div className="mt-1 p-2 rounded text-[10px] font-semibold" style={{background:'color-mix(in srgb, var(--red) 10%, transparent)', color:'var(--red)'}}>
+                          ⚠ Bank will NOT process remittance without Form 15CA/15CB. Get Form 15CB from CA first, then file Form 15CA online.
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>}
                 <div><Inp l="PAN" v={f.pan} ch={v=>u('pan',v.toUpperCase())} ph="ABCDE1234F" />{validationErrors.pan && <p className="text-[10px] mt-0.5" style={{color:'var(--red)'}}>{validationErrors.pan}</p>}</div>
                 <Inp l="DOB" v={f.dob} ch={v=>u('dob',v)} type="date" />
