@@ -25,6 +25,7 @@ import {
   computeSection234C,
   computeDividendTax,
   formatINR,
+  computeHRAExemption,
 } from '../lib/compute.js';
 
 // ──────────────────────────────────────────────
@@ -1009,5 +1010,61 @@ describe('CII Table', () => {
     expect(keys.length).toBe(25);
     expect(keys[0]).toBe('2001-02');
     expect(keys[keys.length - 1]).toBe('2025-26');
+  });
+});
+
+// ════════════════════════════════════════════════
+// 28. computeHRAExemption — Section 10(13A)
+// ════════════════════════════════════════════════
+describe('computeHRAExemption', () => {
+  // Metro case:
+  // Basic 720000, HRA 240000, Rent 180000, metro=true
+  // Rule1 = 240000 (actual HRA received)
+  // Rule2 = 360000 (50% of basic for metro)
+  // Rule3 = 180000 - 72000 = 108000 (rent paid - 10% of basic)
+  // exempt = min(240000, 360000, 108000) = 108000
+  // taxable = 240000 - 108000 = 132000
+  it('computes metro HRA exemption correctly', () => {
+    const r = computeHRAExemption(720000, 240000, 180000, true);
+    expect(r.rule1).toBe(240000);
+    expect(r.rule2).toBe(360000);
+    expect(r.rule3).toBe(108000);
+    expect(r.exempt).toBe(108000);
+    expect(r.taxable).toBe(132000);
+    expect(r.isMetro).toBe(true);
+  });
+
+  // Non-metro case:
+  // Basic 600000, HRA 180000, Rent 120000, metro=false
+  // Rule1 = 180000
+  // Rule2 = 240000 (40% of basic for non-metro)
+  // Rule3 = 120000 - 60000 = 60000 (rent paid - 10% of basic)
+  // exempt = min(180000, 240000, 60000) = 60000
+  it('computes non-metro HRA exemption correctly', () => {
+    const r = computeHRAExemption(600000, 180000, 120000, false);
+    expect(r.rule2).toBe(240000);
+    expect(r.rule3).toBe(60000);
+    expect(r.exempt).toBe(60000);
+    expect(r.isMetro).toBe(false);
+  });
+
+  // No rent paid → exempt = 0
+  it('returns exempt=0 when no rent is paid', () => {
+    const r = computeHRAExemption(600000, 180000, 0, true);
+    expect(r.exempt).toBe(0);
+    expect(r.taxable).toBe(180000);
+  });
+
+  // No HRA received → exempt = 0
+  it('returns exempt=0 and taxable=0 when hraReceived <= 0', () => {
+    const r = computeHRAExemption(600000, 0, 120000, true);
+    expect(r.exempt).toBe(0);
+    expect(r.taxable).toBe(0);
+  });
+
+  it('identifies the applied (minimum) rule', () => {
+    const r = computeHRAExemption(720000, 240000, 180000, true);
+    // rule3=108000 is the minimum
+    expect(r.appliedRule).toBe('rule3');
   });
 });

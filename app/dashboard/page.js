@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
-import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatINR, classifyCase, FY_CONFIG, CII } from '@/lib/compute';
+import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatINR, classifyCase, FY_CONFIG, CII, computeHRAExemption } from '@/lib/compute';
 
 /* ═══ CONSTANTS ═══ */
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
@@ -846,7 +846,16 @@ export default function Dashboard() {
               </div>}
             </div>}
             {(f.salary||f.cgESOPRSU||f.rent) && <div className="card-theme p-5 mb-3">
-              {f.salary && <Inp l="Salary ₹/yr" v={f.salaryAmount} ch={v=>u('salaryAmount',parseInt(v)||0)} ph="1200000" type="number" tip="From Form 16" />}
+              {f.salary && <>
+                <Inp l="Gross Salary ₹/yr" v={f.salaryAmount} ch={v=>u('salaryAmount',parseInt(v)||0)} ph="1200000" type="number" tip="Total from Form 16 Part B" />
+                <div className="mt-2 text-[10px] font-semibold text-theme-muted uppercase tracking-wide">Salary Components (for HRA Exemption)</div>
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  <Inp l="Basic Salary ₹/yr" v={f.basicSalary} ch={v=>u('basicSalary',parseInt(v)||0)} ph="720000" type="number" />
+                  <Inp l="HRA Received ₹/yr" v={f.hraReceived} ch={v=>u('hraReceived',parseInt(v)||0)} ph="240000" type="number" />
+                  <Inp l="Annual Rent Paid ₹" v={f.annualRentPaid} ch={v=>u('annualRentPaid',parseInt(v)||0)} ph="180000" type="number" />
+                  <Inp l="City Type"><Sel v={String(f.isMetroCity||'')} ch={v=>u('isMetroCity',v==='true')} o={[{v:'true',l:'Metro (50%)'},{v:'false',l:'Non-Metro (40%)'}]} /></Inp>
+                </div>
+              </>}
               {f.cgESOPRSU && <div className="grid grid-cols-2 gap-3 mt-2">
                 <Inp l="Employer" v={f.esopEmployer} ch={v=>u('esopEmployer',v)} ph="Company name" />
                 <Inp l="Listed?"><Sel v={f.esopListed} ch={v=>u('esopListed',v)} o={['Listed India','Listed abroad','Unlisted']} /></Inp>
