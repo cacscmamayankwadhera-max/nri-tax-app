@@ -884,6 +884,17 @@ export default function Dashboard() {
                 <Chk l="Tax paid abroad" c={f.foreignTaxPaid} ch={v=>u('foreignTaxPaid',v)} />
               </div>
               {f.foreignSalary && <div className="mt-2"><Inp l="Details" v={f.foreignDetails} ch={v=>u('foreignDetails',v)} ph="UK GBP 72K" wide /></div>}
+              {f.foreignTaxPaid && (
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <Inp l="Form 67 Status"><Sel v={f.form67Status} ch={v=>u('form67Status',v)} o={['Filed before ITR','Will file with ITR','Not filed yet','Not applicable']} ph="Form 67 status" /></Inp>
+                  <Inp l="TRC obtained?"><Sel v={f.trcObtained} ch={v=>u('trcObtained',v)} o={['Yes','No','In progress']} ph="Tax Residency Certificate" /></Inp>
+                </div>
+              )}
+              {f.foreignTaxPaid && f.form67Status === 'Not filed yet' && (
+                <div className="mt-2 p-2 rounded text-[10px] font-semibold" style={{background:'color-mix(in srgb, var(--red) 12%, transparent)', color:'var(--red)', border:'1px solid color-mix(in srgb, var(--red) 30%, transparent)'}}>
+                  ⚠ COMPLIANCE RISK: Form 67 must be filed BEFORE or WITH the ITR. Non-filing = FTC claim denied.
+                </div>
+              )}
             </div>
             <div className="flex gap-2 mt-3">
               <button onClick={()=>setStep(1)} className="flex-1 btn-secondary">← Back</button>
