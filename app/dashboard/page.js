@@ -947,6 +947,25 @@ export default function Dashboard() {
                 <span className="font-bold text-sm px-4 py-1 rounded-full" style={{background:CLS_COLORS[classifyCase(f)]+'20',color:CLS_COLORS[classifyCase(f)]}}>{classifyCase(f)}</span>
               </div>
             </div>
+            {(() => {
+              const residency = parseInt(f.stayDays) >= 182 ? 'Resident' : 'NR';
+              const flags = computeComplianceFlags({ ...f, totalIncome: f.totalIncomeEstimate || 0 }, residency);
+              const activeFlags = [
+                flags.scheduleALRequired && 'Schedule AL required (income >₹50L)',
+                flags.scheduleFARequired && 'Schedule FA required (RNOR/Resident with foreign assets)',
+                flags.form15CARequired && 'Form 15CA/15CB required before remittance',
+                flags.cgasRequired && 'CGAS deposit required (Section 54 pending)',
+              ].filter(Boolean);
+              if (!activeFlags.length) return null;
+              return (
+                <div className="rounded-lg p-3 mb-3" style={{background:'color-mix(in srgb, var(--amber) 10%, var(--bg-card))', border:'1px solid color-mix(in srgb, var(--amber) 30%, transparent)'}}>
+                  <div className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{color:'var(--amber)'}}>Compliance Flags</div>
+                  {activeFlags.map((flag, i) => (
+                    <div key={i} className="text-[10px] text-theme-secondary flex gap-1"><span style={{color:'var(--amber)'}}>⚠</span> {flag}</div>
+                  ))}
+                </div>
+              );
+            })()}
             {cgData && <div className="rounded-lg p-3 mb-3" style={{ background:'color-mix(in srgb, var(--green) 10%, transparent)', border:'1px solid color-mix(in srgb, var(--green) 30%, transparent)' }}>
               <div className="text-xs font-bold" style={{ color:'var(--green)' }}>CG Preview: Option {cgData.better} saves {formatINR(cgData.savings)}</div>
               <div className="text-[10px]" style={{ color:'var(--green)', opacity:0.8 }}>A: {formatINR(cgData.optionA.total)} · B: {formatINR(cgData.optionB.total)}</div>
