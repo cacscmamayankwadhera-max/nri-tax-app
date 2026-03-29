@@ -26,6 +26,8 @@ import {
   computeDividendTax,
   formatINR,
   computeHRAExemption,
+  validateIntakeForm,
+  computeComplianceFlags,
 } from '../lib/compute.js';
 
 // ──────────────────────────────────────────────
@@ -1093,5 +1095,43 @@ describe('computeHRAExemption', () => {
     }, '2025-26');
     const salaryHead = result.heads.find(h => h.head === 'Salary');
     expect(salaryHead.amount).toBe(1200000);
+  });
+});
+
+// ════════════════════════════════════════════════
+// 29. validateIntakeForm
+// ════════════════════════════════════════════════
+describe('validateIntakeForm', () => {
+  it('accepts valid PAN', () => { expect(validateIntakeForm({ pan: 'ABCDE1234F' }).pan).toBeUndefined(); });
+  it('rejects invalid PAN format', () => { expect(validateIntakeForm({ pan: 'abc12345' }).pan).toMatch(/PAN/); });
+  it('accepts valid 12-digit Aadhaar', () => { expect(validateIntakeForm({ aadhaar: '123456789012' }).aadhaar).toBeUndefined(); });
+  it('rejects short Aadhaar', () => { expect(validateIntakeForm({ aadhaar: '12345' }).aadhaar).toMatch(/12 digits/); });
+  it('accepts valid stay days', () => { expect(validateIntakeForm({ stayDays: 300 }).stayDays).toBeUndefined(); });
+  it('rejects stay days > 365', () => { expect(validateIntakeForm({ stayDays: 400 }).stayDays).toMatch(/365/); });
+  it('flags acqFY after saleFY', () => { expect(validateIntakeForm({ propertyAcqFY: '2025-26', saleFY: '2020-21' }).acqFY).toMatch(/before|after/i); });
+  it('accepts valid FY order', () => { expect(validateIntakeForm({ propertyAcqFY: '2020-21', saleFY: '2025-26' }).acqFY).toBeUndefined(); });
+});
+
+// ════════════════════════════════════════════════
+// 30. computeComplianceFlags
+// ════════════════════════════════════════════════
+describe('computeComplianceFlags', () => {
+  it('flags Schedule AL when total income > 50L', () => {
+    expect(computeComplianceFlags({ totalIncome: 6000000 }, 'NR').scheduleALRequired).toBe(true);
+  });
+  it('does not flag Schedule AL when income <= 50L', () => {
+    expect(computeComplianceFlags({ totalIncome: 4000000 }, 'NR').scheduleALRequired).toBe(false);
+  });
+  it('flags Schedule FA for RNOR', () => {
+    expect(computeComplianceFlags({ totalIncome: 0 }, 'RNOR').scheduleFARequired).toBe(true);
+  });
+  it('does not flag Schedule FA for NR', () => {
+    expect(computeComplianceFlags({ totalIncome: 0 }, 'NR').scheduleFARequired).toBe(false);
+  });
+  it('flags Form 15CA when propertySale with repatriation', () => {
+    expect(computeComplianceFlags({ propertySale: true, repatriationNeeded: true, totalIncome: 0 }, 'NR').form15CARequired).toBe(true);
+  });
+  it('flags CGAS when section54 is Planning', () => {
+    expect(computeComplianceFlags({ section54: 'Planning to buy', totalIncome: 0 }, 'NR').cgasRequired).toBe(true);
   });
 });

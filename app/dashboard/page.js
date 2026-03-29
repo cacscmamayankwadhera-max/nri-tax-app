@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/app/theme-provider';
 import { createClient } from '@/lib/supabase-browser';
-import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatINR, classifyCase, FY_CONFIG, CII, computeHRAExemption } from '@/lib/compute';
+import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatINR, classifyCase, FY_CONFIG, CII, computeHRAExemption, validateIntakeForm, computeComplianceFlags } from '@/lib/compute';
 
 /* ═══ CONSTANTS ═══ */
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
@@ -380,6 +380,7 @@ export default function Dashboard() {
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
   const cfg = FY_CONFIG[fy];
   const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(f.salePrice, f.purchaseCost, f.propertyAcqFY || '2020-21', fy) : null;
+  const validationErrors = useMemo(() => validateIntakeForm(f), [f]);
 
   // ── Load cases via API (bypasses RLS — team sees ALL cases including public intake) ──
   useEffect(() => {
@@ -793,7 +794,7 @@ export default function Dashboard() {
           {step===1 && <div className="animate-fade-in-up">
             <div className="card-theme p-5">
               <div className="grid grid-cols-2 gap-3">
-                <Inp l="Stay days" v={f.stayDays} ch={v=>u('stayDays',v)} ph="38" tip="Approximate OK" />
+                <div><Inp l="Stay days" v={f.stayDays} ch={v=>u('stayDays',v)} ph="38" tip="Approximate OK" />{validationErrors.stayDays && <p className="text-[10px] mt-0.5" style={{color:'var(--red)'}}>{validationErrors.stayDays}</p>}</div>
                 <Inp l="Source"><Sel v={f.staySource} ch={v=>u('staySource',v)} o={['Estimate','Passport','Travel summary']} /></Inp>
                 <Inp l="Family in India?"><Sel v={f.familyInIndia} ch={v=>u('familyInIndia',v)} o={['Yes','No','Partly']} /></Inp>
                 <Inp l="Property sold?"><Sel v={f.propertySale?'Yes':'No'} ch={v=>{u('propertySale',v==='Yes');u('cgProperty',v==='Yes');}} o={['No','Yes']} /></Inp>
@@ -814,9 +815,9 @@ export default function Dashboard() {
                   <Inp l="Co-owner" v={f.coOwnerName} ch={v=>u('coOwnerName',v)} ph="If joint" />
                   <Inp l="Co-owner PAN" v={f.coOwnerPAN} ch={v=>u('coOwnerPAN',v.toUpperCase())} ph="FGHIJ5678K" />
                 </>}
-                <Inp l="PAN" v={f.pan} ch={v=>u('pan',v.toUpperCase())} ph="ABCDE1234F" />
+                <div><Inp l="PAN" v={f.pan} ch={v=>u('pan',v.toUpperCase())} ph="ABCDE1234F" />{validationErrors.pan && <p className="text-[10px] mt-0.5" style={{color:'var(--red)'}}>{validationErrors.pan}</p>}</div>
                 <Inp l="DOB" v={f.dob} ch={v=>u('dob',v)} type="date" />
-                <Inp l="Aadhaar" v={f.aadhaar} ch={v=>u('aadhaar',v)} ph="1234 5678 9012" />
+                <div><Inp l="Aadhaar" v={f.aadhaar} ch={v=>u('aadhaar',v)} ph="1234 5678 9012" />{validationErrors.aadhaar && <p className="text-[10px] mt-0.5" style={{color:'var(--red)'}}>{validationErrors.aadhaar}</p>}</div>
                 <Inp l="Stay 4yr (days)" v={f.stayDays4yr} ch={v=>u('stayDays4yr',parseInt(v)||0)} ph="300" type="number" tip="Preceding 4 years total" />
                 <Inp l="Stay 7yr (days)" v={f.stayDays7yr} ch={v=>u('stayDays7yr',parseInt(v)||0)} ph="500" type="number" tip="Preceding 7 years total" />
               </div>
