@@ -900,7 +900,13 @@ export default function Dashboard() {
                 <Inp l="Notices"><Sel v={f.priorNotices} ch={v=>u('priorNotices',v)} o={['None','Yes']} /></Inp>
                 <Inp l="Service"><Sel v={f.serviceNeed} ch={v=>u('serviceNeed',v)} o={['Filing only','Filing+Advisory','Advisory+Planning']} /></Inp>
                 <Inp l="Regime"><Sel v={f.taxRegime} ch={v=>u('taxRegime',v)} o={['New (default)','Old','Help decide']} /></Inp>
+                <Inp l="Prior Year Regime"><Sel v={f.priorYearRegime} ch={v=>u('priorYearRegime',v)} o={['New','Old','Unknown — check portal']} ph="FY 2024-25 regime" /></Inp>
               </div>
+              {f.priorYearRegime === 'Old' && (f.taxRegime || '').includes('New') && (
+                <div className="col-span-2 mt-1 p-2 rounded text-[10px] font-semibold" style={{background:'color-mix(in srgb, var(--amber) 12%, transparent)', color:'var(--amber)', border:'1px solid color-mix(in srgb, var(--amber) 30%, transparent)'}}>
+                  ⚠ Regime switch: Old→New. Verify CG loss carry-forwards. Business income cases generally cannot switch freely.
+                </div>
+              )}
               <div className="mt-3"><Inp l="Notes" wide><textarea value={f.notes||''} onChange={e=>u('notes',e.target.value)} rows={2} className="input-theme" style={{ resize:'vertical' }} /></Inp></div>
             </div>
             <div className="card-theme p-5 mb-3 mt-3">
