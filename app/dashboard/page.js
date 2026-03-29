@@ -805,6 +805,17 @@ export default function Dashboard() {
                   <Inp l="Purchase cost ₹" v={f.purchaseCost} ch={v=>u('purchaseCost',parseInt(v)||0)} ph="2200000" type="number" />
                   <Inp l="Location" v={f.propertyLocation} ch={v=>u('propertyLocation',v)} ph="Nashik" />
                   <Inp l="Section 54" wide tip="New house? Bonds?"><Sel v={f.section54} ch={v=>u('section54',v)} o={['Not discussed','House purchased','Planning purchase','Considering 54EC','Not applicable']} /></Inp>
+                  {(f.section54||'').toLowerCase().includes('bond') && (
+                    <div className="col-span-2 grid grid-cols-2 gap-2 mt-1">
+                      <Inp l="54EC Investment Date" v={f.sec54ecInvestDate} ch={v=>u('sec54ecInvestDate',v)} type="date" tip="Within 6 months of sale" />
+                      <Inp l="54EC Amount ₹" v={f.sec54ecInvestAmount} ch={v=>u('sec54ecInvestAmount',parseInt(v)||0)} ph="5000000" type="number" tip="Max ₹50L" />
+                    </div>
+                  )}
+                  {['Planning to buy','Considering'].some(s=>(f.section54||'').startsWith(s)) && (
+                    <div className="col-span-2 mt-1 p-2 rounded text-[10px]" style={{background:'color-mix(in srgb, var(--amber) 10%, transparent)', color:'var(--amber)'}}>
+                      📌 If new house not purchased before ITR filing date, deposit capital gains in CGAS with a public sector bank.
+                    </div>
+                  )}
                   <Inp l="Property type"><Sel v={f.propertyType} ch={v=>u('propertyType',v)} o={['Residential Flat','Residential Plot','Commercial','Agricultural (Urban)','Agricultural (Rural)']} /></Inp>
                   <Inp l="Stamp duty ₹" v={f.stampDutyValue} ch={v=>u('stampDutyValue',parseInt(v)||0)} ph="7000000" type="number" tip="Circle rate" />
                   <Inp l="Registration ₹" v={f.registrationExpenses} ch={v=>u('registrationExpenses',parseInt(v)||0)} ph="350000" type="number" />
