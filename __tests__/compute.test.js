@@ -1067,4 +1067,31 @@ describe('computeHRAExemption', () => {
     // rule3=108000 is the minimum
     expect(r.appliedRule).toBe('rule3');
   });
+
+  it('returns appliedRule=null when no rent paid (not misleadingly rule3)', () => {
+    const r = computeHRAExemption(600000, 180000, 0, true);
+    expect(r.appliedRule).toBeNull();
+  });
+
+  it('integration: computeTotalIncome deducts HRA exempt from salary under Old Regime', () => {
+    // Basic 720000, HRA 240000, Rent 180000 metro → exempt 108000
+    // Gross salary 1200000, taxable salary = 1200000 - 108000 = 1092000
+    const result = computeTotalIncome({
+      salary: true, salaryAmount: 1200000,
+      basicSalary: 720000, hraReceived: 240000, annualRentPaid: 180000, isMetroCity: true,
+      taxRegime: 'Old',
+    }, '2025-26');
+    const salaryHead = result.heads.find(h => h.head === 'Salary');
+    expect(salaryHead.amount).toBe(1092000);
+  });
+
+  it('integration: computeTotalIncome does NOT deduct HRA under New Regime', () => {
+    const result = computeTotalIncome({
+      salary: true, salaryAmount: 1200000,
+      basicSalary: 720000, hraReceived: 240000, annualRentPaid: 180000, isMetroCity: true,
+      taxRegime: 'New (default)',
+    }, '2025-26');
+    const salaryHead = result.heads.find(h => h.head === 'Salary');
+    expect(salaryHead.amount).toBe(1200000);
+  });
 });

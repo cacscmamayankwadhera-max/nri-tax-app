@@ -334,7 +334,6 @@ export default function Dashboard() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [casesLoading, setCasesLoading] = useState(true);
   const [sidebarTab, setSidebarTab] = useState('modules');
-  const { theme, toggleTheme } = useTheme();
   const printRef = useRef(null);
   const supabase = useMemo(() => createClient(), []);
 
@@ -441,8 +440,8 @@ export default function Dashboard() {
   async function saveModuleOutput(caseId, moduleId, output) {
     if (!caseId) return;
     try {
-      await supabase.from('module_outputs').upsert({ case_id: caseId, module_id: moduleId, output_text: output });
-      await supabase.from('cases').update({ modules_completed: Object.keys(outs).length + 1 }).eq('id', caseId);
+      supabase.from('module_outputs').upsert({ case_id: caseId, module_id: moduleId, output_text: output });
+      supabase.from('cases').update({ modules_completed: Object.keys(outs).length + 1 }).eq('id', caseId);
     } catch (e) { /* continue */ }
   }
 
@@ -855,6 +854,18 @@ export default function Dashboard() {
                   <Inp l="Annual Rent Paid ₹" v={f.annualRentPaid} ch={v=>u('annualRentPaid',parseInt(v)||0)} ph="180000" type="number" />
                   <Inp l="City Type"><Sel v={String(f.isMetroCity||'')} ch={v=>u('isMetroCity',v==='true')} o={[{v:'true',l:'Metro (50%)'},{v:'false',l:'Non-Metro (40%)'}]} /></Inp>
                 </div>
+                {f.basicSalary > 0 && f.hraReceived > 0 && (() => {
+                  const hra = computeHRAExemption(f.basicSalary, f.hraReceived, f.annualRentPaid||0, f.isMetroCity||false);
+                  return hra.exempt > 0 ? (
+                    <div className="mt-2 p-2 rounded text-[10px]" style={{background:'color-mix(in srgb, var(--green) 8%, transparent)', color:'var(--green)'}}>
+                      HRA exempt: {formatINR(hra.exempt)} | Taxable HRA: {formatINR(hra.taxable)}
+                    </div>
+                  ) : (
+                    <div className="mt-2 p-2 rounded text-[10px]" style={{background:'color-mix(in srgb, var(--amber) 8%, transparent)', color:'var(--amber)'}}>
+                      HRA fully taxable — enter annual rent paid to compute exemption
+                    </div>
+                  );
+                })()}
               </>}
               {f.cgESOPRSU && <div className="grid grid-cols-2 gap-3 mt-2">
                 <Inp l="Employer" v={f.esopEmployer} ch={v=>u('esopEmployer',v)} ph="Company name" />
@@ -1001,7 +1012,7 @@ export default function Dashboard() {
                 setAc(prev => ({...prev, status: newStatus}));
                 if (ac?.dbId) {
                   try {
-                    await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                    supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
                     fetch('/api/notify', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
