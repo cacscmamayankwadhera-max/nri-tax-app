@@ -957,6 +957,9 @@ export default function Dashboard() {
                 <Inp l="80D parents ₹" v={f.healthInsuranceParents} ch={v=>u('healthInsuranceParents',parseInt(v)||0)} ph="25000" type="number" />
                 <Inp l="NPS ₹" v={f.npsContribution} ch={v=>u('npsContribution',parseInt(v)||0)} ph="50000" type="number" />
                 <Inp l="Edu loan int ₹" v={f.educationLoanInterest} ch={v=>u('educationLoanInterest',parseInt(v)||0)} type="number" />
+                <Inp l="80DD (dependent disabled) ₹" v={f.section80DD} ch={v=>u('section80DD',parseInt(v)||0)} ph="75000" type="number" tip="₹75K or ₹1.25L severe" />
+                <Inp l="80U (self disability) ₹" v={f.section80U} ch={v=>u('section80U',parseInt(v)||0)} ph="75000" type="number" tip="₹75K or ₹1.25L severe" />
+                <Inp l="80EEB (EV loan int) ₹" v={f.section80EEB} ch={v=>u('section80EEB',parseInt(v)||0)} ph="0" type="number" tip="Max ₹1.5L — old regime only" />
                 <div className="col-span-2">
                   <div className="text-[10px] font-semibold text-theme-muted uppercase tracking-wide mb-1">Advance Tax Paid (Challan 280)</div>
                   <div className="grid grid-cols-2 gap-2">
