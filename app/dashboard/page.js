@@ -957,7 +957,15 @@ export default function Dashboard() {
                 <Inp l="80D parents ₹" v={f.healthInsuranceParents} ch={v=>u('healthInsuranceParents',parseInt(v)||0)} ph="25000" type="number" />
                 <Inp l="NPS ₹" v={f.npsContribution} ch={v=>u('npsContribution',parseInt(v)||0)} ph="50000" type="number" />
                 <Inp l="Edu loan int ₹" v={f.educationLoanInterest} ch={v=>u('educationLoanInterest',parseInt(v)||0)} type="number" />
-                <Inp l="Advance tax ₹" v={f.advanceTaxPaid} ch={v=>u('advanceTaxPaid',parseInt(v)||0)} type="number" tip="Challan 280" />
+                <div className="col-span-2">
+                  <div className="text-[10px] font-semibold text-theme-muted uppercase tracking-wide mb-1">Advance Tax Paid (Challan 280)</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Inp l="Q1 (by 15 Jun) ₹" v={f.advTaxQ1} ch={v=>u('advTaxQ1',parseInt(v)||0)} ph="0" type="number" />
+                    <Inp l="Q2 (by 15 Sep) ₹" v={f.advTaxQ2} ch={v=>u('advTaxQ2',parseInt(v)||0)} ph="0" type="number" />
+                    <Inp l="Q3 (by 15 Dec) ₹" v={f.advTaxQ3} ch={v=>u('advTaxQ3',parseInt(v)||0)} ph="0" type="number" />
+                    <Inp l="Q4 (by 15 Mar) ₹" v={f.advTaxQ4} ch={v=>u('advTaxQ4',parseInt(v)||0)} ph="0" type="number" />
+                  </div>
+                </div>
                 <Inp l="TCS on LRS ₹" v={f.tcsPaidLRS} ch={v=>u('tcsPaidLRS',parseInt(v)||0)} type="number" />
               </div>
             </div>

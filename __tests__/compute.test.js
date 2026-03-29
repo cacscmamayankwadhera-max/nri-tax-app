@@ -391,6 +391,17 @@ describe('computeAdvanceTax', () => {
     expect(r.schedule[3].date).toBe('15 March 2026');
     expect(r.ay).toBe('2026-27');
   });
+
+  it('computes per-quarter shortfall when paid is less than required', () => {
+    const r = computeAdvanceTax(1000000, 0, '2025-26', { q1Paid: 100000 });
+    expect(r.schedule[0].paid).toBe(100000);
+    expect(r.schedule[0].shortfall).toBe(50000); // needed 150000, paid 100000
+    expect(r.totalShortfall).toBe(900000); // balance 1000000 - totalPaid 100000
+  });
+  it('totalShortfall is 0 when fully paid', () => {
+    const r = computeAdvanceTax(1000000, 0, '2025-26', { q1Paid:150000, q2Paid:300000, q3Paid:300000, q4Paid:250000 });
+    expect(r.totalShortfall).toBe(0);
+  });
 });
 
 // ════════════════════════════════════════════════
