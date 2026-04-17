@@ -49,7 +49,7 @@ export async function POST(request) {
             This link expires in 1 hour.
           </p>
           <a href="${actionLink}"
-             style="display:inline-block;background:#C49A3C;color:#fff;text-decoration:none;
+             style="display:inline-block;background:#046BD2;color:#fff;text-decoration:none;
                     padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;">
             Reset Password
           </a>

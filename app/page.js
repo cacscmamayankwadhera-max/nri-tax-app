@@ -417,10 +417,10 @@ export default function Home() {
                 border: '1px solid rgba(4,107,210,0.25)',
               }}
             >
-              <CheckCircle size={18} style={{ color: '#C49A3C' }} />
+              <CheckCircle size={18} style={{ color: '#046BD2' }} />
               <span
                 className="text-sm font-semibold"
-                style={{ color: '#C49A3C' }}
+                style={{ color: '#046BD2' }}
               >
                 We fix all of this. Every single case.
               </span>
@@ -429,7 +429,7 @@ export default function Home() {
               <a
                 href="/client"
                 className="btn-premium inline-flex"
-                style={{ background: '#C49A3C', color: '#0f0f0f' }}
+                style={{ background: '#046BD2', color: '#0f0f0f' }}
               >
                 Get Your Free Diagnostic &rarr;
               </a>

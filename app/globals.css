@@ -70,14 +70,14 @@ html {
   --border: #24304a;
   --border-hover: #045CB4;
 
-  --stat-number: #D4AF37;
+  --stat-number: #045CB4;
   --green: #4ade80;
   --amber: #fbbf24;
   --red: #f87171;
 
   /* Premium palette extensions */
   --accent-secondary: #3D8A9C;
-  --accent-tertiary: #D4AF37;
+  --accent-tertiary: #045CB4;
   --bg-elevated: #1f2a3d;
   --bg-hero: linear-gradient(180deg, #0a0f1a 0%, #0d1420 100%);
   --text-display: #f5f1ea;

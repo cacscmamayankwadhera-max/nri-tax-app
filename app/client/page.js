@@ -1062,7 +1062,7 @@ export default function ClientIntake() {
               {/* Legal consent */}
               <label className="flex items-start gap-2.5 text-xs cursor-pointer mt-4">
                 <input type="checkbox" checked={!!f.consent} onChange={e => u('consent', e.target.checked)}
-                  className="accent-[#C49A3C] w-4 h-4 mt-0.5 flex-shrink-0" />
+                  className="accent-[#046BD2] w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span style={{ color: 'var(--text-secondary)' }}>
                   I understand this is an AI-assisted preliminary assessment, not professional tax advice.
                   Final computations will be reviewed by a qualified Chartered Accountant.
