@@ -1,0 +1,256 @@
+2026-03-24T01:42:33.707689 | NRI Shaala | xDI7UId2hbY | Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 953, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=xDI7UId2hbY (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 229, in process_video
+    text, lang, ttype = fetch_transcript(vid)
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 163, in fetch_transcript
+    transcript_list = ytt.list(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_api.py", line 127, in list
+    return self._fetcher.fetch(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 356, in fetch
+    self._fetch_captions_json(video_id),
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 361, in _fetch_captions_json
+    html = self._fetch_video_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 433, in _fetch_video_html
+    html = self._fetch_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 442, in _fetch_html
+    response = self._http_client.get(WATCH_URL.format(video_id=video_id))
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=xDI7UId2hbY (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+2026-03-24T01:42:36.779921 | NRI Money Clinic | MAwDKWe7vHc | Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 953, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=MAwDKWe7vHc (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 229, in process_video
+    text, lang, ttype = fetch_transcript(vid)
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 163, in fetch_transcript
+    transcript_list = ytt.list(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_api.py", line 127, in list
+    return self._fetcher.fetch(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 356, in fetch
+    self._fetch_captions_json(video_id),
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 361, in _fetch_captions_json
+    html = self._fetch_video_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 433, in _fetch_video_html
+    html = self._fetch_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 442, in _fetch_html
+    response = self._http_client.get(WATCH_URL.format(video_id=video_id))
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=MAwDKWe7vHc (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+2026-03-24T01:42:39.055788 | Enrichwise | lAN8agcsFBo | Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 953, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=lAN8agcsFBo (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 229, in process_video
+    text, lang, ttype = fetch_transcript(vid)
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 163, in fetch_transcript
+    transcript_list = ytt.list(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_api.py", line 127, in list
+    return self._fetcher.fetch(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 356, in fetch
+    self._fetch_captions_json(video_id),
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 361, in _fetch_captions_json
+    html = self._fetch_video_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 433, in _fetch_video_html
+    html = self._fetch_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 442, in _fetch_html
+    response = self._http_client.get(WATCH_URL.format(video_id=video_id))
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=lAN8agcsFBo (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+2026-03-24T01:42:41.219056 | CA Sumit Sharma | gOk4jjXl-V0 | Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 953, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=gOk4jjXl-V0 (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 229, in process_video
+    text, lang, ttype = fetch_transcript(vid)
+  File "/Users/rakeshanita/Downloads/nri-tax-suite/transcript-downloader/download_transcripts.py", line 163, in fetch_transcript
+    transcript_list = ytt.list(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_api.py", line 127, in list
+    return self._fetcher.fetch(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 356, in fetch
+    self._fetch_captions_json(video_id),
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 361, in _fetch_captions_json
+    html = self._fetch_video_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 433, in _fetch_video_html
+    html = self._fetch_html(video_id)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/youtube_transcript_api/_transcripts.py", line 442, in _fetch_html
+    response = self._http_client.get(WATCH_URL.format(video_id=video_id))
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/rakeshanita/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='www.youtube.com', port=443): Max retries exceeded with url: /watch?v=gOk4jjXl-V0 (Caused by NameResolutionError("HTTPSConnection(host='www.youtube.com', port=443): Failed to resolve 'www.youtube.com' ([Errno 8] nodename nor servname provided, or not known)"))
+

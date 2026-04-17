@@ -1,0 +1,77 @@
+INPUTS:-   1)  Under the start filling tab when we enter the details manually we need to place cursor to every time to enter the every single details . ( In the column it takes only one letter / word at one time , we need to place cursor every time to enter single thing again and again )  2) Which deduction can NRI can claim :- ( Page not found )
+
+
+
+ 
+
+
+3) Sub link are not opening .   4) When we track are case it shows no case found . 
+
+5) Status of Case not updating . 
+
+6) Case not updating in the team portal . 
+
+
+(CASE 1)  < Outcome highlighted in Yellow >
+
+Tester as Admin (login as admin):
+  1. /login → click ⚙️  gear icon → Admin panel :- ( Done working properly )
+
+  2. API Keys tab → see Anthropic (green), Supabase (green), others (gray):-  ( Done )  Only some API are configured
+   
+
+  3. Team tab → see all 6 members → try changing a role :- ( Done Working properly)
+
+  4. System tab → see health check, case count ( Done Working Properly) some API are not configured . 
+
+  5. Try "Invite Team Member" with a test email ( Done )    Mail not received in the inbox only available / added in the   
+  Team member list .  
+
+6)  Change passwords after testing. Use "Forgot password?" on /login. ( Done ) not able to reset the password , shows that email is invalid .  
+
+
+(Case 2)
+Tester as NRI Client (no login):
+
+  1. Go to /client → select UK → select "Sold property" → enter Sale ₹85L, Cost ₹35L, FY 2020-21
+   → see savings preview → enter name + real email + real phone → check consent → submit ( done) working properly
+
+  2. Copy tracking code → go to /portal → paste → verify with last 4 phone digits → see case
+  Progress ( done) working properly 
+
+  3. Go to /my-cases → enter same email → verify → see all cases (done) otp is not received on the registered mobile to check the case status 
+
+
+4) Test are not working properly in any steps .  
+
+(Case 3)
+
+Tester as Team Member (login as tester1):
+
+1). /login → see welcome tour → dismiss :- Done ( Working Properly)
+
+2) Dashboard → see the case submitted from client test above :- Done ( Working Properly ) 
+
+3) Search by client name → filter by status :- Done ( Working Properly)
+
+4) Open case → Modules tab → click "Residency" → Run → see AI output
+    :- Done ( Not working , any test is not working ) 
+
+
+
+5) Click "Next" → run through a few modules :- Done ( no module is working ) 
+
+
+6) Docs tab → click "CG Computation Sheet" → see preview → Download DOCX :- Done (working properly ) 
+
+ 7)  Details tab → see team notes, priority :- Done ( Working Properly)
+
+ 8)  Details tab :- Payment link Done ( Not working Properly) 
+
+
+
+
+9) Change status to "Findings Ready" :- Done ( Not Working properly) showing same status after the change 
+
+
+
