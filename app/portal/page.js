@@ -732,11 +732,28 @@ function ClientPortal() {
                 {'\u2192'} How NRI Property Sale Capital Gains Are Computed
               </a>
             )}
-            {caseData?.country && (
-              <a href={`/blog/${caseData.country.toLowerCase().replace(/\s+/g,'-')}-nri-tax-guide`} className="block text-sm text-theme-accent hover:underline">
-                {'\u2192'} Tax Guide for NRIs in {caseData.country}
-              </a>
-            )}
+            {caseData?.country && (() => {
+              const COUNTRY_SLUG_MAP = {
+                'United Kingdom': 'uk-nri-tax-guide',
+                'United States': 'us-nri-tax-guide',
+                'UAE': 'uae-nri-tax-guide',
+                'Singapore': 'singapore-nri-tax-guide',
+                'Canada': 'canada-nri-tax-guide',
+                'Australia': 'australia-nri-tax-guide',
+                'Germany': 'germany-nri-tax-guide',
+                'Saudi Arabia': 'gulf-gcc-nri-tax-guide',
+                'Qatar': 'gulf-gcc-nri-tax-guide',
+                'Hong Kong': null,
+                'New Zealand': null,
+                'Other': null,
+              };
+              const slug = COUNTRY_SLUG_MAP[caseData.country];
+              return slug ? (
+                <a href={`/blog/${slug}`} className="block text-sm text-theme-accent hover:underline">
+                  {'\u2192'} Tax Guide for NRIs in {caseData.country}
+                </a>
+              ) : null;
+            })()}
             <a href="/blog/nri-tax-filing-itr" className="block text-sm text-theme-accent hover:underline">
               {'\u2192'} Complete Guide to NRI Tax Filing in India
             </a>

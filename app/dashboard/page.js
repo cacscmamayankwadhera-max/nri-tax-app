@@ -1207,35 +1207,15 @@ export default function Dashboard() {
                   }} className="btn-secondary w-full text-[9px]" style={{ padding:'0.35rem 0.5rem', borderRadius:'0.5rem' }}>
                     Copy Client Portal Link
                   </button>
-                  <button onClick={async () => {
-                    const amount = prompt('Enter amount in \u20B9 (e.g. 35000):');
-                    if (!amount) return;
-                    try {
-                      const res = await fetch('/api/payment', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          amount: parseInt(amount),
-                          clientName: ac?.name || ac?.client_name,
-                          clientEmail: ac?.client_email || ac?.formData?.email,
-                          clientPhone: ac?.client_phone || ac?.formData?.phone,
-                          caseRef: (ac?.dbId || ac?.id)?.toString().slice(0, 8),
-                          caseId: ac?.dbId || ac?.id,
-                        }),
-                      });
-                      const data = await res.json();
-                      if (data.available && data.data?.shortUrl) {
-                        navigator.clipboard.writeText(data.data.shortUrl);
-                        setToast({ type: 'success', message: `Payment link copied! \u20B9${amount} \u2014 share with client` });
-                      } else {
-                        setToast({ type: 'error', message: data.message || data.error || 'Payment not configured' });
-                      }
-                    } catch (e) {
-                      setToast({ type: 'error', message: 'Failed to create payment link' });
-                    }
-                  }} className="btn-secondary w-full text-[9px] min-h-[44px]" style={{ padding:'0.5rem 0.5rem', borderRadius:'0.5rem' }}>
+                  <a
+                    href="https://wa.me/919599937963?text=Interested%20for%20our%20NRI%20Tax%20Advisory%20support"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary w-full text-[9px] min-h-[44px] flex items-center justify-center"
+                    style={{ padding:'0.5rem 0.5rem', borderRadius:'0.5rem', textDecoration:'none' }}
+                  >
                     Send Payment Link
-                  </button>
+                  </a>
                 </div>
 
                 {/* Case Enrichment — PAN verify, 26AS, AIS */}
