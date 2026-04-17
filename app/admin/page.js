@@ -351,7 +351,11 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setInviteMsg({ type: 'success', text: `Invite sent to ${inviteEmail}` });
+        if (data.actionLink) {
+          setInviteMsg({ type: 'success', text: `Invite created for ${inviteEmail}. If email is not delivered, copy/share this link: ${data.actionLink}` });
+        } else {
+          setInviteMsg({ type: 'success', text: `Invite sent to ${inviteEmail}` });
+        }
         setInviteEmail('');
         setInviteName('');
         setInviteRole('preparer');

@@ -41,10 +41,11 @@ export default function Login() {
   async function handleResetPassword(e) {
     e.preventDefault();
     setError('');
-    if (!email) { setError('Enter your email address first'); return; }
+    const cleanedEmail = (email || '').trim().toLowerCase();
+    if (!cleanedEmail) { setError('Enter your email address first'); return; }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+    const { error } = await supabase.auth.resetPasswordForEmail(cleanedEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     setLoading(false);
     if (error) { setError(error.message); return; }

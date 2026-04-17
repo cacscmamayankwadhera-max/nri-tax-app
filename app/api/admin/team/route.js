@@ -128,23 +128,51 @@ export async function PUT(request) {
 
   try {
     const { email, role, fullName } = await request.json();
-    if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
+    const cleanedEmail = (email || '').trim().toLowerCase();
+    if (!cleanedEmail || !cleanedEmail.includes('@')) {
+      return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
+    }
 
     const supabase = createServerClient();
 
-    // Create user via Supabase Admin API
-    const { data, error } = await supabase.auth.admin.createUser({
-      email,
-      email_confirm: true,
-      user_metadata: { full_name: fullName || '', role: role || 'preparer' },
+    // Prefer native invite flow — Supabase will email the invite if SMTP is configured.
+    const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL || ''}/reset-password`;
+    let invitedUserId = null;
+    let actionLink = null;
+
+    // Try inviteUserByEmail first (sends email when mail is configured)
+    if (supabase.auth?.admin?.inviteUserByEmail) {
+      const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
+        cleanedEmail,
+        {
+          data: { full_name: fullName || '', role: role || 'preparer' },
+          redirectTo: redirectTo || undefined,
+        }
+      );
+      if (inviteError) {
+        return NextResponse.json({ error: inviteError.message }, { status: 400 });
+      }
+      invitedUserId = inviteData?.user?.id || null;
+    } else {
+      // Fallback: create user (no email is sent automatically)
+      const { data, error } = await supabase.auth.admin.createUser({
+        email: cleanedEmail,
+        email_confirm: false,
+        user_metadata: { full_name: fullName || '', role: role || 'preparer' },
+      });
+      if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+      invitedUserId = data.user?.id || null;
+    }
+
+    // Always generate an invite link as a fallback the admin can copy/share manually
+    const { data: linkData } = await supabase.auth.admin.generateLink({
+      type: 'invite',
+      email: cleanedEmail,
+      options: redirectTo ? { redirectTo } : undefined,
     });
+    actionLink = linkData?.properties?.action_link || null;
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-
-    // Send password reset email so they can set their password
-    await supabase.auth.admin.generateLink({ type: 'magiclink', email });
-
-    return NextResponse.json({ success: true, userId: data.user?.id });
+    return NextResponse.json({ success: true, userId: invitedUserId, actionLink });
   } catch (e) {
     console.error('[admin/team] Invite error:', e);
     return NextResponse.json({ error: 'Failed to invite member' }, { status: 500 });

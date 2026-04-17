@@ -6,8 +6,6 @@ import { createServerClient as createSupabaseSSR } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { logActivity } from '@/lib/activity-log';
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 async function verifyAuth(request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -38,6 +36,13 @@ export async function POST(request) {
   }
 
   try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        { error: 'Anthropic API key is not configured. Set ANTHROPIC_API_KEY in your environment.' },
+        { status: 500 }
+      );
+    }
+
     const { moduleId, formData, fy, moduleOutputs } = await request.json();
 
     if (!moduleId || !formData || !fy) {
@@ -52,6 +57,7 @@ export async function POST(request) {
     const systemPrompt = promptFn(fy);
     const caseContext = buildCaseContext(formData, fy, moduleOutputs || {});
 
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const message = await client.messages.create({
       model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
       max_tokens: 4096,

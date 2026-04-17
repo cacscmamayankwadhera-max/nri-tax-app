@@ -181,7 +181,8 @@ export default function ClientIntake() {
 
   const u = (k, v) => setF(p => ({ ...p, [k]: v }));
 
-  // Parse Indian-format numbers safely: strip commas before parsing
+  // Parse Indian-format numbers safely: strip commas before parsing.
+  // Keep inputs as strings while typing; parse only for calculations/submission.
   const parseNum = (v, fallback = 0) => {
     const cleaned = String(v).replace(/,/g, '');
     const n = parseInt(cleaned);
@@ -189,7 +190,11 @@ export default function ClientIntake() {
   };
 
   const cfg = FY_CONFIG[fy];
-  const cgData = (f.salePrice && f.purchaseCost) ? computeCapitalGains(Number(f.salePrice) || 0, Number(f.purchaseCost) || 0, f.propertyAcqFY || '2020-21', fy) : null;
+  const salePriceNum = parseNum(f.salePrice, 0);
+  const purchaseCostNum = parseNum(f.purchaseCost, 0);
+  const cgData = (salePriceNum > 0 && purchaseCostNum > 0)
+    ? computeCapitalGains(salePriceNum, purchaseCostNum, f.propertyAcqFY || '2020-21', fy)
+    : null;
 
   // Selected scenarios as a Set for quick lookup
   const selectedScenarios = useMemo(() => {
@@ -738,14 +743,14 @@ export default function ClientIntake() {
                     <Input
                       label="Sale price"
                       value={f.salePrice}
-                      onChange={v => u('salePrice', parseNum(v))}
+                      onChange={v => u('salePrice', v)}
                       placeholder="6800000"
                       type="number"
                     />
                     <Input
                       label="Purchase cost"
                       value={f.purchaseCost}
-                      onChange={v => u('purchaseCost', parseNum(v))}
+                      onChange={v => u('purchaseCost', v)}
                       placeholder="2200000"
                       type="number"
                     />
@@ -807,19 +812,26 @@ export default function ClientIntake() {
                   <Input
                     label="Monthly rent"
                     value={f.rentalMonthly}
-                    onChange={v => u('rentalMonthly', parseNum(v))}
+                    onChange={v => u('rentalMonthly', v)}
                     placeholder="25000"
                     type="number"
                   />
                 </div>
 
-                {f.rentalMonthly > 0 && (
+                {parseNum(f.rentalMonthly, 0) > 0 && (
                   <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Your rental tax position</p>
                     <p className="text-sm text-theme-secondary leading-relaxed">
-                      Annual rent: <strong className="text-theme">{formatINR(f.rentalMonthly * 12)}</strong>
-                      {' '}{'\u2192'} 30% standard deduction: <strong className="text-theme">{formatINR(Math.round(f.rentalMonthly * 12 * 0.3))}</strong>
-                      {' '}{'\u2192'} Taxable: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.rentalMonthly * 12 * 0.7))}</strong>
+                      {(() => {
+                        const m = parseNum(f.rentalMonthly, 0);
+                        return (
+                          <>
+                            Annual rent: <strong className="text-theme">{formatINR(m * 12)}</strong>
+                            {' '}{'\u2192'} 30% standard deduction: <strong className="text-theme">{formatINR(Math.round(m * 12 * 0.3))}</strong>
+                            {' '}{'\u2192'} Taxable: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(m * 12 * 0.7))}</strong>
+                          </>
+                        );
+                      })()}
                     </p>
                   </div>
                 )}
@@ -835,26 +847,33 @@ export default function ClientIntake() {
                   <Input
                     label="NRO/FD interest per year"
                     value={f.nroInterest}
-                    onChange={v => u('nroInterest', parseNum(v))}
+                    onChange={v => u('nroInterest', v)}
                     placeholder="140000"
                     type="number"
                   />
                 </div>
 
-                {f.nroInterest > 0 && f.country && (
+                {parseNum(f.nroInterest, 0) > 0 && f.country && (
                   dtaaData ? (
                     <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                       <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">TDS on your interest</p>
                       <p className="text-sm text-theme-secondary leading-relaxed">
-                        Bank deducts: <strong className="text-theme">{formatINR(Math.round(f.nroInterest * 0.30))}</strong> (30%).
+                        {(() => {
+                          const i = parseNum(f.nroInterest, 0);
+                          return (
+                            <>
+                              Bank deducts: <strong className="text-theme">{formatINR(Math.round(i * 0.30))}</strong> (30%).
                         {dtaaData.hasDTAA ? (
                           <>
-                            {' '}With DTAA ({f.country}): <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (dtaaData.rate / 100)))}</strong> ({dtaaData.rate}%).
-                            {' '}Potential saving: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(f.nroInterest * (0.30 - dtaaData.rate / 100)))}</strong>
+                            {' '}With DTAA ({f.country}): <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(i * (dtaaData.rate / 100)))}</strong> ({dtaaData.rate}%).
+                            {' '}Potential saving: <strong style={{ color: 'var(--green)' }}>{formatINR(Math.round(i * (0.30 - dtaaData.rate / 100)))}</strong>
                           </>
                         ) : (
                           <> No DTAA with {f.country} -- domestic 30% rate applies. Section 91 unilateral relief may be available.</>
                         )}
+                            </>
+                          );
+                        })()}
                       </p>
                     </div>
                   ) : (
@@ -876,7 +895,7 @@ export default function ClientIntake() {
                     <Input
                       label="Perquisite value at exercise"
                       value={f.esopPerquisite}
-                      onChange={v => u('esopPerquisite', parseNum(v))}
+                      onChange={v => u('esopPerquisite', v)}
                       placeholder="500000"
                       type="number"
                       tip="FMV at exercise minus exercise price"
@@ -884,7 +903,7 @@ export default function ClientIntake() {
                     <Input
                       label="Sale gain after exercise"
                       value={f.esopSaleGain}
-                      onChange={v => u('esopSaleGain', parseNum(v))}
+                      onChange={v => u('esopSaleGain', v)}
                       placeholder="300000"
                       type="number"
                       tip="Sale price minus FMV at exercise"
@@ -892,15 +911,15 @@ export default function ClientIntake() {
                   </div>
                 </div>
 
-                {(f.esopPerquisite > 0 || f.esopSaleGain > 0) && (
+                {(parseNum(f.esopPerquisite, 0) > 0 || parseNum(f.esopSaleGain, 0) > 0) && (
                   <div className="card-premium p-5 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">ESOP tax overview</p>
                     <p className="text-sm text-theme-secondary leading-relaxed">
-                      {f.esopPerquisite > 0 && (
-                        <>Perquisite: <strong className="text-theme">{formatINR(f.esopPerquisite)}</strong> taxed as salary income at slab rates. </>
+                      {parseNum(f.esopPerquisite, 0) > 0 && (
+                        <>Perquisite: <strong className="text-theme">{formatINR(parseNum(f.esopPerquisite, 0))}</strong> taxed as salary income at slab rates. </>
                       )}
-                      {f.esopSaleGain > 0 && (
-                        <>Sale gain: <strong className="text-theme">{formatINR(f.esopSaleGain)}</strong> taxed as capital gains (rate depends on holding period and listing status). </>
+                      {parseNum(f.esopSaleGain, 0) > 0 && (
+                        <>Sale gain: <strong className="text-theme">{formatINR(parseNum(f.esopSaleGain, 0))}</strong> taxed as capital gains (rate depends on holding period and listing status). </>
                       )}
                       <strong style={{ color: 'var(--accent)' }}>Our team will compute the exact India-service apportionment if your employer is foreign.</strong>
                     </p>

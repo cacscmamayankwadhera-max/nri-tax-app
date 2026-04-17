@@ -36,8 +36,10 @@ async function runAIModule(moduleId, formData, fy, moduleOutputs) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ moduleId, formData, fy, moduleOutputs })
   });
-  if (!res.ok) throw new Error(`AI error: ${res.status}`);
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data?.error || `AI error: ${res.status}`);
+  }
   return data.output;
 }
 
@@ -1085,10 +1087,11 @@ export default function Dashboard() {
             <select value={ac?.status || 'intake'}
               onChange={async (e) => {
                 const newStatus = e.target.value;
-                setAc(prev => ({...prev, status: newStatus}));
+                setAc(prev => (prev ? { ...prev, status: newStatus } : prev));
+                setCases(prev => prev.map(c => (c.dbId || c.id) === (ac?.dbId || ac?.id) ? { ...c, status: newStatus } : c));
                 if (ac?.dbId) {
                   try {
-                    supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                    await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
                     fetch('/api/notify', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },

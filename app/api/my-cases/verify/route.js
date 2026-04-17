@@ -38,7 +38,8 @@ export async function POST(request) {
     const { data: cases, error: caseError } = await supabase
       .from('cases')
       .select('id, client_name, client_email, client_phone, country, fy, ay, classification, status, modules_completed, created_at, updated_at, portal_token, intake_data')
-      .or(`client_email.ilike.${email},intake_data->>email.ilike.${email}`)
+      // Prefer exact matching for email (stored normalized); avoids filter-string parsing issues.
+      .or(`client_email.eq.${email},intake_data->>email.eq.${email}`)
       .order('created_at', { ascending: false });
 
     if (caseError) {

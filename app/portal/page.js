@@ -214,7 +214,7 @@ function ClientPortal() {
 
   const handleLookup = (e) => {
     e.preventDefault();
-    const trimmed = inputRef.trim().toUpperCase();
+    const trimmed = inputRef.trim();
     setRef(trimmed);
     // Update URL without reload
     window.history.replaceState(null, '', `/portal?ref=${trimmed}`);
@@ -340,7 +340,7 @@ function ClientPortal() {
             <input
               type="text"
               value={inputRef}
-              onChange={e => setInputRef(e.target.value.toUpperCase())}
+              onChange={e => setInputRef(e.target.value)}
               placeholder="e.g. ABCD1234EFGH5678IJKL9012"
               maxLength={30}
               className="input-theme text-lg font-mono tracking-widest text-center"
@@ -737,7 +737,7 @@ function ClientPortal() {
                 {'\u2192'} Tax Guide for NRIs in {caseData.country}
               </a>
             )}
-            <a href="/blog/nri-income-tax-filing-guide" className="block text-sm text-theme-accent hover:underline">
+            <a href="/blog/nri-tax-filing-itr" className="block text-sm text-theme-accent hover:underline">
               {'\u2192'} Complete Guide to NRI Tax Filing in India
             </a>
           </div>
