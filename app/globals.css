@@ -40,6 +40,8 @@ html {
   --accent-tertiary: #0B054C;
   --bg-elevated: #F8FBFF;
   --bg-hero: linear-gradient(180deg, #F0F5FA 0%, #E8EFFB 100%);
+  --bg-card-dark: #1a1a1a;
+  --bg-card-dark-hover: #1f1f1f;
   --text-display: #0B054C;
   --shadow-premium: 0 20px 60px -12px rgba(8, 31, 68, 0.08), 0 0 0 1px rgba(4,107,210,0.08);
   --shadow-hover: 0 30px 80px -12px rgba(8, 31, 68, 0.20), 0 0 0 1px rgba(4,107,210,0.12);

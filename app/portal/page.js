@@ -40,7 +40,7 @@ const MODULE_DESCRIPTIONS = {
   memo: 'Your personalized advisory report is being prepared',
 };
 
-const CLS_COLORS = { Green: '#2A6B4A', Amber: '#B07D3A', Red: '#A04848' };
+const CLS_COLORS = { Green: '#059669', Amber: '#F59E0B', Red: '#DC2626' };
 const CLS_MEANINGS = {
   Green: 'Straightforward case \u2014 simple filing with limited complexity.',
   Amber: 'Moderate complexity \u2014 advisory review recommended alongside filing.',

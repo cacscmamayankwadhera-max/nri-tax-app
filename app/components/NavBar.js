@@ -201,7 +201,7 @@ export default function NavBar({ variant = 'solid' }) {
         <div className="mt-auto px-5 pb-6">
           <a href="/client"
             className="block w-full text-center px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300"
-            style={{ background: 'var(--accent)', color: '#1a1a1a' }}>
+            style={{ background: 'var(--accent)', color: 'var(--text-on-cta)' }}>
             Start Filing →
           </a>
           <p className="text-center text-[10px] mt-3" style={{ color: 'rgba(255,255,255,0.25)' }}>

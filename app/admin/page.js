@@ -26,12 +26,12 @@ const ROLE_LABELS = {
 };
 
 const ROLE_COLORS = {
-  admin: '#C49A3C',
-  partner: '#2A6B4A',
-  senior: '#5670A8',
-  preparer: '#6b6256',
-  client: '#9ca3af',
-  deactivated: '#a04848',
+  admin: '#046BD2',
+  partner: '#045CB4',
+  senior: '#0B054C',
+  preparer: '#64748B',
+  client: '#9CA3AF',
+  deactivated: '#94A3B8',
 };
 
 /* ================================================================

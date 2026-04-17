@@ -26,7 +26,7 @@ const MODULE_NAMES = [
   { id: 'memo',      label: 'Advisory Report' },
 ];
 
-const CLS_COLORS = { Green: '#2A6B4A', Amber: '#B07D3A', Red: '#A04848' };
+const CLS_COLORS = { Green: '#059669', Amber: '#F59E0B', Red: '#DC2626' };
 
 const SESSION_KEY = 'nri-mycases-session';
 

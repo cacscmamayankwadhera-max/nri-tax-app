@@ -167,14 +167,14 @@ export async function PUT(request) {
           cleanedEmail,
           "You've been invited to MKW Advisors Tax Suite",
           `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;">
-            <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">You're invited to join MKW Advisors</h2>
-            <p style="color:#555;font-size:14px;line-height:1.6;margin-bottom:8px;">Hi ${displayName},</p>
-            <p style="color:#555;font-size:14px;line-height:1.6;margin-bottom:24px;">
+            <h2 style="font-size:20px;font-weight:700;color:#0B054C;margin-bottom:8px;">You're invited to join MKW Advisors</h2>
+            <p style="color:#334155;font-size:14px;line-height:1.6;margin-bottom:8px;">Hi ${displayName},</p>
+            <p style="color:#334155;font-size:14px;line-height:1.6;margin-bottom:24px;">
               You've been invited as a <strong>${role || 'preparer'}</strong> on the MKW Advisors NRI Tax Suite.
               Click below to set your password and activate your account. This link expires in 24 hours.
             </p>
             <a href="${actionLink}"
-               style="display:inline-block;background:#C49A3C;color:#fff;text-decoration:none;
+               style="display:inline-block;background:#046BD2;color:#fff;text-decoration:none;
                       padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;">
               Accept Invitation
             </a>

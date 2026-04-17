@@ -354,7 +354,7 @@ export default function Home() {
             </h2>
             <p
               className="text-sm leading-relaxed max-w-lg mx-auto"
-              style={{ color: '#9ca3af' }}
+              style={{ color: 'var(--text-muted)' }}
             >
               These aren&rsquo;t hypothetical scenarios. We see every single
               one of these every week.
@@ -368,24 +368,24 @@ export default function Home() {
                 key={i}
                 className="rounded-xl p-6 md:p-7 transition-all duration-300"
                 style={{
-                  background: '#1a1a1a',
-                  borderLeft: '3px solid #dc2626',
+                  background: 'var(--bg-card-dark)',
+                  borderLeft: '3px solid var(--accent)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderLeftWidth: '3px',
-                  borderLeftColor: '#dc2626',
+                  borderLeftColor: 'var(--accent)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderLeftColor = '#f87171';
-                  e.currentTarget.style.background = '#1f1f1f';
+                  e.currentTarget.style.borderLeftColor = 'var(--accent-hover)';
+                  e.currentTarget.style.background = 'var(--bg-card-dark-hover)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderLeftColor = '#dc2626';
-                  e.currentTarget.style.background = '#1a1a1a';
+                  e.currentTarget.style.borderLeftColor = 'var(--accent)';
+                  e.currentTarget.style.background = 'var(--bg-card-dark)';
                 }}
               >
                 <h3
                   className="font-serif text-lg md:text-xl mb-3"
-                  style={{ color: '#ffffff', fontWeight: 400 }}
+                  style={{ color: 'var(--text-on-dark)', fontWeight: 400 }}
                 >
                   {p.headline}
                 </h3>

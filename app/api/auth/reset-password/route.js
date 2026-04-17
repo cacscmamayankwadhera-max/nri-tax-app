@@ -43,8 +43,8 @@ export async function POST(request) {
         cleanedEmail,
         'Reset your MKW Advisors password',
         `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;">
-          <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Reset your password</h2>
-          <p style="color:#555;font-size:14px;line-height:1.6;margin-bottom:24px;">
+          <h2 style="font-size:20px;font-weight:700;color:#0B054C;margin-bottom:8px;">Reset your password</h2>
+          <p style="color:#475569;font-size:14px;line-height:1.6;margin-bottom:24px;">
             Click the button below to set a new password for your MKW Advisors account.
             This link expires in 1 hour.
           </p>
@@ -53,7 +53,7 @@ export async function POST(request) {
                     padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;">
             Reset Password
           </a>
-          <p style="color:#999;font-size:12px;margin-top:24px;">
+          <p style="color:#64748B;font-size:12px;margin-top:24px;">
             If you did not request this, you can safely ignore this email.
           </p>
         </div>`

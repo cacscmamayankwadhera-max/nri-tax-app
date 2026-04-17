@@ -36,7 +36,7 @@ const STATS = [
 
 function StyleA() {
   return (
-    <div style={{ fontFamily: 'Georgia, serif' }} className="min-h-screen bg-[#0a0f1a] text-white">
+    <div style={{ fontFamily: 'Georgia, serif' }} className="min-h-screen bg-[#07112d] text-white">
 
       {/* ── NAV ── */}
       <nav className="border-b border-[#046BD2]/20">
@@ -108,10 +108,10 @@ function StyleA() {
         <div className="w-16 h-px bg-[#046BD2] mx-auto mb-16" />
         <div className="grid md:grid-cols-3 gap-6">
           {FEATURES.map((f, i) => (
-            <div key={i} className="bg-[#1a2332] border-t-2 border-[#046BD2]/60 p-8 hover:border-[#045CB4] transition-colors group">
+            <div key={i} className="bg-[#07112d] border-t-2 border-[#046BD2]/60 p-8 hover:border-[#045CB4] transition-colors group">
               <div className="text-3xl mb-4">{f.icon}</div>
               <h3 className="text-lg mb-3 text-white group-hover:text-[#045CB4] transition-colors">{f.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed" style={{ fontFamily: 'system-ui', fontWeight: 300 }}>{f.desc}</p>
+              <p className="text-[#cbd5e1] text-sm leading-relaxed" style={{ fontFamily: 'system-ui', fontWeight: 300 }}>{f.desc}</p>
             </div>
           ))}
         </div>
@@ -125,9 +125,9 @@ function StyleA() {
           <div className="w-16 h-px bg-[#046BD2] mx-auto mb-16" />
           <div className="grid md:grid-cols-4 gap-5">
             {PRICING.map((p, i) => {
-              const tagColors = { green: '#2A6B4A', amber: '#B07D3A', red: '#A04848', gold: '#046BD2' };
+              const tagColors = { green: '#046BD2', amber: '#045CB4', red: '#0B054C', gold: '#046BD2' };
               return (
-                <div key={i} className={`relative bg-[#1a2332] border ${p.popular ? 'border-[#046BD2]' : 'border-[#046BD2]/20'} p-7 flex flex-col`}>
+                <div key={i} className={`relative bg-[#07112d] border ${p.popular ? 'border-[#046BD2]' : 'border-[#046BD2]/20'} p-7 flex flex-col`}>
                   {p.popular && (
                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#046BD2] text-[#0a0f1a] px-4 py-1 text-[10px] tracking-widest uppercase font-bold" style={{ fontFamily: 'system-ui' }}>
                       Most Popular
@@ -412,21 +412,21 @@ function StyleB() {
 
 function StyleC() {
   return (
-    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }} className="min-h-screen bg-[#f5f2ec] text-[#1a1a1a]">
+    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }} className="min-h-screen bg-[#F8FBFF] text-[#0B054C]">
 
       {/* ── NAV ── */}
-      <nav className="border-b border-[#E8E0D4]">
+      <nav className="border-b border-[#D1D5DB]">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-8 py-5">
           <div className="flex items-center gap-3">
             <span className="text-xl tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>NRI Tax Suite</span>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-[#6b6256] font-medium">
+          <div className="hidden md:flex items-center gap-8 text-sm text-[#475569] font-medium">
             <a className="hover:text-[#046BD2] transition-colors cursor-pointer">Services</a>
             <a className="hover:text-[#046BD2] transition-colors cursor-pointer">Our Approach</a>
             <a className="hover:text-[#046BD2] transition-colors cursor-pointer">Pricing</a>
             <a className="hover:text-[#046BD2] transition-colors cursor-pointer">Contact</a>
           </div>
-          <button className="bg-[#1a1a1a] text-white px-5 py-2.5 text-sm rounded-md hover:bg-[#333] transition-colors">
+          <button className="bg-[#0B054C] text-white px-5 py-2.5 text-sm rounded-md hover:bg-[#045CB4] transition-colors">
             Client Login
           </button>
         </div>
@@ -447,19 +447,19 @@ function StyleC() {
             <br />
             Respects Your Time
           </h1>
-          <p className="text-lg text-[#6b6256] max-w-lg mx-auto mb-12 leading-relaxed" style={{ fontWeight: 400 }}>
+          <p className="text-lg text-[#475569] max-w-lg mx-auto mb-12 leading-relaxed" style={{ fontWeight: 400 }}>
             Expert-led cross-border tax compliance for discerning NRIs. Thoughtful analysis, clear communication, and meticulous execution.
           </p>
           <div className="flex items-center justify-center gap-4 mb-16">
-            <button className="bg-[#1a1a1a] text-white px-8 py-3.5 rounded-md text-sm font-medium hover:bg-[#333] transition-colors">
+            <button className="bg-[#0B054C] text-white px-8 py-3.5 rounded-md text-sm font-medium hover:bg-[#045CB4] transition-colors">
               Begin Your Filing &rarr;
             </button>
-            <button className="border-2 border-[#1a1a1a] text-[#1a1a1a] px-8 py-3.5 rounded-md text-sm font-medium hover:bg-[#1a1a1a] hover:text-white transition-all">
+            <button className="border-2 border-[#0B054C] text-[#0B054C] px-8 py-3.5 rounded-md text-sm font-medium hover:bg-[#0B054C] hover:text-white transition-all">
               Our Approach
             </button>
           </div>
           {/* Inline stats */}
-          <p className="text-base text-[#6b6256]" style={{ fontFamily: 'Georgia, serif' }}>
+          <p className="text-base text-[#475569]" style={{ fontFamily: 'Georgia, serif' }}>
             <span className="text-[#046BD2] font-semibold">2,800+</span> NRIs served
             <span className="mx-3 text-[#046BD2]">&middot;</span>
             <span className="text-[#046BD2] font-semibold">18+</span> countries
@@ -477,14 +477,14 @@ function StyleC() {
           <div className="text-center mb-16">
             <p className="text-[#046BD2] text-sm mb-4 tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>&mdash; Our Services &mdash;</p>
             <h2 className="text-3xl md:text-4xl mb-4" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>Tailored to Your Situation</h2>
-            <p className="text-[#6b6256] max-w-md mx-auto">Every NRI&rsquo;s tax situation is unique. Our services adapt to your specific cross-border complexities.</p>
+            <p className="text-[#475569] max-w-md mx-auto">Every NRI&rsquo;s tax situation is unique. Our services adapt to your specific cross-border complexities.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {FEATURES.map((f, i) => (
-              <div key={i} className="bg-white border border-[#E8E0D4] rounded-lg p-7 hover:border-[#046BD2] transition-all duration-300 group">
+              <div key={i} className="bg-white border border-[#D1D5DB] rounded-lg p-7 hover:border-[#046BD2] transition-all duration-300 group">
                 <div className="text-2xl mb-4">{f.icon}</div>
                 <h3 className="text-lg mb-3" style={{ fontFamily: 'Georgia, serif' }}>{f.title}</h3>
-                <p className="text-sm text-[#6b6256] leading-relaxed">{f.desc}</p>
+                <p className="text-sm text-[#475569] leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -497,16 +497,16 @@ function StyleC() {
           <div className="text-center mb-16">
             <p className="text-[#046BD2] text-sm mb-4 tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>&mdash; Engagement Options &mdash;</p>
             <h2 className="text-3xl md:text-4xl mb-4" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>Clear, Considered Pricing</h2>
-            <p className="text-[#6b6256] max-w-md mx-auto">Our fees reflect the depth of expertise applied to your situation. No surprises.</p>
+            <p className="text-[#475569] max-w-md mx-auto">Our fees reflect the depth of expertise applied to your situation. No surprises.</p>
           </div>
           <div className="grid md:grid-cols-4 gap-5">
             {PRICING.map((p, i) => {
-              const tagColors = { green: '#2A6B4A', amber: '#B07D3A', red: '#A04848', gold: '#046BD2' };
+              const tagColors = { green: '#046BD2', amber: '#045CB4', red: '#0B054C', gold: '#046BD2' };
               return (
                 <div key={i} className={`relative rounded-lg p-7 flex flex-col border transition-all duration-300 hover:border-[#046BD2] ${
                   p.popular
-                    ? 'bg-[#f5f2ec] border-[#046BD2]'
-                    : 'bg-white border-[#E8E0D4]'
+                    ? 'bg-[#F8FBFF] border-[#046BD2]'
+                    : 'bg-white border-[#D1D5DB]'
                 }`}>
                   {p.popular && (
                     <div className="absolute -top-3 left-6 bg-[#046BD2] text-white px-3 py-0.5 rounded text-[11px] font-semibold tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>
@@ -515,14 +515,14 @@ function StyleC() {
                   )}
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tagColors[p.tag] }} />
-                    <h3 className="text-xs font-semibold text-[#6b6256] uppercase tracking-wider">{p.tier}</h3>
+                    <h3 className="text-xs font-semibold text-[#475569] uppercase tracking-wider">{p.tier}</h3>
                   </div>
                   <div className="text-2xl font-semibold mb-0.5" style={{ fontFamily: 'Georgia, serif' }}>{p.price}</div>
-                  <div className="text-xs text-[#6b6256] mb-4">{p.period}</div>
-                  <p className="text-sm text-[#6b6256] mb-6 flex-1 leading-relaxed">{p.desc}</p>
+                  <div className="text-xs text-[#475569] mb-4">{p.period}</div>
+                  <p className="text-sm text-[#475569] mb-6 flex-1 leading-relaxed">{p.desc}</p>
                   <ul className="space-y-2.5 mb-8">
                     {p.bullets.map((b, j) => (
-                      <li key={j} className="text-sm text-[#6b6256] flex items-start gap-2">
+                      <li key={j} className="text-sm text-[#475569] flex items-start gap-2">
                         <span className="text-[#046BD2] mt-0.5 text-xs">&#9679;</span>
                         {b}
                       </li>
@@ -530,8 +530,8 @@ function StyleC() {
                   </ul>
                   <button className={`w-full py-3 rounded-md text-sm font-medium transition-all ${
                     p.popular
-                      ? 'bg-[#1a1a1a] text-white hover:bg-[#333]'
-                      : 'border border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white'
+                      ? 'bg-[#0B054C] text-white hover:bg-[#045CB4]'
+                      : 'border border-[#0B054C] text-[#0B054C] hover:bg-[#0B054C] hover:text-white'
                   }`}>
                     Select Plan
                   </button>
@@ -549,15 +549,15 @@ function StyleC() {
           <h2 className="text-3xl md:text-5xl mb-6" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
             Let Us Handle the<br />Complexity
           </h2>
-          <p className="text-[#6b6256] max-w-md mx-auto mb-10 leading-relaxed">
+          <p className="text-[#475569] max-w-md mx-auto mb-10 leading-relaxed">
             Book a conversation with our team. We&rsquo;ll understand your situation, outline the approach, and handle everything from there.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <button className="bg-[#1a1a1a] text-white px-10 py-4 rounded-md text-sm font-medium hover:bg-[#333] transition-colors">
+            <button className="bg-[#0B054C] text-white px-10 py-4 rounded-md text-sm font-medium hover:bg-[#045CB4] transition-colors">
               Book a Conversation &rarr;
             </button>
           </div>
-          <p className="text-xs text-[#6b6256] mt-6">No obligations. Typically responds within 4 hours.</p>
+          <p className="text-xs text-[#475569] mt-6">No obligations. Typically responds within 4 hours.</p>
         </div>
       </section>
 
@@ -565,21 +565,21 @@ function StyleC() {
       <section className="bg-white py-20">
         <div className="max-w-2xl mx-auto px-6 text-center">
           <div className="text-4xl text-[#046BD2] mb-6" style={{ fontFamily: 'Georgia, serif' }}>&ldquo;</div>
-          <p className="text-xl text-[#1a1a1a] leading-relaxed mb-6" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+          <p className="text-xl text-[#0B054C] leading-relaxed mb-6" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
             After years of struggling with cross-border compliance, this team brought clarity and peace of mind. Their attention to detail on my property sale was exceptional.
           </p>
-          <p className="text-sm text-[#6b6256] font-medium">Rajesh K., Software Engineer &mdash; Singapore</p>
+          <p className="text-sm text-[#475569] font-medium">Rajesh K., Software Engineer &mdash; Singapore</p>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-[#E8E0D4] py-12">
+      <footer className="border-t border-[#D1D5DB] py-12">
         <div className="max-w-5xl mx-auto px-6 flex flex-wrap items-center justify-between gap-6">
           <div>
             <span className="text-base" style={{ fontFamily: 'Georgia, serif' }}>NRI Tax Suite</span>
-            <p className="text-xs text-[#6b6256] mt-1">&copy; 2026 NRI Tax Suite. All rights reserved.</p>
+            <p className="text-xs text-[#475569] mt-1">&copy; 2026 NRI Tax Suite. All rights reserved.</p>
           </div>
-          <div className="flex gap-6 text-sm text-[#6b6256]">
+          <div className="flex gap-6 text-sm text-[#475569]">
             <a className="hover:text-[#046BD2] cursor-pointer transition-colors">Privacy Policy</a>
             <a className="hover:text-[#046BD2] cursor-pointer transition-colors">Terms of Service</a>
             <a className="hover:text-[#046BD2] cursor-pointer transition-colors">Contact Us</a>
@@ -598,7 +598,7 @@ function StyleC() {
 const STYLE_META = {
   A: { name: 'Premium Financial Services', subtitle: 'Dark navy, gold accents, serif typography, private-banking gravitas', color: '#046BD2' },
   B: { name: 'Modern SaaS', subtitle: 'White & blue, bold sans-serif, rounded cards, fintech energy', color: '#046BD2' },
-  C: { name: 'Luxury Consultancy', subtitle: 'Warm cream, editorial serif, charcoal & gold, trusted-advisor sophistication', color: '#6b6256' },
+  C: { name: 'Luxury Consultancy', subtitle: 'Warm cream, editorial serif, charcoal & gold, trusted-advisor sophistication', color: '#475569' },
 };
 
 export default function Preview() {

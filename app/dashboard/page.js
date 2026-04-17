@@ -9,16 +9,16 @@ import { computeCapitalGains, computeHouseProperty, computeTotalIncome, formatIN
 /* ═══ CONSTANTS ═══ */
 const COUNTRIES = ["United Kingdom","United States","UAE","Singapore","Canada","Australia","Germany","Saudi Arabia","Qatar","Hong Kong","New Zealand","Other"];
 const MODS = [
-  { id:"intake", l:"Case Intake", ic:"📋", c:"#C49A3C" },
-  { id:"residency", l:"Residency", ic:"🌍", c:"#4A7C5E" },
-  { id:"income", l:"Income Map", ic:"📊", c:"#5670A8" },
-  { id:"pricing", l:"Scope & Fee", ic:"💰", c:"#B07D3A", int:true },
-  { id:"recon", l:"AIS Recon", ic:"🔍", c:"#7B5FA0", cp:"Senior Associate reviews classification and reconciliation readiness" },
-  { id:"filing", l:"Form Select", ic:"📄", c:"#3D7D8F" },
-  { id:"cg", l:"Capital Gains", ic:"🏠", c:"#A04848" },
-  { id:"dtaa", l:"DTAA/FTC", ic:"🌐", c:"#2E6B70" },
-  { id:"prefiling", l:"Pre-Filing", ic:"✅", c:"#4D7A2E", cp:"Senior Reviewer / Partner verifies before filing" },
-  { id:"memo", l:"Advisory Memo", ic:"📝", c:"#7A6245" },
+  { id:"intake", l:"Case Intake", ic:"📋", c:"#046BD2" },
+  { id:"residency", l:"Residency", ic:"🌍", c:"#045CB4" },
+  { id:"income", l:"Income Map", ic:"📊", c:"#0B054C" },
+  { id:"pricing", l:"Scope & Fee", ic:"💰", c:"#046BD2", int:true },
+  { id:"recon", l:"AIS Recon", ic:"🔍", c:"#045CB4", cp:"Senior Associate reviews classification and reconciliation readiness" },
+  { id:"filing", l:"Form Select", ic:"📄", c:"#0B054C" },
+  { id:"cg", l:"Capital Gains", ic:"🏠", c:"#045CB4" },
+  { id:"dtaa", l:"DTAA/FTC", ic:"🌐", c:"#046BD2" },
+  { id:"prefiling", l:"Pre-Filing", ic:"✅", c:"#0B054C", cp:"Senior Reviewer / Partner verifies before filing" },
+  { id:"memo", l:"Advisory Memo", ic:"📝", c:"#045CB4" },
 ];
 const DELS = [
   { id:"cg_sheet", l:"CG Computation Sheet", n:["cg"], d:"Dual-option tax computation with Section 54 planning", apiType:"cg_sheet" },
@@ -27,7 +27,7 @@ const DELS = [
   { id:"total_income", l:"Computation of Total Income", n:["income","cg"], d:"Formal ITR-ready statement — all heads, tax, TDS, refund", apiType:"total_income" },
   { id:"quote", l:"Scope & Fee Note", n:["pricing"], d:"Internal: service tier, fee band, scope inclusions/exclusions", apiType:"quote" },
 ];
-const CLS_COLORS = { Green:"#2A6B4A", Amber:"#B07D3A", Red:"#A04848" };
+const CLS_COLORS = { Green:"#059669", Amber:"#F59E0B", Red:"#DC2626" };
 
 /* ═══ API HELPERS ═══ */
 async function runAIModule(moduleId, formData, fy, moduleOutputs) {

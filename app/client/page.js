@@ -82,12 +82,12 @@ const COUNTRY_INSIGHTS = {
 };
 
 const SCENARIOS = [
-  { id: 'propertySale', icon: '\uD83C\uDFE0', title: 'Sold or selling property', hook: 'Most NRIs overpay Rs.2-8L on property tax', color: '#2A6B4A' },
-  { id: 'rent', icon: '\uD83C\uDFE2', title: 'Earning rent from India', hook: '30% standard deduction -- are you claiming it?', color: '#B07D3A' },
-  { id: 'interest', icon: '\uD83D\uDCB0', title: 'NRO/FD interest', hook: 'Banks deduct 30% TDS -- your DTAA rate may be 10-15%', color: '#5670A8' },
-  { id: 'esopRsu', icon: '\uD83D\uDCCA', title: 'ESOP/RSU from employer', hook: 'Two-stage taxation -- most get this wrong', color: '#7B5FA0' },
-  { id: 'filing', icon: '\uD83D\uDCCB', title: 'Need to file ITR', hook: 'NRIs must file if Indian income exceeds Rs.4L', color: '#3D7D8F' },
-  { id: 'notSure', icon: '\uD83E\uDD37', title: "I'm not sure", hook: 'Describe your situation -- AI will help', color: '#9ca3af' },
+  { id: 'propertySale', icon: '\uD83C\uDFE0', title: 'Sold or selling property', hook: 'Most NRIs overpay Rs.2-8L on property tax', color: '#046BD2' },
+  { id: 'rent', icon: '\uD83C\uDFE2', title: 'Earning rent from India', hook: '30% standard deduction -- are you claiming it?', color: '#045CB4' },
+  { id: 'interest', icon: '\uD83D\uDCB0', title: 'NRO/FD interest', hook: 'Banks deduct 30% TDS -- your DTAA rate may be 10-15%', color: '#0B054C' },
+  { id: 'esopRsu', icon: '\uD83D\uDCCA', title: 'ESOP/RSU from employer', hook: 'Two-stage taxation -- most get this wrong', color: '#046BD2' },
+  { id: 'filing', icon: '\uD83D\uDCCB', title: 'Need to file ITR', hook: 'NRIs must file if Indian income exceeds Rs.4L', color: '#045CB4' },
+  { id: 'notSure', icon: '\uD83E\uDD37', title: "I'm not sure", hook: 'Describe your situation -- AI will help', color: '#64748B' },
 ];
 
 // ---- Reusable form input at module scope to avoid remounts ----
