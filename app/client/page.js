@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTheme } from '@/app/theme-provider';
 import { computeCapitalGains, formatINR, classifyCase, FY_CONFIG, CII, getDTAARate } from '@/lib/compute';
 import { CheckCircle, User, Mail, Phone } from 'lucide-react';
@@ -119,6 +119,30 @@ const Select = ({ label, value, onChange, options, placeholder, tip }) => (
   </div>
 );
 
+// ---- Contact input with leading icon (module scope to avoid remounts) ----
+const InputWithIcon = ({ label, value, onChange, placeholder, type, tip, icon: Icon, autoComplete, inputMode }) => (
+  <div>
+    <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">{label}</label>
+    <div className="relative">
+      <input
+        type={type || 'text'}
+        value={value || ''}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        className="input-theme py-3 px-4 pl-10 w-full"
+      />
+      {Icon && (
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
+          <Icon size={16} />
+        </span>
+      )}
+    </div>
+    {tip && <p className="text-[10px] text-theme-muted mt-1">{tip}</p>}
+  </div>
+);
+
 // ---- Helper: contextual CTA text ----
 function getContextualCTA(f) {
   if (f.propertySale) return 'Get Your CG Computation + Refund Estimate';
@@ -179,7 +203,7 @@ export default function ClientIntake() {
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
 
-  const u = (k, v) => setF(p => ({ ...p, [k]: v }));
+  const u = useCallback((k, v) => setF(p => ({ ...p, [k]: v })), []);
 
   // Parse Indian-format numbers safely: strip commas before parsing.
   // Keep inputs as strings while typing; parse only for calculations/submission.
@@ -976,52 +1000,35 @@ export default function ClientIntake() {
               </div>
 
               <div className="space-y-4 mb-6">
-                <div>
-                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Your full name *</label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={f.name || ''}
-                      onChange={e => u('name', e.target.value)}
-                      placeholder="Rajesh Mehta"
-                      className="input-theme py-3 px-4 pl-10 w-full"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
-                      <User size={16} />
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Email *</label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      value={f.email || ''}
-                      onChange={e => u('email', e.target.value)}
-                      placeholder="rajesh@email.com"
-                      className="input-theme py-3 px-4 pl-10 w-full"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
-                      <Mail size={16} />
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-theme-muted mb-1.5 uppercase tracking-wide">Phone *</label>
-                  <div className="relative">
-                    <input
-                      type="tel"
-                      value={f.phone || ''}
-                      onChange={e => u('phone', e.target.value)}
-                      placeholder="+44 7700 123456"
-                      className="input-theme py-3 px-4 pl-10 w-full"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted opacity-50">
-                      <Phone size={16} />
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-theme-muted mt-1">Include country code (e.g. +44 7700 123456)</p>
-                </div>
+                <InputWithIcon
+                  label="Your full name *"
+                  value={f.name}
+                  onChange={v => u('name', v)}
+                  placeholder="Rajesh Mehta"
+                  type="text"
+                  autoComplete="name"
+                  icon={User}
+                />
+                <InputWithIcon
+                  label="Email *"
+                  value={f.email}
+                  onChange={v => u('email', v)}
+                  placeholder="rajesh@email.com"
+                  type="text"
+                  autoComplete="email"
+                  inputMode="email"
+                  icon={Mail}
+                />
+                <InputWithIcon
+                  label="Phone *"
+                  value={f.phone}
+                  onChange={v => u('phone', v)}
+                  placeholder="+44 7700 123456"
+                  type="tel"
+                  autoComplete="tel"
+                  tip="Include country code (e.g. +44 7700 123456)"
+                  icon={Phone}
+                />
               </div>
 
               {/* Classification preview */}
