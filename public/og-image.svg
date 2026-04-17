@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1a1a1a"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#C49A3C"/>
+  <circle cx="100" cy="315" r="40" fill="none" stroke="#C49A3C" stroke-width="2"/>
+  <text x="100" y="325" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="bold" fill="#C49A3C">NT</text>
+  <text x="180" y="280" font-family="Georgia,serif" font-size="52" fill="#f0ece4">NRI Tax Suite</text>
+  <text x="180" y="340" font-family="Georgia,serif" font-size="28" fill="#C49A3C">AI-Assisted Tax Filing, Advisory &amp; Compliance</text>
+  <text x="180" y="400" font-family="sans-serif" font-size="20" fill="#8b95a8">MKW Advisors · CA · CS · CMA · IBBI Registered Valuer</text>
+  <rect x="180" y="440" width="280" height="50" rx="8" fill="#C49A3C"/>
+  <text x="320" y="472" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#1a1a1a">Get Your Free Assessment →</text>
+</svg>
