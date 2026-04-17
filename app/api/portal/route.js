@@ -26,11 +26,13 @@ export async function GET(request) {
     const supabase = createServerClient();
 
     // Find case by portal_token (unguessable hex token)
-    const { data: cases, error: caseError } = await supabase
+    const initialResult = await supabase
       .from('cases')
       .select('id, status, classification, fy, ay, created_at, modules_completed')
       .eq('portal_token', ref)
       .limit(1);
+    let cases = initialResult.data;
+    const caseError = initialResult.error;
 
     if (caseError) {
       console.error('[portal] Case lookup error:', caseError.message);
