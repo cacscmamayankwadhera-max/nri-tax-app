@@ -11,6 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [resetMode, setResetMode] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [resetLink, setResetLink] = useState('');
   const { theme, toggleTheme } = useTheme();
   const supabase = createClient();
 
@@ -41,15 +42,25 @@ export default function Login() {
   async function handleResetPassword(e) {
     e.preventDefault();
     setError('');
+    setResetLink('');
     const cleanedEmail = (email || '').trim().toLowerCase();
     if (!cleanedEmail) { setError('Enter your email address first'); return; }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(cleanedEmail, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    setLoading(false);
-    if (error) { setError(error.message); return; }
-    setResetSent(true);
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanedEmail }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok || data.error) { setError(data.error || 'Could not send reset link. Please try again.'); return; }
+      if (data.actionLink) setResetLink(data.actionLink);
+      setResetSent(true);
+    } catch {
+      setLoading(false);
+      setError('Network error. Please check your connection and try again.');
+    }
   }
 
   const isDark = theme === 'dark';
@@ -83,18 +94,34 @@ export default function Login() {
             {resetMode ? (
               resetSent ? (
                 <div className="text-center">
-                  <div className="mb-4 rounded-lg px-4 py-3 text-sm font-medium" style={{
-                    background: 'rgba(42,107,74,0.08)',
-                    border: '1px solid rgba(42,107,74,0.2)',
-                    color: 'var(--green)',
-                  }}>
-                    Password reset email sent. Check your inbox.
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => { setResetMode(false); setResetSent(false); setError(''); }}
-                    className="text-xs text-theme-accent font-semibold hover:underline"
-                  >
+                  {resetLink ? (
+                    <>
+                      <div className="mb-3 rounded-lg px-4 py-3 text-xs font-medium text-left" style={{
+                        background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.25)', color: 'var(--accent)',
+                      }}>
+                        Email delivery is not configured yet. Copy this link and open it in your browser to reset your password:
+                      </div>
+                      <div className="mb-3 rounded-lg px-3 py-2 text-xs break-all text-left" style={{
+                        background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+                        color: 'var(--text-secondary)', fontFamily: 'monospace', wordBreak: 'break-all',
+                      }}>
+                        {resetLink}
+                      </div>
+                      <button type="button" onClick={() => { try { navigator.clipboard.writeText(resetLink); } catch {} }}
+                        className="btn-dark w-full py-2 mb-4 text-xs">
+                        Copy Link
+                      </button>
+                    </>
+                  ) : (
+                    <div className="mb-4 rounded-lg px-4 py-3 text-sm font-medium" style={{
+                      background: 'rgba(42,107,74,0.08)', border: '1px solid rgba(42,107,74,0.2)', color: 'var(--green)',
+                    }}>
+                      Password reset email sent. Check your inbox.
+                    </div>
+                  )}
+                  <button type="button"
+                    onClick={() => { setResetMode(false); setResetSent(false); setResetLink(''); setError(''); }}
+                    className="text-xs text-theme-accent font-semibold hover:underline">
                     Back to login
                   </button>
                 </div>

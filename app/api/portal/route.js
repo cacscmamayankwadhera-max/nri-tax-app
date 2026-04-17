@@ -40,6 +40,25 @@ export async function GET(request) {
       );
     }
 
+    // Fallback: try matching the first 8+ hex chars of the case UUID.
+    // Handles cases where portal_token is NULL (created before that column existed)
+    // or where the client was given the short UUID-prefix reference.
+    if (!cases || cases.length === 0) {
+      const trimmedRef = ref.trim().toLowerCase();
+      if (/^[0-9a-f-]{8,}$/i.test(trimmedRef)) {
+        const prefix = trimmedRef.replace(/-/g, '');
+        const { data: fallbackCases, error: fallbackError } = await supabase
+          .from('cases')
+          .select('id, status, classification, fy, ay, created_at, modules_completed')
+          .gte('id', trimmedRef)
+          .limit(10);
+        if (!fallbackError && fallbackCases?.length > 0) {
+          const match = fallbackCases.find(c => c.id.replace(/-/g, '').startsWith(prefix));
+          if (match) cases = [match];
+        }
+      }
+    }
+
     if (!cases || cases.length === 0) {
       return NextResponse.json(
         { error: 'Case not found. Please check your reference and try again.' },

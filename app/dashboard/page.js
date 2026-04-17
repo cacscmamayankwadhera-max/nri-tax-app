@@ -1089,9 +1089,9 @@ export default function Dashboard() {
                 const newStatus = e.target.value;
                 setAc(prev => (prev ? { ...prev, status: newStatus } : prev));
                 setCases(prev => prev.map(c => (c.dbId || c.id) === (ac?.dbId || ac?.id) ? { ...c, status: newStatus } : c));
-                if (ac?.dbId) {
+                if (ac?.dbId || ac?.id) {
                   try {
-                    await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId);
+                    await supabase.from('cases').update({ status: newStatus }).eq('id', ac.dbId || ac.id);
                     fetch('/api/notify', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
@@ -1106,7 +1106,9 @@ export default function Dashboard() {
                       .catch(() => {
                         setToast({ type: 'error', message: 'Status updated but notification could not be sent' });
                       });
-                  } catch(e) {}
+                  } catch(e) {
+                    setToast({ type: 'error', message: 'Failed to save status. Please check your connection or log in again.' });
+                  }
                 }
               }}
               className="input-theme text-[10px] py-1 mt-2 w-full">

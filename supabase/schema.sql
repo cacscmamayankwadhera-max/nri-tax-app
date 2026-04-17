@@ -81,7 +81,8 @@ create table public.module_outputs (
   reviewed_by uuid references public.profiles(id),
   reviewed_at timestamptz,
   created_at timestamptz default now(),
-  
+  completed_at timestamptz,
+
   unique(case_id, module_id)
 );
 

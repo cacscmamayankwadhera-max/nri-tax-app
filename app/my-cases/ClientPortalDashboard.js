@@ -303,7 +303,7 @@ export default function ClientPortalDashboard() {
               </svg>
             </div>
 
-            <h3 className="font-serif text-xl font-bold text-theme mb-2">Verify Your Identity</h3>
+            <h3 className="font-serif text-xl font-bold text-theme mb-2">Confirm Your Identity</h3>
             <p className="text-sm text-theme-secondary mb-1">
               We found <strong className="text-theme-accent">{caseCount} case{caseCount !== 1 ? 's' : ''}</strong> linked to this email.
             </p>
@@ -362,7 +362,7 @@ export default function ClientPortalDashboard() {
             ) : (
               <>
                 <p className="text-sm text-theme-secondary mb-6">
-                  For your security, enter the last 4 digits of your registered phone number.
+                  Enter the last 4 digits of the phone number you provided during intake. No code will be sent — we verify against what's already on file.
                 </p>
 
                 <form onSubmit={handleVerify}>

@@ -757,6 +757,9 @@ function ClientPortal() {
             <a href="/blog/nri-tax-filing-itr" className="block text-sm text-theme-accent hover:underline">
               {'\u2192'} Complete Guide to NRI Tax Filing in India
             </a>
+            <a href="/blog/nri-tax-saving-strategies" className="block text-sm text-theme-accent hover:underline">
+              {'\u2192'} Which deductions can NRIs claim? Deductions &amp; Exemptions Guide
+            </a>
           </div>
         </div>
 

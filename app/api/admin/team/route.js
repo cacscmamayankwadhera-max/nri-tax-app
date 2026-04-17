@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase-server';
 import { createServerClient as createSSR } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { sendEmail } from '@/lib/api-integrations';
 
 export const dynamic = 'force-dynamic';
 
@@ -134,45 +135,62 @@ export async function PUT(request) {
     }
 
     const supabase = createServerClient();
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || '').replace(/\/$/, '');
+    const redirectTo = appUrl ? `${appUrl}/reset-password` : undefined;
 
-    // Prefer native invite flow — Supabase will email the invite if SMTP is configured.
-    const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL || ''}/reset-password`;
-    let invitedUserId = null;
-    let actionLink = null;
-
-    // Try inviteUserByEmail first (sends email when mail is configured)
-    if (supabase.auth?.admin?.inviteUserByEmail) {
-      const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
-        cleanedEmail,
-        {
-          data: { full_name: fullName || '', role: role || 'preparer' },
-          redirectTo: redirectTo || undefined,
-        }
-      );
-      if (inviteError) {
-        return NextResponse.json({ error: inviteError.message }, { status: 400 });
-      }
-      invitedUserId = inviteData?.user?.id || null;
-    } else {
-      // Fallback: create user (no email is sent automatically)
-      const { data, error } = await supabase.auth.admin.createUser({
-        email: cleanedEmail,
-        email_confirm: false,
-        user_metadata: { full_name: fullName || '', role: role || 'preparer' },
-      });
-      if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-      invitedUserId = data.user?.id || null;
-    }
-
-    // Always generate an invite link as a fallback the admin can copy/share manually
-    const { data: linkData } = await supabase.auth.admin.generateLink({
+    // Single generateLink({ type:'invite' }) call — atomically creates the user
+    // AND produces a valid invite token. The admin client bypasses the redirect URL
+    // whitelist that caused the old inviteUserByEmail + generateLink double-call to fail.
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'invite',
       email: cleanedEmail,
-      options: redirectTo ? { redirectTo } : undefined,
+      options: {
+        data: { full_name: fullName || '', role: role || 'preparer' },
+        ...(redirectTo ? { redirectTo } : {}),
+      },
     });
-    actionLink = linkData?.properties?.action_link || null;
 
-    return NextResponse.json({ success: true, userId: invitedUserId, actionLink });
+    if (linkError) {
+      console.error('[admin/team] generateLink invite error:', linkError.message);
+      return NextResponse.json({ error: linkError.message }, { status: 400 });
+    }
+
+    const invitedUserId = linkData?.user?.id || null;
+    const actionLink = linkData?.properties?.action_link || null;
+
+    // Send via Resend if configured
+    let emailSent = false;
+    if (actionLink && process.env.RESEND_API_KEY) {
+      try {
+        const displayName = fullName || cleanedEmail;
+        const emailResult = await sendEmail(
+          cleanedEmail,
+          "You've been invited to MKW Advisors Tax Suite",
+          `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;">
+            <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">You're invited to join MKW Advisors</h2>
+            <p style="color:#555;font-size:14px;line-height:1.6;margin-bottom:8px;">Hi ${displayName},</p>
+            <p style="color:#555;font-size:14px;line-height:1.6;margin-bottom:24px;">
+              You've been invited as a <strong>${role || 'preparer'}</strong> on the MKW Advisors NRI Tax Suite.
+              Click below to set your password and activate your account. This link expires in 24 hours.
+            </p>
+            <a href="${actionLink}"
+               style="display:inline-block;background:#C49A3C;color:#fff;text-decoration:none;
+                      padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;">
+              Accept Invitation
+            </a>
+            <p style="color:#999;font-size:12px;margin-top:24px;">
+              If you did not expect this invitation, you can safely ignore this email.
+            </p>
+          </div>`
+        );
+        if (emailResult.available && emailResult.data) emailSent = true;
+      } catch (emailErr) {
+        console.error('[admin/team] Resend error:', emailErr.message);
+      }
+    }
+
+    // Always return actionLink — admin UI shows it as a copyable fallback when emailSent=false
+    return NextResponse.json({ success: true, userId: invitedUserId, actionLink, emailSent });
   } catch (e) {
     console.error('[admin/team] Invite error:', e);
     return NextResponse.json({ error: 'Failed to invite member' }, { status: 500 });
