@@ -5,6 +5,7 @@ import CookieConsent from './components/CookieConsent';
 export const metadata = {
   title: 'NRI Tax Suite — MKW Advisors',
   description: 'AI-Assisted NRI Tax Filing, Advisory & Compliance for Non-Resident Indians. Expert CA team powered by AI for FY 2025-26.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://nri-tax-app.vercel.app'),
   icons: {
     icon: '/favicon.svg',
   },
