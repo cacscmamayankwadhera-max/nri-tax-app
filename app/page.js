@@ -185,12 +185,12 @@ export default function Home() {
           style={{
             background: isDark
               ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(196,154,60,0.06) 0%, transparent 70%)'
-              : 'var(--bg-primary)',
+              : 'var(--bg-hero)',
           }}
         />
         {/* Subtle diamond/rhombus geometric pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23C49A3C' stroke-width='0.5'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23B48A30' stroke-width='0.5'/%3E%3C/svg%3E")`,
           backgroundSize: '80px 80px',
         }} />
 
@@ -200,6 +200,7 @@ export default function Home() {
               vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
+            <div className="hero-panel mx-auto max-w-5xl p-8 md:p-12 rounded-[2rem]">
             {/* Return visitor banner */}
             {(hasDraft || hasSession) && (
               <div className="mb-6 animate-fade-in-up">
@@ -282,6 +283,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </div>
       </section>
 
 
