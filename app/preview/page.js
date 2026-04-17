@@ -63,7 +63,7 @@ function StyleA() {
       <section className="relative overflow-hidden">
         {/* Subtle radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(4,107,210,0.08) 0%, transparent 70%)',
         }} />
         <div className="max-w-4xl mx-auto text-center px-6 pt-28 pb-20 relative z-10">
           <p className="text-[#C49A3C] text-xs tracking-[0.35em] uppercase mb-8">

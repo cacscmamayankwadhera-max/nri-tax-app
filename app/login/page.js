@@ -97,7 +97,7 @@ export default function Login() {
                   {resetLink ? (
                     <>
                       <div className="mb-3 rounded-lg px-4 py-3 text-xs font-medium text-left" style={{
-                        background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.25)', color: 'var(--accent)',
+                        background: 'rgba(4,107,210,0.08)', border: '1px solid rgba(4,107,210,0.25)', color: 'var(--accent)',
                       }}>
                         Email delivery is not configured yet. Copy this link and open it in your browser to reset your password:
                       </div>

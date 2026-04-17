@@ -14,7 +14,7 @@ export default function TermsOfService() {
         <div className="space-y-8 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {/* 1 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>1. Service Description</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>1. Service Description</h2>
             <p>
               NRI Tax Suite, operated by MKW Advisors, provides AI-assisted tax advisory and filing services
               for Non-Resident Indians (NRIs). The platform uses artificial intelligence to analyse your tax
@@ -30,7 +30,7 @@ export default function TermsOfService() {
 
           {/* 2 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>2. User Obligations</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>2. User Obligations</h2>
             <p>By using our services, you agree to:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li>Provide accurate and complete information about your income, assets, residential status, and all other details relevant to your tax filing.</li>
@@ -43,7 +43,7 @@ export default function TermsOfService() {
 
           {/* 3 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>3. Limitation of Liability</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>3. Limitation of Liability</h2>
             <p>
               NRI Tax Suite and MKW Advisors provide advisory services only. While we take every reasonable care
               to ensure accuracy of our analysis and computations:
@@ -58,7 +58,7 @@ export default function TermsOfService() {
 
           {/* 4 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>4. AI Disclaimer</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>4. AI Disclaimer</h2>
             <p>
               Our platform uses artificial intelligence (powered by large language models) to analyse tax positions,
               generate computations, and draft advisory content. You acknowledge and agree that:
@@ -73,7 +73,7 @@ export default function TermsOfService() {
 
           {/* 5 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>5. Data Handling</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>5. Data Handling</h2>
             <p>
               Your personal and financial data is stored securely and handled with strict confidentiality:
             </p>
@@ -91,7 +91,7 @@ export default function TermsOfService() {
 
           {/* 6 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>6. Payment Terms</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>6. Payment Terms</h2>
             <ul className="list-disc ml-6 space-y-1.5">
               <li>Service fees are as quoted in the engagement scope provided to you after the initial diagnostic.</li>
               <li>Payment is due as per the terms specified in your engagement letter (typically 50% advance, 50% on delivery).</li>
@@ -103,7 +103,7 @@ export default function TermsOfService() {
 
           {/* 7 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>7. Governing Law and Jurisdiction</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>7. Governing Law and Jurisdiction</h2>
             <p>
               These Terms of Service are governed by and construed in accordance with the laws of India.
               Any disputes arising out of or in connection with these terms shall be subject to the
@@ -113,7 +113,7 @@ export default function TermsOfService() {
 
           {/* 8 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>8. Changes to Terms</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>8. Changes to Terms</h2>
             <p>
               We reserve the right to update these Terms of Service at any time. Material changes will be
               communicated via email to active clients. Continued use of the platform after changes are
@@ -123,7 +123,7 @@ export default function TermsOfService() {
 
           {/* 9 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>9. Contact</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>9. Contact</h2>
             <p>
               For any questions regarding these terms, please contact us:
             </p>

@@ -184,7 +184,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background: isDark
-              ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(196,154,60,0.06) 0%, transparent 70%)'
+              ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(4,107,210,0.06) 0%, transparent 70%)'
               : 'var(--bg-hero)',
           }}
         />
@@ -206,7 +206,7 @@ export default function Home() {
               <div className="mb-6 animate-fade-in-up">
                 {hasDraft && (
                   <a href="/client" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-105"
-                    style={{ background: 'rgba(196,154,60,0.1)', border: '1px solid rgba(196,154,60,0.3)', color: 'var(--accent)' }}>
+                    style={{ background: 'rgba(4,107,210,0.1)', border: '1px solid rgba(4,107,210,0.3)', color: 'var(--accent)' }}>
                     &#8617; Continue your assessment
                   </a>
                 )}
@@ -413,8 +413,8 @@ export default function Home() {
             <div
               className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-6"
               style={{
-                background: 'rgba(196,154,60,0.08)',
-                border: '1px solid rgba(196,154,60,0.25)',
+                background: 'rgba(4,107,210,0.08)',
+                border: '1px solid rgba(4,107,210,0.25)',
               }}
             >
               <CheckCircle size={18} style={{ color: '#C49A3C' }} />
@@ -479,8 +479,8 @@ export default function Home() {
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4"
                     style={{
-                      background: 'rgba(196,154,60,0.08)',
-                      border: '1px solid rgba(196,154,60,0.15)',
+                      background: 'rgba(4,107,210,0.08)',
+                      border: '1px solid rgba(4,107,210,0.15)',
                     }}
                   >
                     <Icon
@@ -553,8 +553,8 @@ export default function Home() {
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                     style={{
-                      background: 'rgba(196,154,60,0.08)',
-                      border: '1px solid rgba(196,154,60,0.15)',
+                      background: 'rgba(4,107,210,0.08)',
+                      border: '1px solid rgba(4,107,210,0.15)',
                     }}
                   >
                     <Icon
@@ -720,7 +720,7 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-3">
               {['CA', 'CS', 'CMA', 'IBBI RV'].map((badge, i) => (
                 <span key={i} className="px-3 py-1 rounded-full text-xs font-bold"
-                  style={{ background: 'rgba(196,154,60,0.08)', color: 'var(--accent)', border: '1px solid rgba(196,154,60,0.2)' }}>
+                  style={{ background: 'rgba(4,107,210,0.08)', color: 'var(--accent)', border: '1px solid rgba(4,107,210,0.2)' }}>
                   {badge}
                 </span>
               ))}
@@ -847,7 +847,7 @@ export default function Home() {
                   href="/client"
                   className="btn-primary w-full text-center block py-3 rounded-lg text-sm font-bold"
                   style={tier.featured ? {
-                    boxShadow: '0 4px 16px rgba(196,154,60,0.25)',
+                    boxShadow: '0 4px 16px rgba(4,107,210,0.25)',
                   } : {}}
                 >
                   {tier.featured

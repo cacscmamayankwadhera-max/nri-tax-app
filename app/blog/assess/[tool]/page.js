@@ -913,7 +913,7 @@ export default function AssessmentTool() {
           </a>
           <div className="flex gap-3 items-center">
             <a href="/blog" className="text-sm" style={{ color: 'var(--text-muted)' }}>Knowledge Hub</a>
-            <button onClick={toggleTheme} className="w-9 h-9 rounded-full flex items-center justify-center text-sm" style={{ background: isDark ? 'rgba(196,154,60,0.15)' : 'rgba(255,255,255,0.12)', color: 'var(--accent)', border: '1px solid rgba(196,154,60,0.3)' }}>
+            <button onClick={toggleTheme} className="w-9 h-9 rounded-full flex items-center justify-center text-sm" style={{ background: isDark ? 'rgba(4,107,210,0.15)' : 'rgba(255,255,255,0.12)', color: 'var(--accent)', border: '1px solid rgba(4,107,210,0.3)' }}>
               {isDark ? '\u2600' : '\u263D'}
             </button>
           </div>
@@ -961,7 +961,7 @@ export default function AssessmentTool() {
                 {currentStep.options.map(opt => {
                   const selected = (answers[step] || []).includes(opt.value);
                   return (
-                    <button key={opt.value} onClick={() => handleMultiAnswer(opt.value)} className="w-full text-left px-5 py-4 rounded-xl text-sm transition-all" style={{ background: selected ? 'rgba(196,154,60,0.1)' : 'var(--bg-primary)', border: `1px solid ${selected ? 'var(--accent)' : 'var(--border)'}`, color: 'var(--text-primary)' }}>
+                    <button key={opt.value} onClick={() => handleMultiAnswer(opt.value)} className="w-full text-left px-5 py-4 rounded-xl text-sm transition-all" style={{ background: selected ? 'rgba(4,107,210,0.1)' : 'var(--bg-primary)', border: `1px solid ${selected ? 'var(--accent)' : 'var(--border)'}`, color: 'var(--text-primary)' }}>
                       {selected ? '☑ ' : '☐ '}{opt.label}
                     </button>
                   );
@@ -1044,7 +1044,7 @@ export default function AssessmentTool() {
             </div>
 
             {/* Lead capture — email result */}
-            <div className="rounded-2xl p-6 mb-6" style={{ background: isDark ? 'rgba(196,154,60,0.06)' : 'rgba(196,154,60,0.04)', border: '1px solid rgba(196,154,60,0.2)' }}>
+            <div className="rounded-2xl p-6 mb-6" style={{ background: isDark ? 'rgba(4,107,210,0.06)' : 'rgba(4,107,210,0.04)', border: '1px solid rgba(4,107,210,0.2)' }}>
               {saved ? (
                 <div className="text-center">
                   <p className="text-lg mb-1">&#x2705;</p>
@@ -1072,7 +1072,7 @@ export default function AssessmentTool() {
                 <a href="/client" className="px-6 py-3 rounded-lg text-sm font-bold" style={{ background: 'var(--bg-cta)', color: 'var(--text-on-cta)' }}>
                   Free Detailed Assessment &rarr;
                 </a>
-                <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg text-sm" style={{ border: '1px solid rgba(196,154,60,0.4)', color: 'var(--accent)' }}>
+                <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg text-sm" style={{ border: '1px solid rgba(4,107,210,0.4)', color: 'var(--accent)' }}>
                   WhatsApp Expert
                 </a>
               </div>

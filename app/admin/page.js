@@ -435,7 +435,7 @@ export default function AdminPage() {
         <aside className="hidden md:flex w-56 flex-col flex-shrink-0 border-r border-theme" style={{ background: 'var(--bg-secondary)' }}>
           <div className="p-4 border-b border-theme">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(196,154,60,0.1)', border: '1.5px solid var(--accent)' }}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(4,107,210,0.1)', border: '1.5px solid var(--accent)' }}>
                 <IconSettings size={14} />
               </div>
               <div>
@@ -539,7 +539,7 @@ export default function AdminPage() {
                           </div>
                         </div>
                         {integration.pricing && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(196,154,60,0.1)', color: 'var(--accent)', border: '1px solid rgba(196,154,60,0.2)' }}>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(4,107,210,0.1)', color: 'var(--accent)', border: '1px solid rgba(4,107,210,0.2)' }}>
                             {integration.pricing}
                           </span>
                         )}

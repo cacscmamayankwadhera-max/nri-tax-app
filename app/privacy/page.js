@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
         <div className="space-y-8 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           {/* 1 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>1. Data We Collect</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>1. Data We Collect</h2>
             <p>To provide our tax advisory and filing services, we collect the following information:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Personal identifiers:</strong> Full name, email address, phone number, country of residence.</li>
@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
 
           {/* 2 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>2. Purpose of Data Collection</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>2. Purpose of Data Collection</h2>
             <p>Your data is used exclusively for:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Tax computation:</strong> Calculating your tax liability, capital gains, income from house property, and other heads of income.</li>
@@ -39,7 +39,7 @@ export default function PrivacyPolicy() {
 
           {/* 3 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>3. Data Storage</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>3. Data Storage</h2>
             <p>
               Your data is stored securely on <strong>Supabase</strong>, a cloud database platform. Key security measures include:
             </p>
@@ -54,7 +54,7 @@ export default function PrivacyPolicy() {
 
           {/* 4 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>4. Data Retention</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>4. Data Retention</h2>
             <p>
               We retain your data for a minimum of <strong>7 years</strong> from the date of the relevant assessment year,
               in compliance with Indian tax law requirements. This is necessary because:
@@ -69,7 +69,7 @@ export default function PrivacyPolicy() {
 
           {/* 5 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>5. Third-Party Data Sharing</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>5. Third-Party Data Sharing</h2>
             <p>We share your data only with the following third parties, strictly for the purposes described:</p>
             <div className="mt-3 rounded-xl p-5" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <p className="font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Anthropic AI (Claude)</p>
@@ -91,7 +91,7 @@ export default function PrivacyPolicy() {
 
           {/* 6 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>6. Your Rights</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>6. Your Rights</h2>
             <p>As a client, you have the right to:</p>
             <ul className="list-disc ml-6 mt-2 space-y-1.5">
               <li><strong>Access:</strong> Request a copy of all personal data we hold about you.</li>
@@ -108,7 +108,7 @@ export default function PrivacyPolicy() {
 
           {/* 7 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>7. Cookies</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>7. Cookies</h2>
             <p>
               Our platform uses <strong>minimal cookies</strong>, limited to:
             </p>
@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
 
           {/* 8 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>8. Changes to This Policy</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>8. Changes to This Policy</h2>
             <p>
               We may update this Privacy Policy from time to time. Material changes will be communicated to
               active clients via email. The &quot;Last updated&quot; date at the top of this page reflects the most recent revision.
@@ -132,7 +132,7 @@ export default function PrivacyPolicy() {
 
           {/* 9 */}
           <section>
-            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(196,154,60,0.3)' }}>9. Contact</h2>
+            <h2 className="font-serif text-lg font-bold mb-3 pb-2" style={{ color: 'var(--text-primary)', borderBottom: '1px solid rgba(4,107,210,0.3)' }}>9. Contact</h2>
             <p>
               For any questions or concerns about this Privacy Policy or your data, please contact us:
             </p>

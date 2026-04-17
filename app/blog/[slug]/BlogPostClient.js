@@ -104,7 +104,7 @@ export default function BlogPostClient({ blog, blogContent }) {
 
       {/* ARTICLE HEADER */}
       <header className="relative overflow-hidden">
-        {isDark && <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.06) 0%, transparent 70%)' }} />}
+        {isDark && <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(4,107,210,0.06) 0%, transparent 70%)' }} />}
         <div className="max-w-3xl mx-auto px-6 pt-12 pb-8 relative z-10">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-xs mb-6" style={{ color: 'var(--text-muted)' }}>
@@ -198,7 +198,7 @@ export default function BlogPostClient({ blog, blogContent }) {
                   ol: ({ children }) => <ol className="text-sm mb-4 pl-5 space-y-1.5" style={{ color: 'var(--text-secondary)', listStyleType: 'decimal' }}>{children}</ol>,
                   li: ({ children }) => <li className="leading-relaxed">{children}</li>,
                   blockquote: ({ children }) => (
-                    <blockquote className="rounded-xl p-5 my-6" style={{ background: isDark ? 'rgba(196,154,60,0.08)' : 'rgba(196,154,60,0.06)', borderLeft: '4px solid var(--accent)' }}>
+                    <blockquote className="rounded-xl p-5 my-6" style={{ background: isDark ? 'rgba(4,107,210,0.08)' : 'rgba(4,107,210,0.06)', borderLeft: '4px solid var(--accent)' }}>
                       {children}
                     </blockquote>
                   ),
@@ -233,7 +233,7 @@ export default function BlogPostClient({ blog, blogContent }) {
         </div>
 
         {/* MID-ARTICLE CTA */}
-        <div className="my-10 rounded-xl p-6" style={{ background: isDark ? 'rgba(196,154,60,0.08)' : 'rgba(196,154,60,0.06)', border: '1px solid rgba(196,154,60,0.2)' }}>
+        <div className="my-10 rounded-xl p-6" style={{ background: isDark ? 'rgba(4,107,210,0.08)' : 'rgba(4,107,210,0.06)', border: '1px solid rgba(4,107,210,0.2)' }}>
           <div className="flex items-start gap-4">
             <div className="text-2xl">💡</div>
             <div>
@@ -260,7 +260,7 @@ export default function BlogPostClient({ blog, blogContent }) {
         </div>
 
         {/* EMAIL THIS GUIDE */}
-        <div className="rounded-xl p-5 mb-10" style={{ background: isDark ? 'rgba(196,154,60,0.06)' : 'rgba(196,154,60,0.04)', border: '1px solid rgba(196,154,60,0.2)' }}>
+        <div className="rounded-xl p-5 mb-10" style={{ background: isDark ? 'rgba(4,107,210,0.06)' : 'rgba(4,107,210,0.04)', border: '1px solid rgba(4,107,210,0.2)' }}>
           {emailResult === 'sent' ? (
             <div className="text-center">
               <p className="text-sm font-bold">&#x2705; Saved! Check your email for the guide + bonus tax checklist.</p>

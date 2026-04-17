@@ -171,7 +171,7 @@ export default function BlogHubClient({ blogs }) {
 
       {/* ══ HERO ══ */}
       <section id="main-content" className="relative overflow-hidden">
-        {isDark && <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,154,60,0.08) 0%, transparent 70%)' }} />}
+        {isDark && <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(4,107,210,0.08) 0%, transparent 70%)' }} />}
         <div className="max-w-6xl mx-auto px-6 md:px-12 pt-16 pb-10 relative z-10">
           <div className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-6" style={{ background: 'var(--bg-badge)', color: 'var(--text-badge)' }}>
             NRI Knowledge Hub &middot; FY 2025-26 &middot; Updated March 2026
@@ -292,7 +292,7 @@ export default function BlogHubClient({ blogs }) {
 
         {/* ══ LEAD CAPTURE — Free Tax Checklist ══ */}
         {activeTopic === 'all' && !searchQuery && (
-          <section className="mb-14 rounded-2xl p-6 md:p-8" style={{ background: isDark ? 'rgba(196,154,60,0.06)' : 'linear-gradient(135deg, #fef9ee 0%, #fdf2d8 100%)', border: '1px solid rgba(196,154,60,0.2)' }}>
+          <section className="mb-14 rounded-2xl p-6 md:p-8" style={{ background: isDark ? 'rgba(4,107,210,0.06)' : 'linear-gradient(135deg, #fef9ee 0%, #fdf2d8 100%)', border: '1px solid rgba(4,107,210,0.2)' }}>
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex-1">
                 <div className="text-3xl mb-3">{'\u{1F4CB}'}</div>
@@ -553,10 +553,10 @@ export default function BlogHubClient({ blogs }) {
             <a href="/client" className="px-8 py-3 rounded-lg font-bold text-sm transition-all hover:scale-105" style={{ background: 'var(--bg-cta)', color: 'var(--text-on-cta)' }}>
               Free Tax Assessment &rarr;
             </a>
-            <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:scale-105" style={{ border: '1px solid rgba(196,154,60,0.4)', color: 'var(--accent)' }}>
+            <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:scale-105" style={{ border: '1px solid rgba(4,107,210,0.4)', color: 'var(--accent)' }}>
               WhatsApp: +91-96677 44073
             </a>
-            <a href="mailto:contact@mkwadvisors.com" className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:scale-105" style={{ border: '1px solid rgba(196,154,60,0.4)', color: 'var(--accent)' }}>
+            <a href="mailto:contact@mkwadvisors.com" className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:scale-105" style={{ border: '1px solid rgba(4,107,210,0.4)', color: 'var(--accent)' }}>
               Email Us
             </a>
           </div>

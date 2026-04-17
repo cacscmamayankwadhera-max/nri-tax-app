@@ -509,7 +509,7 @@ function ClientPortal() {
                       {isCurrent && (
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full min-h-[44px] md:min-h-0 items-center" style={{
                           color: 'var(--accent)',
-                          background: 'rgba(196,154,60,0.1)',
+                          background: 'rgba(4,107,210,0.1)',
                         }}>
                           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                           CURRENT
@@ -614,7 +614,7 @@ function ClientPortal() {
                       key={mod.id}
                       className={`flex items-start gap-3 py-2 px-3 rounded-lg transition-colors`}
                       style={{
-                        background: isCurrent ? 'rgba(196,154,60,0.08)' : 'transparent',
+                        background: isCurrent ? 'rgba(4,107,210,0.08)' : 'transparent',
                       }}
                     >
                       {/* Status indicator */}
@@ -802,7 +802,7 @@ function Nav({ isDark, toggleTheme }) {
           onClick={toggleTheme}
           className="w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all duration-300 hover:scale-110 ml-2"
           style={{
-            background: 'rgba(196,154,60,0.15)',
+            background: 'rgba(4,107,210,0.15)',
             color: 'var(--accent)',
           }}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

@@ -215,7 +215,7 @@ export default function ClientPortalDashboard() {
         <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="text-center mb-10">
             <div className="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center"
-              style={{ background: 'rgba(196,154,60,0.1)', border: '2px solid rgba(196,154,60,0.2)' }}>
+              style={{ background: 'rgba(4,107,210,0.1)', border: '2px solid rgba(4,107,210,0.2)' }}>
               <svg className="w-7 h-7" style={{ color: 'var(--accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z" />
@@ -296,7 +296,7 @@ export default function ClientPortalDashboard() {
         <div className={`max-w-lg mx-auto px-6 pt-20 pb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="card-theme p-8 text-center shadow-sm">
             <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"
-              style={{ background: 'rgba(196,154,60,0.1)', border: '2px solid rgba(196,154,60,0.2)' }}>
+              style={{ background: 'rgba(4,107,210,0.1)', border: '2px solid rgba(4,107,210,0.2)' }}>
               <svg className="w-6 h-6" style={{ color: 'var(--accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -349,7 +349,7 @@ export default function ClientPortalDashboard() {
                   </button>
                 </form>
 
-                <div className="mt-6 p-4 rounded-lg" style={{ background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.2)' }}>
+                <div className="mt-6 p-4 rounded-lg" style={{ background: 'rgba(4,107,210,0.08)', border: '1px solid rgba(4,107,210,0.2)' }}>
                   <p className="text-sm text-theme-secondary">
                     Having trouble? Contact us on{' '}
                     <a href="https://wa.me/919667744073" target="_blank" rel="noopener noreferrer" className="text-theme-accent font-semibold hover:underline">
@@ -532,9 +532,9 @@ export default function ClientPortalDashboard() {
                       <div
                         className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm"
                         style={{
-                          background: stage >= 6 ? 'var(--green)' : stage >= 4 ? 'rgba(42,107,74,0.12)' : 'rgba(196,154,60,0.1)',
+                          background: stage >= 6 ? 'var(--green)' : stage >= 4 ? 'rgba(42,107,74,0.12)' : 'rgba(4,107,210,0.1)',
                           color: stage >= 6 ? '#fff' : stage >= 4 ? 'var(--green)' : 'var(--accent)',
-                          border: stage >= 6 ? 'none' : `1.5px solid ${stage >= 4 ? 'rgba(42,107,74,0.25)' : 'rgba(196,154,60,0.2)'}`,
+                          border: stage >= 6 ? 'none' : `1.5px solid ${stage >= 4 ? 'rgba(42,107,74,0.25)' : 'rgba(4,107,210,0.2)'}`,
                         }}
                       >
                         {stage >= 6 ? (
@@ -665,7 +665,7 @@ export default function ClientPortalDashboard() {
                                   </span>
                                   {isCurrent && (
                                     <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                                      style={{ color: 'var(--accent)', background: 'rgba(196,154,60,0.1)' }}>
+                                      style={{ color: 'var(--accent)', background: 'rgba(4,107,210,0.1)' }}>
                                       <span className="w-1 h-1 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                                       CURRENT
                                     </span>
@@ -775,8 +775,8 @@ function SummaryCard({ label, value, accent }) {
 
 function StatusBadge({ stage }) {
   const configs = {
-    1: { label: 'Received',    bg: 'rgba(196,154,60,0.1)',  color: 'var(--accent)',  border: 'rgba(196,154,60,0.2)' },
-    2: { label: 'Analyzing',   bg: 'rgba(196,154,60,0.1)',  color: 'var(--accent)',  border: 'rgba(196,154,60,0.2)' },
+    1: { label: 'Received',    bg: 'rgba(4,107,210,0.1)',  color: 'var(--accent)',  border: 'rgba(4,107,210,0.2)' },
+    2: { label: 'Analyzing',   bg: 'rgba(4,107,210,0.1)',  color: 'var(--accent)',  border: 'rgba(4,107,210,0.2)' },
     3: { label: 'In Review',   bg: 'rgba(176,125,58,0.1)',  color: 'var(--amber)',   border: 'rgba(176,125,58,0.2)' },
     4: { label: 'Findings',    bg: 'rgba(42,107,74,0.1)',   color: 'var(--green)',   border: 'rgba(42,107,74,0.2)' },
     5: { label: 'Filing',      bg: 'rgba(42,107,74,0.1)',   color: 'var(--green)',   border: 'rgba(42,107,74,0.2)' },
