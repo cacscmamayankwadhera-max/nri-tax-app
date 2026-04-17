@@ -190,7 +190,7 @@ export default function Home() {
         />
         {/* Subtle diamond/rhombus geometric pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23B48A30' stroke-width='0.5'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23046BD2' stroke-width='0.5'/%3E%3C/svg%3E")`,
           backgroundSize: '80px 80px',
         }} />
 
@@ -234,7 +234,7 @@ export default function Home() {
             <h1 className="text-display font-serif text-3xl sm:text-4xl md:text-6xl mb-6 leading-tight">
               NRI Tax Filing, Advisory
               <br />
-              <span className="text-gradient-gold">
+              <span className="text-gradient-brand">
                 &amp; Compliance &mdash; Done Right
               </span>
             </h1>

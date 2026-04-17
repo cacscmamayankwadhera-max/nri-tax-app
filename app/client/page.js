@@ -791,7 +791,7 @@ export default function ClientIntake() {
                 {f.salePrice && f.purchaseCost && cgData && (
                   <div className="card-premium border-glow p-6 mt-4 animate-fade-in-up overflow-x-auto">
                     <p className="text-xs text-theme-accent uppercase tracking-wide mb-2 font-bold">Live Tax Preview</p>
-                    <div className="text-2xl font-serif font-bold text-gradient-gold">
+                    <div className="text-2xl font-serif font-bold text-gradient-brand">
                       You could save {formatINR(cgData.savings)}
                       {f.country && FX_RATES[f.country] && (
                         <span className="text-xs text-theme-muted ml-2">

@@ -519,7 +519,7 @@ h1, h2, h3, .font-serif {
 }
 
 /* ═══ SELECTION ═══ */
-::selection { background: rgba(196, 154, 60, 0.2); color: var(--text-primary); }
+::selection { background: rgba(4, 107, 210, 0.18); color: var(--text-primary); }
 
 /* ═══ FOCUS VISIBLE ═══ */
 *:focus-visible {
@@ -534,15 +534,15 @@ h1, h2, h3, .font-serif {
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ═══ GRADIENT TEXT — for hero headings ═══ */
-.text-gradient-gold {
-  background: linear-gradient(135deg, #C49A3C 0%, #D4AF37 40%, #E8C547 60%, #C49A3C 100%);
+.text-gradient-brand {
+  background: linear-gradient(135deg, #046BD2 0%, #0A64C2 35%, #0A54A2 65%, #045CB4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-[data-theme="dark"] .text-gradient-gold {
-  background: linear-gradient(135deg, #D4AF37 0%, #E8C547 40%, #F0D860 60%, #D4AF37 100%);
+[data-theme="dark"] .text-gradient-brand {
+  background: linear-gradient(135deg, #045CB4 0%, #0A54A2 35%, #0A64C2 65%, #046BD2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
