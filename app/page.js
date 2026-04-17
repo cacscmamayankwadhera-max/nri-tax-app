@@ -172,7 +172,7 @@ export default function Home() {
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}
     >
-      <NavBar variant="transparent" />
+      <NavBar variant="solid" />
 
 
       {/* ============================================================

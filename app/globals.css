@@ -8,27 +8,27 @@ html {
 
 :root {
   /* Theme C (default) — Luxury Consultancy */
-  --bg-primary: #f5f2ec;
-  --bg-secondary: #ffffff;
-  --bg-nav: #1a1a1a;
-  --bg-card: #ffffff;
-  --bg-card-hover: #faf8f4;
-  --bg-footer: #1a1a1a;
-  --bg-cta: #C49A3C;
-  --bg-badge: #fef3c7;
+  --bg-primary: #f4efe4;
+  --bg-secondary: #fbf7ef;
+  --bg-nav: #10151e;
+  --bg-card: #fffdfa;
+  --bg-card-hover: #f7f1e7;
+  --bg-footer: #0d1118;
+  --bg-cta: #b48a30;
+  --bg-badge: #f9e8bc;
 
-  --text-primary: #1a1a1a;
-  --text-secondary: #6b6256;
-  --text-muted: #9ca3af;
-  --text-nav: #C49A3C;
+  --text-primary: #121317;
+  --text-secondary: #5f5649;
+  --text-muted: #8f8a7d;
+  --text-nav: #d1a754;
   --text-on-dark: #ffffff;
-  --text-on-cta: #1a1a1a;
-  --text-badge: #92400e;
+  --text-on-cta: #0d1118;
+  --text-badge: #8b5b1d;
 
-  --accent: #C49A3C;
-  --accent-hover: #d4a843;
-  --border: #e5e0d8;
-  --border-hover: #C49A3C;
+  --accent: #b48a30;
+  --accent-hover: #d1a754;
+  --border: #e4dacd;
+  --border-hover: #b48a30;
 
   --stat-number: #C49A3C;
   --green: #2A6B4A;
@@ -54,21 +54,21 @@ html {
   --bg-card: #1a2332;
   --bg-card-hover: #1f2a3d;
   --bg-footer: #060a12;
-  --bg-cta: #C49A3C;
+  --bg-cta: #b48a30;
   --bg-badge: #1a2332;
 
-  --text-primary: #f0ece4;
-  --text-secondary: #8b95a8;
-  --text-muted: #5a6478;
-  --text-nav: #C49A3C;
-  --text-on-dark: #f0ece4;
+  --text-primary: #f1ebe1;
+  --text-secondary: #9aa1b2;
+  --text-muted: #6b748d;
+  --text-nav: #d1a754;
+  --text-on-dark: #f1ebe1;
   --text-on-cta: #0a0f1a;
-  --text-badge: #C49A3C;
+  --text-badge: #d1a754;
 
-  --accent: #C49A3C;
-  --accent-hover: #D4AF37;
-  --border: #2a3548;
-  --border-hover: #C49A3C;
+  --accent: #b48a30;
+  --accent-hover: #d1a754;
+  --border: #24304a;
+  --border-hover: #d1a754;
 
   --stat-number: #D4AF37;
   --green: #4ade80;
