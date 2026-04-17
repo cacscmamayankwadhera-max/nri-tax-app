@@ -48,11 +48,11 @@ export default function NavBar({ variant = 'solid' }) {
   return (
     <>
       <nav
-        className="sticky top-0 z-50 transition-all duration-300"
+        className="sticky top-0 z-50 transition-all duration-300 backdrop-saturate-150"
         style={{
           background: isTransparent ? 'transparent' : 'var(--bg-nav)',
-          boxShadow: isTransparent ? 'none' : '0 1px 0 0 rgba(255,255,255,0.06)',
-          backdropFilter: isTransparent ? 'none' : 'blur(12px)',
+          boxShadow: isTransparent ? 'none' : '0 18px 50px rgba(0,0,0,0.18)',
+          backdropFilter: isTransparent ? 'none' : 'blur(18px)',
         }}
         role="navigation"
         aria-label="Main navigation"
@@ -70,7 +70,7 @@ export default function NavBar({ variant = 'solid' }) {
           </a>
 
           {/* Desktop — center links (client-facing) */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-2">
             {[
               { label: 'Knowledge Hub', href: '/blog', icon: BookOpen },
               { label: 'Start Filing', href: '/client', icon: FileText },
@@ -81,15 +81,9 @@ export default function NavBar({ variant = 'solid' }) {
               const active = isActive(link.href);
               return (
                 <a key={link.href} href={link.href}
-                  className="relative flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-200"
-                  style={{
-                    color: active ? 'var(--accent)' : 'rgba(255,255,255,0.65)',
-                    background: active ? 'rgba(196,154,60,0.1)' : 'transparent',
-                  }}
-                  onMouseEnter={(e) => { if (!active) { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; } }}
-                  onMouseLeave={(e) => { if (!active) { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'transparent'; } }}
+                  className={`nav-link ${active ? 'nav-link-active' : ''}`}
                 >
-                  <Icon size={15} style={{ opacity: 0.7 }} />
+                  <Icon size={15} style={{ opacity: 0.75 }} />
                   {link.label}
                 </a>
               );
@@ -99,20 +93,15 @@ export default function NavBar({ variant = 'solid' }) {
           {/* Desktop — right side (secondary actions) */}
           <div className="hidden md:flex items-center gap-3">
             <button onClick={toggleTheme}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-              style={{ color: 'var(--accent)', background: 'rgba(196,154,60,0.08)', border: '1px solid rgba(196,154,60,0.2)' }}
+              className="nav-icon-button"
+              style={{ color: 'var(--accent)' }}
               aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}>
               {isDark ? <Sun size={14} /> : <Moon size={14} />}
             </button>
 
-            <div className="w-px h-5" style={{ background: 'rgba(255,255,255,0.12)' }} />
+            <div className="w-px h-5 bg-white/10" />
 
-            <a href="/login"
-              className="flex items-center gap-1.5 text-[12px] font-medium px-3 py-1.5 rounded-md transition-all duration-200"
-              style={{ color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-            >
+            <a href="/login" className="nav-cta">
               <LogIn size={13} />
               Team
             </a>
@@ -121,14 +110,14 @@ export default function NavBar({ variant = 'solid' }) {
           {/* Mobile — right side */}
           <div className="flex md:hidden items-center gap-1.5">
             <button onClick={toggleTheme}
-              className="w-8 h-8 rounded-full flex items-center justify-center"
+              className="nav-icon-button"
               style={{ color: 'var(--accent)' }}
               aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}>
               {isDark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
             <button onClick={() => setMenuOpen(true)}
-              className="w-9 h-9 rounded-lg flex items-center justify-center"
-              style={{ color: 'rgba(255,255,255,0.8)' }}
+              className="nav-icon-button"
+              style={{ color: 'rgba(255,255,255,0.85)' }}
               aria-label="Open menu" aria-expanded={menuOpen}>
               <Menu size={20} />
             </button>

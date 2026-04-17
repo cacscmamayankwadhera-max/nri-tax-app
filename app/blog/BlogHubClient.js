@@ -205,8 +205,7 @@ export default function BlogHubClient({ blogs }) {
               {/* Slider content */}
               <a
                 href={`/blog/${featured[featIdx]?.slug}`}
-                className="block rounded-2xl p-6 md:p-8 transition-all duration-500"
-                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
+                className="block rounded-2xl p-6 md:p-8 transition-all duration-500 premium-card"
               >
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-1">
@@ -375,8 +374,7 @@ export default function BlogHubClient({ blogs }) {
               placeholder="Search 97 guides... (try: property sale, TDS, FBAR, DTAA, NRE, FEMA, ESOP)"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full px-5 py-3.5 rounded-xl text-sm transition-all focus:shadow-lg"
-              style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)', outline: 'none' }}
+              className="search-input focus:shadow-xl"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg opacity-40">&#x1F50D;</span>
           </div>

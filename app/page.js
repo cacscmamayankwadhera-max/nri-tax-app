@@ -261,21 +261,7 @@ export default function Home() {
               <a href="/client" className="btn-premium">
                 Get Your Free Assessment &rarr;
               </a>
-              <a
-                href="#how"
-                className="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200"
-                style={{
-                  border: '1px solid var(--accent)',
-                  color: 'var(--accent)',
-                  background: 'transparent',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(196,154,60,0.06)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                }}
-              >
+              <a href="#how" className="btn-outline">
                 See How It Works
               </a>
             </div>
