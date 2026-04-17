@@ -59,7 +59,7 @@ export async function POST(request) {
 
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const message = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5',
       max_tokens: 4096,
       temperature: 0,
       system: systemPrompt,
@@ -80,6 +80,9 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('AI module error:', error);
-    return NextResponse.json({ error: 'AI processing failed. Please try again.' }, { status: 500 });
+    const msg = error?.status === 401 ? 'Invalid Anthropic API key. Check ANTHROPIC_API_KEY in your environment.'
+      : error?.status === 429 ? 'Anthropic rate limit reached. Please wait a moment and try again.'
+      : error?.message || 'AI processing failed. Please try again.';
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

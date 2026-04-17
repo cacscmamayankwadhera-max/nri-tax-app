@@ -443,7 +443,7 @@ export default function Dashboard() {
   async function saveModuleOutput(caseId, moduleId, output) {
     if (!caseId) return;
     try {
-      supabase.from('module_outputs').upsert({ case_id: caseId, module_id: moduleId, output_text: output });
+      supabase.from('module_outputs').upsert({ case_id: caseId, module_id: moduleId, output_text: output, completed_at: new Date().toISOString() });
       supabase.from('cases').update({ modules_completed: Object.keys(outs).length + 1 }).eq('id', caseId);
     } catch (e) { /* continue */ }
   }
