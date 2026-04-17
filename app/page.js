@@ -184,7 +184,7 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background: isDark
-              ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(4,107,210,0.06) 0%, transparent 70%)'
+              ? 'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(var(--accent-rgb),0.06) 0%, transparent 70%)'
               : 'var(--bg-hero)',
           }}
         />
@@ -206,13 +206,13 @@ export default function Home() {
               <div className="mb-6 animate-fade-in-up">
                 {hasDraft && (
                   <a href="/client" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-105"
-                    style={{ background: 'rgba(4,107,210,0.1)', border: '1px solid rgba(4,107,210,0.3)', color: 'var(--accent)' }}>
+                    style={{ background: 'rgba(var(--accent-rgb),0.1)', border: '1px solid rgba(var(--accent-rgb),0.3)', color: 'var(--accent)' }}>
                     &#8617; Continue your assessment
                   </a>
                 )}
                 {hasSession && !hasDraft && (
                   <a href="/my-cases" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:scale-105"
-                    style={{ background: 'rgba(42,107,74,0.1)', border: '1px solid rgba(42,107,74,0.3)', color: 'var(--green)' }}>
+                    style={{ background: 'rgba(var(--green-rgb),0.1)', border: '1px solid rgba(var(--green-rgb),0.3)', color: 'var(--green)' }}>
                     &#8617; View your cases
                   </a>
                 )}
@@ -275,7 +275,7 @@ export default function Home() {
             </p>
 
             <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full animate-pulse"
-              style={{ background: 'rgba(160,72,72,0.08)', border: '1px solid rgba(160,72,72,0.2)' }}>
+              style={{ background: 'rgba(var(--red-rgb),0.08)', border: '1px solid rgba(var(--red-rgb),0.2)' }}>
               <span className="w-2 h-2 rounded-full" style={{ background: 'var(--red)' }} />
               <span className="text-xs font-medium" style={{ color: 'var(--red)' }}>
                 ITR deadline: 31 July 2026 — {Math.max(0, Math.ceil((new Date('2026-07-31') - new Date()) / (1000 * 60 * 60 * 24)))} days remaining
@@ -333,22 +333,22 @@ export default function Home() {
       {/* ============================================================
           S3 — PAIN POINTS: Dark Section, 2x2 Card Grid
           ============================================================ */}
-      <section className="reveal" style={{ background: '#0f0f0f' }}>
+      <section className="reveal" style={{ background: 'var(--bg-nav)' }}>
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-24">
           {/* Section heading — centered */}
           <div className="text-center mb-14">
             <div className="flex items-center justify-center gap-2 mb-5">
-              <AlertTriangle size={14} style={{ color: '#f87171' }} />
+              <AlertTriangle size={14} style={{ color: 'var(--red)' }} />
               <span
                 className="text-xs font-bold uppercase tracking-widest"
-                style={{ color: '#f87171' }}
+                style={{ color: 'var(--red)' }}
               >
                 Common NRI Tax Problems
               </span>
             </div>
             <h2
               className="font-serif text-3xl md:text-4xl mb-4"
-              style={{ color: '#ffffff', fontWeight: 400 }}
+              style={{ color: 'var(--text-on-dark)', fontWeight: 400 }}
             >
               Why NRIs Lose Money on Indian Taxes
             </h2>
@@ -391,15 +391,15 @@ export default function Home() {
                 </h3>
                 <p
                   className="text-sm leading-relaxed mb-4"
-                  style={{ color: '#9ca3af' }}
+                  style={{ color: 'var(--text-muted)' }}
                 >
                   {p.detail}
                 </p>
                 <span
                   className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold"
                   style={{
-                    background: 'rgba(220,38,38,0.12)',
-                    color: '#f87171',
+                    background: 'rgba(var(--red-rgb),0.12)',
+                    color: 'var(--red)',
                   }}
                 >
                   {p.stat}
@@ -413,14 +413,14 @@ export default function Home() {
             <div
               className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-6"
               style={{
-                background: 'rgba(4,107,210,0.08)',
-                border: '1px solid rgba(4,107,210,0.25)',
+                background: 'rgba(var(--accent-rgb),0.08)',
+                border: '1px solid rgba(var(--accent-rgb),0.25)',
               }}
             >
-              <CheckCircle size={18} style={{ color: '#046BD2' }} />
+              <CheckCircle size={18} style={{ color: 'var(--accent)' }} />
               <span
                 className="text-sm font-semibold"
-                style={{ color: '#046BD2' }}
+                style={{ color: 'var(--accent)' }}
               >
                 We fix all of this. Every single case.
               </span>
@@ -429,7 +429,7 @@ export default function Home() {
               <a
                 href="/client"
                 className="btn-premium inline-flex"
-                style={{ background: '#046BD2', color: '#0f0f0f' }}
+                style={{ background: 'var(--accent)', color: 'var(--text-on-cta)' }}
               >
                 Get Your Free Diagnostic &rarr;
               </a>
@@ -479,8 +479,8 @@ export default function Home() {
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4"
                     style={{
-                      background: 'rgba(4,107,210,0.08)',
-                      border: '1px solid rgba(4,107,210,0.15)',
+                      background: 'rgba(var(--accent-rgb),0.08)',
+                      border: '1px solid rgba(var(--accent-rgb),0.15)',
                     }}
                   >
                     <Icon
@@ -553,8 +553,8 @@ export default function Home() {
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                     style={{
-                      background: 'rgba(4,107,210,0.08)',
-                      border: '1px solid rgba(4,107,210,0.15)',
+                      background: 'rgba(var(--accent-rgb),0.08)',
+                      border: '1px solid rgba(var(--accent-rgb),0.15)',
                     }}
                   >
                     <Icon
@@ -720,7 +720,7 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-3">
               {['CA', 'CS', 'CMA', 'IBBI RV'].map((badge, i) => (
                 <span key={i} className="px-3 py-1 rounded-full text-xs font-bold"
-                  style={{ background: 'rgba(4,107,210,0.08)', color: 'var(--accent)', border: '1px solid rgba(4,107,210,0.2)' }}>
+                  style={{ background: 'rgba(var(--accent-rgb),0.08)', color: 'var(--accent)', border: '1px solid rgba(var(--accent-rgb),0.2)' }}>
                   {badge}
                 </span>
               ))}
@@ -847,7 +847,7 @@ export default function Home() {
                   href="/client"
                   className="btn-primary w-full text-center block py-3 rounded-lg text-sm font-bold"
                   style={tier.featured ? {
-                    boxShadow: '0 4px 16px rgba(4,107,210,0.25)',
+                    boxShadow: '0 4px 16px rgba(var(--accent-rgb),0.25)',
                   } : {}}
                 >
                   {tier.featured

@@ -61,7 +61,7 @@ export default function NavBar({ variant = 'solid' }) {
           {/* Logo */}
           <a href="/" className="flex items-center gap-2.5" aria-label="NRI Tax Suite home">
             <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ border: '1.5px solid var(--accent)', background: 'rgba(4,107,210,0.08)' }}>
+              style={{ border: '1.5px solid var(--accent)', background: 'rgba(var(--accent-rgb),0.08)' }}>
               <span className="text-[11px] font-bold tracking-tight" style={{ color: 'var(--accent)' }}>NT</span>
             </div>
             <span className="font-serif text-base tracking-wide hidden sm:inline" style={{ color: 'var(--text-nav, #fff)' }}>
@@ -99,7 +99,7 @@ export default function NavBar({ variant = 'solid' }) {
               {isDark ? <Sun size={14} /> : <Moon size={14} />}
             </button>
 
-            <div className="w-px h-5 bg-white/10" />
+            <div className="w-px h-5 bg-[var(--border)]" />
 
             <a href="/login" className="nav-cta">
               <LogIn size={13} />
@@ -170,7 +170,7 @@ export default function NavBar({ variant = 'solid' }) {
                 className="flex items-start gap-3 px-3 py-3 rounded-lg transition-all duration-200"
                 style={{
                   color: active ? 'var(--accent)' : 'rgba(255,255,255,0.85)',
-                  background: active ? 'rgba(4,107,210,0.08)' : 'transparent',
+                  background: active ? 'rgba(var(--accent-rgb),0.08)' : 'transparent',
                 }}>
                 <Icon size={18} className="mt-0.5 flex-shrink-0" style={{ opacity: 0.6 }} />
                 <div>

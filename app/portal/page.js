@@ -40,7 +40,17 @@ const MODULE_DESCRIPTIONS = {
   memo: 'Your personalized advisory report is being prepared',
 };
 
-const CLS_COLORS = { Green: '#059669', Amber: '#F59E0B', Red: '#DC2626' };
+const STATUS_COLORS = { Green: 'var(--green)', Amber: 'var(--amber)', Red: 'var(--red)' };
+const STATUS_BG = {
+  Green: 'rgba(var(--green-rgb),0.08)',
+  Amber: 'rgba(var(--amber-rgb),0.08)',
+  Red: 'rgba(var(--red-rgb),0.08)',
+};
+const STATUS_BORDER = {
+  Green: 'rgba(var(--green-rgb),0.2)',
+  Amber: 'rgba(var(--amber-rgb),0.2)',
+  Red: 'rgba(var(--red-rgb),0.2)',
+};
 const CLS_MEANINGS = {
   Green: 'Straightforward case \u2014 simple filing with limited complexity.',
   Amber: 'Moderate complexity \u2014 advisory review recommended alongside filing.',
@@ -291,8 +301,8 @@ function ClientPortal() {
             />
             {error && (
               <div className="mt-4 rounded-lg px-4 py-3 text-sm" style={{
-                background: 'rgba(160,72,72,0.08)',
-                border: '1px solid rgba(160,72,72,0.2)',
+                background: 'rgba(var(--red-rgb),0.08)',
+                border: '1px solid rgba(var(--red-rgb),0.2)',
                 color: 'var(--red)',
               }}>
                 {error}
@@ -352,8 +362,8 @@ function ClientPortal() {
 
             {error && (
               <div className="mt-4 rounded-lg px-4 py-3 text-sm" style={{
-                background: 'rgba(160,72,72,0.08)',
-                border: '1px solid rgba(160,72,72,0.2)',
+                background: 'rgba(var(--red-rgb),0.08)',
+                border: '1px solid rgba(var(--red-rgb),0.2)',
                 color: 'var(--red)',
               }}>
                 {error}
@@ -441,9 +451,9 @@ function ClientPortal() {
               <div
                 className="text-sm font-bold px-5 py-2 rounded-full whitespace-nowrap self-start"
                 style={{
-                  background: (CLS_COLORS[caseData.classification] || '#999') + '15',
-                  color: CLS_COLORS[caseData.classification] || '#999',
-                  border: `2px solid ${(CLS_COLORS[caseData.classification] || '#999')}40`,
+                  background: STATUS_BG[caseData.classification] || 'rgba(107,114,128,0.12)',
+                  color: STATUS_COLORS[caseData.classification] || 'var(--text-muted)',
+                  border: `2px solid ${STATUS_BORDER[caseData.classification] || 'rgba(107,114,128,0.25)'}`,
                 }}
               >
                 {caseData.classification} Case
@@ -509,7 +519,7 @@ function ClientPortal() {
                       {isCurrent && (
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full min-h-[44px] md:min-h-0 items-center" style={{
                           color: 'var(--accent)',
-                          background: 'rgba(4,107,210,0.1)',
+                          background: 'rgba(var(--accent-rgb),0.1)',
                         }}>
                           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                           CURRENT
@@ -539,8 +549,8 @@ function ClientPortal() {
                   label="Tax Savings Identified"
                   value={`${formatINR(findings.cgSavings)} savings via Option ${findings.cgBetter}`}
                   accent="var(--green)"
-                  bg="rgba(42,107,74,0.06)"
-                  border="rgba(42,107,74,0.2)"
+                  bg="rgba(var(--green-rgb),0.06)"
+                  border="rgba(var(--green-rgb),0.2)"
                 />
               )}
               {findings.tdsRefund > 0 && (
@@ -548,8 +558,8 @@ function ClientPortal() {
                   label="Estimated TDS Refund"
                   value={`${formatINR(findings.tdsRefund)} refund expected`}
                   accent="var(--green)"
-                  bg="rgba(42,107,74,0.06)"
-                  border="rgba(42,107,74,0.2)"
+                  bg="rgba(var(--green-rgb),0.06)"
+                  border="rgba(var(--green-rgb),0.2)"
                 />
               )}
               <FindingCard
@@ -569,9 +579,9 @@ function ClientPortal() {
                       ? 'Advisory Filing'
                       : 'Premium Compliance'
                   }
-                  accent={CLS_COLORS[caseData.classification]}
-                  bg={(CLS_COLORS[caseData.classification]) + '08'}
-                  border={(CLS_COLORS[caseData.classification]) + '30'}
+                  accent={STATUS_COLORS[caseData.classification]}
+                  bg={STATUS_BG[caseData.classification]}
+                  border={STATUS_BORDER[caseData.classification]}
                 />
               )}
             </div>
@@ -614,7 +624,7 @@ function ClientPortal() {
                       key={mod.id}
                       className={`flex items-start gap-3 py-2 px-3 rounded-lg transition-colors`}
                       style={{
-                        background: isCurrent ? 'rgba(4,107,210,0.08)' : 'transparent',
+                        background: isCurrent ? 'rgba(var(--accent-rgb),0.08)' : 'transparent',
                       }}
                     >
                       {/* Status indicator */}
@@ -802,7 +812,7 @@ function Nav({ isDark, toggleTheme }) {
           onClick={toggleTheme}
           className="w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all duration-300 hover:scale-110 ml-2"
           style={{
-            background: 'rgba(4,107,210,0.15)',
+            background: 'rgba(var(--accent-rgb),0.15)',
             color: 'var(--accent)',
           }}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

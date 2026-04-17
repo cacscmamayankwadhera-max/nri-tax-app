@@ -27,7 +27,7 @@ const DELS = [
   { id:"total_income", l:"Computation of Total Income", n:["income","cg"], d:"Formal ITR-ready statement — all heads, tax, TDS, refund", apiType:"total_income" },
   { id:"quote", l:"Scope & Fee Note", n:["pricing"], d:"Internal: service tier, fee band, scope inclusions/exclusions", apiType:"quote" },
 ];
-const CLS_COLORS = { Green:"#059669", Amber:"#F59E0B", Red:"#DC2626" };
+const STATUS_COLORS = { Green:'var(--green)', Amber:'var(--amber)', Red:'var(--red)' };
 
 /* ═══ API HELPERS ═══ */
 async function runAIModule(moduleId, formData, fy, moduleOutputs) {
@@ -718,7 +718,7 @@ export default function Dashboard() {
                   <div className="text-xs text-theme-muted">{c.country} · FY {c.fy}</div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:CLS_COLORS[c.classification]+'18',color:CLS_COLORS[c.classification]}}>{c.classification}</span>
+                  <span className="text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:STATUS_COLORS[c.classification]+'18',color:STATUS_COLORS[c.classification]}}>{c.classification}</span>
                   <button onClick={(e) => {
                     e.stopPropagation();
                     const url = `${window.location.origin}/portal?ref=${c.portal_token || ''}`;
@@ -982,10 +982,10 @@ export default function Dashboard() {
 
           {/* Step 4: Review */}
           {step===4 && <div className="animate-fade-in-up">
-            <div className="rounded-lg p-4 mb-3 border" style={{background:CLS_COLORS[classifyCase(f)]+'08',borderColor:CLS_COLORS[classifyCase(f)]+'40'}}>
+            <div className="rounded-lg p-4 mb-3 border" style={{background:STATUS_COLORS[classifyCase(f)]+'08',borderColor:STATUS_COLORS[classifyCase(f)]+'40'}}>
               <div className="flex justify-between items-center">
                 <div className="font-bold text-sm text-theme">AI Classification</div>
-                <span className="font-bold text-sm px-4 py-1 rounded-full" style={{background:CLS_COLORS[classifyCase(f)]+'20',color:CLS_COLORS[classifyCase(f)]}}>{classifyCase(f)}</span>
+                <span className="font-bold text-sm px-4 py-1 rounded-full" style={{background:STATUS_COLORS[classifyCase(f)]+'20',color:STATUS_COLORS[classifyCase(f)]}}>{classifyCase(f)}</span>
               </div>
             </div>
             {(() => {
@@ -1076,7 +1076,7 @@ export default function Dashboard() {
             <div className="text-[10px] text-theme-muted truncate">{ac?.client_email}</div>
             {ac?.client_phone && <div className="text-[10px] text-theme-muted">{ac?.client_phone}</div>}
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-[9px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${CLS_COLORS[ac?.classification]}15`, color: CLS_COLORS[ac?.classification] }}>
+              <span className="text-[9px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${STATUS_COLORS[ac?.classification]}15`, color: STATUS_COLORS[ac?.classification] }}>
                 {ac?.classification}
               </span>
               <span className="text-[9px] text-theme-muted">{ac?.fy || fy}</span>
