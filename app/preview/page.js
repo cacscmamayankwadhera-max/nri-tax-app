@@ -241,7 +241,7 @@ function StyleB() {
         }} />
         <div className="max-w-4xl mx-auto px-6 pt-24 pb-16 relative z-10">
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100 px-4 py-1.5 rounded-full">
+            <div className="inline-flex items-center gap-2 bg-[rgba(var(--accent-rgb),0.08)] border border-[rgba(var(--accent-rgb),0.15)] px-4 py-1.5 rounded-full">
               <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] animate-pulse" />
               <span className="text-xs font-semibold text-theme-accent">FY 2025-26 &middot; AI-Powered</span>
             </div>
@@ -255,7 +255,7 @@ function StyleB() {
             The smartest way to file your Indian taxes from anywhere in the world. AI-powered analysis, expert review, and seamless compliance.
           </p>
           <div className="flex items-center justify-center gap-4 mb-16">
-            <button className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] text-white px-8 py-3.5 rounded-full text-sm font-semibold shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 hover:scale-[1.02] transition-all">
+            <button className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] text-white px-8 py-3.5 rounded-full text-sm font-semibold shadow-lg shadow-[0_20px_40px_rgba(var(--accent-rgb),0.16)] hover:shadow-xl hover:shadow-[0_24px_48px_rgba(var(--accent-rgb),0.18)] hover:scale-[1.02] transition-all">
               Start Free Assessment &rarr;
             </button>
             <button className="border-2 border-theme text-theme px-8 py-3.5 rounded-full text-sm font-semibold hover:border-theme-accent hover:text-theme-accent transition-all">
@@ -263,7 +263,7 @@ function StyleB() {
             </button>
           </div>
           {/* Stats card */}
-          <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-6 max-w-3xl mx-auto">
+          <div className="bg-[rgba(var(--accent-rgb),0.08)] border border-[rgba(var(--accent-rgb),0.15)] rounded-2xl p-6 max-w-3xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {STATS.map((s, i) => (
                 <div key={i} className="text-center">
@@ -289,7 +289,7 @@ function StyleB() {
           <div className="grid md:grid-cols-3 gap-5">
             {FEATURES.map((f, i) => (
               <div key={i} className="bg-[var(--bg-secondary)] rounded-2xl p-7 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-theme group">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-[rgba(var(--accent-rgb),0.08)] flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
                   {f.icon}
                 </div>
                 <h3 className="text-base font-bold mb-2">{f.title}</h3>
