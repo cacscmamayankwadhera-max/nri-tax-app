@@ -1,0 +1,54 @@
+# NRI Tax Suite
+
+> A premium, AI-assisted operating system for Non-Resident Indian (NRI) tax return filing, advisory, and compliance.
+
+The NRI Tax Suite is a professional solution for serving Non-Resident Indian taxpayers. It covers the entire NRI client journey, from self-assessment and smart conversational intake to expert advisory reports and final tax return submission.
+
+---
+
+## 🌟 Key Features
+
+### 1. Smart Conversational Intake
+NRI clients can describe their financial situation in plain English. The conversational engine analyzes details such as days spent in India, property transactions, overseas interest, and investment portfolios to populate a customized intake record.
+
+### 2. Live Tax Diagnostics & Case Classification
+Provides instant client feedback. The system automatically categorizes files based on complexity:
+- 🟢 **Green (Basic)**: Simple tax returns (interest income, basic NRI profile).
+- 🟡 **Amber (Advisory)**: Dual residency checks, capital gains from investments, DTAA assessment.
+- 🔴 **Red (Premium)**: Complex property sales, ESOP/RSU tax apportionment, Foreign Tax Credit (FTC) tracking, high-value asset disclosures.
+
+### 3. Automated Capital Gains Optimization
+Performs dual-scenario computations comparing:
+- Option A: **20% Tax with Indexation** (using the FY 2025-26 Cost Inflation Index of 376).
+- Option B: **12.5% Flat Tax without Indexation**.
+The platform automatically highlights the most tax-efficient method to optimize capital gains liability.
+
+### 4. Cross-Border DTAA & FTC Mapping
+Avoids double-taxation by mapping tax treaty (Double Taxation Avoidance Agreement) rates for over 90 countries (including the US, UK, UAE, Canada, Singapore, and Australia). Tracks requirements for Form 67 and Tax Residency Certificates (TRC).
+
+### 5. Compliance Reconciliation
+Enables preparers to reconcile client-provided records against Indian Income-Tax Department datasets (Annual Information Statement (AIS), Taxpayer Information Summary (TIS), and Form 26AS) to flag notice-sensitive mismatches.
+
+---
+
+## 💼 Service Tiers
+
+| Tier | Fee Range | Best For | Inclusions |
+|------|-----------|----------|------------|
+| **Basic Filing (Green)** | ₹8,000–15,000 | Simple NRI tax profiles | Salary, NRO/NRE interest, simple ITR returns |
+| **Advisory Filing (Amber)** | ₹18,000–30,000 | Mid-complexity cases | Multiple income heads, residency days analysis, investment portfolios |
+| **Premium Compliance (Red)** | ₹35,000–75,000 | High-value property / complex assets | Property sales, DTAA treaty relief, Form 15CA/15CB repatriation, ESOPs |
+| **HNI Annual Retainer** | ₹1,00,000+/year | Active portfolios & family offices | Year-round planning, multi-FY advisory, dedicated consultant |
+
+---
+
+## 📈 FY 2025-26 Compliance Highlights
+
+The platform computes calculations using current regulations:
+- **Exemption Threshold**: ₹4,00,000 under the default New Tax Regime (Section 115BAC).
+- **Section 87A Rebate**: Up to ₹60,000 (Note: available only to resident taxpayers; NRIs are ineligible).
+- **LTCG Property (Pre-July 23, 2024)**: Taxpayers choose 20% with indexation or 12.5% flat rate.
+- **LTCG Property (Post-July 23, 2024)**: Flat 12.5% without indexation.
+- **LTCG Listed Equities**: 12.5% tax on gains above ₹1.25 Lakh.
+- **Asset Disclosures**: Mandatory Schedule FA reporting if foreign-source Indian assets exceed ₹1 Crore.
+- **Repatriation**: Structured support for transferring NRO funds under the USD 1 Million annual FEMA limit.
