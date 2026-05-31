@@ -1,6 +1,8 @@
 import './globals.css';
 import { ThemeProvider } from './theme-provider';
 import CookieConsent from './components/CookieConsent';
+import Script from 'next/script';
+
 
 export const metadata = {
   title: 'NRI Tax Suite — MKW Advisors',
@@ -29,6 +31,8 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-J6RP6LYS51';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -71,6 +75,22 @@ export default function RootLayout({ children }) {
           {children}
           <CookieConsent />
         </ThemeProvider>
+        {gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
